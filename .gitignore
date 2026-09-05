@@ -25,3 +25,9 @@ simulations/results/*.csv
 .vscode/
 .idea/
 *.swp
+
+# Python Virtual Environments
+.venv/
+env/
+venv/
+ENV/
