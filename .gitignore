@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+
+# KiCad / EDA
+*.kicad_prl
+*.kicad_pcb-bak
+*.sch-bak
+*-backups/
+_autosave-*/
+*.lck
+*.tmp
+
+# SPICE / Simulation outputs
+*.raw
+*.log
+*.op.raw
+simulations/results/*.png
+simulations/results/*.csv
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.swp
