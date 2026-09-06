@@ -1,0 +1,65 @@
+(kicad_sch (version 20240116) (generator "adex-resonant-brain")
+
+  (uuid "77e3e520-b65d-512b-8315-8847808f8b9d")
+
+  (paper "A4")
+
+  (title_block
+    (title "LC Bridge Cell — Tunable Resonance Coupling")
+    (date "2026-09-06")
+    (rev "1.0")
+    (company "AdEx Resonant Brain Project")
+  )
+
+  ;; ──────────────────────────────────────────────
+  ;;  Hierarchical Labels — INPUT
+  ;; ──────────────────────────────────────────────
+  (hierarchical_label "LC_IN" (shape input) (at 0 50 0)
+    (fields_autoplaced)
+    (uuid "8c575c38-e5c8-5f50-a3f7-8cb1a269f956")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+
+  (hierarchical_label "TUNE" (shape input) (at 0 60 0)
+    (fields_autoplaced)
+    (uuid "4eb5f56c-aaf0-55b1-9042-1661ba186dde")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+
+  ;; ──────────────────────────────────────────────
+  ;;  Hierarchical Labels — OUTPUT
+  ;; ──────────────────────────────────────────────
+  (hierarchical_label "LC_OUT" (shape output) (at 200 50 180)
+    (fields_autoplaced)
+    (uuid "9fe63c40-3665-5ba6-9b29-9da81f08930c")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+
+  ;; ──────────────────────────────────────────────
+  ;;  Hierarchical Labels — POWER
+  ;; ──────────────────────────────────────────────
+  (hierarchical_label "VDD" (shape bidirectional) (at 50 100 90)
+    (fields_autoplaced)
+    (uuid "84c48c9a-95b1-5179-a6b0-cd84759ba29c")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+
+  (hierarchical_label "VSS" (shape bidirectional) (at 70 100 90)
+    (fields_autoplaced)
+    (uuid "2b349418-3fd0-54a8-a01d-fc0df645e149")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+
+  (hierarchical_label "GND" (shape bidirectional) (at 90 100 90)
+    (fields_autoplaced)
+    (uuid "e2085afa-9b97-52fd-bc86-918081d6f9a9")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+
+  ;; ──────────────────────────────────────────────
+  ;;  Symbol & Schematic Body Placeholder
+  ;; ──────────────────────────────────────────────
+  ;; (Tunable inductor / capacitor network symbols
+  ;;  will be placed in the detailed design phase.)
+
+)

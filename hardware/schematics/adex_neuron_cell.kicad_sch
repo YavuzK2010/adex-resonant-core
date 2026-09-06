@@ -1,0 +1,77 @@
+(kicad_sch (version 20240116) (generator "adex-resonant-brain")
+
+  (uuid "72a69a8d-6675-59b8-818a-8decf68d3375")
+
+  (paper "A4")
+
+  (title_block
+    (title "AdEx Neuron Cell — Adaptive Exponential Integrate-and-Fire + LC Tank")
+    (date "2026-09-06")
+    (rev "1.0")
+    (company "AdEx Resonant Brain Project")
+  )
+
+  ;; ──────────────────────────────────────────────
+  ;;  Hierarchical Labels — INPUT
+  ;; ──────────────────────────────────────────────
+  (hierarchical_label "V_in" (shape input) (at 0 50 0)
+    (fields_autoplaced)
+    (uuid "a961525f-244f-5ef4-90c1-e61b7c48bfd3")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+
+  (hierarchical_label "I_ext" (shape input) (at 0 60 0)
+    (fields_autoplaced)
+    (uuid "55598b45-8ad0-56a6-864b-38fbd69e8c72")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+
+  (hierarchical_label "V_tune" (shape input) (at 0 70 0)
+    (fields_autoplaced)
+    (uuid "ad39f75f-2366-5d2f-a882-f4a0a4f07d27")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+
+  ;; ──────────────────────────────────────────────
+  ;;  Hierarchical Labels — OUTPUT
+  ;; ──────────────────────────────────────────────
+  (hierarchical_label "V_m" (shape output) (at 200 50 180)
+    (fields_autoplaced)
+    (uuid "805c5c11-d3ea-5edc-825f-e26a97a17338")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+
+  (hierarchical_label "SPIKE_OUT" (shape output) (at 200 60 180)
+    (fields_autoplaced)
+    (uuid "66bf1c31-4872-5418-aae6-46122ed9f201")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+
+  ;; ──────────────────────────────────────────────
+  ;;  Hierarchical Labels — POWER (bidirectional)
+  ;; ──────────────────────────────────────────────
+  (hierarchical_label "VDD" (shape bidirectional) (at 50 100 90)
+    (fields_autoplaced)
+    (uuid "2d508782-7098-5ae3-98b1-eafcc4ad70e8")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+
+  (hierarchical_label "VSS" (shape bidirectional) (at 70 100 90)
+    (fields_autoplaced)
+    (uuid "65b08f13-5ee2-5015-ae7b-f4f65eff8fef")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+
+  (hierarchical_label "GND" (shape bidirectional) (at 90 100 90)
+    (fields_autoplaced)
+    (uuid "42dd184e-e972-52ea-9e7d-39da88162534")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+
+  ;; ──────────────────────────────────────────────
+  ;;  Symbol & Schematic Body Placeholder
+  ;; ──────────────────────────────────────────────
+  ;; (Component symbols, nets, and simulation models
+  ;;  will be placed in the detailed design phase.)
+
+)
