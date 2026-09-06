@@ -306,7 +306,7 @@ def main() -> None:
         sys.stderr.write(f"[INFO] SPICE: {len(t)} points, "
                          f"V_m range [{v.min():.4f}, {v.max():.4f}]\n")
         digital: np.ndarray = (comp > 2.5).astype(np.int8)
-        spike_count: int = int(np.sum(np.diff(digital) == 1))
+        spike_count: int = int(np.count_nonzero(np.diff(digital) == 1))
         if spike_count > 0:
             sys.stderr.write(f"[INFO] SPICE spikes detected: {spike_count}\n")
         else:
