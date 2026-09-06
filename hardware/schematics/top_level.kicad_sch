@@ -102,7 +102,6 @@
       )
     )
     (page_number "1")
-    (pin "V_in" input (at 0 10 0) (uuid "2188b6b6-9876-572c-888a-734ae0b53375"))
     (pin "I_ext" input (at 0 15 0) (uuid "c4ee49e5-0713-58a7-8700-37aa36ada68c"))
     (pin "V_tune" input (at 0 20 0) (uuid "538baff4-98db-5d1d-9740-982a49c92fd2"))
     (pin "V_m" output (at 50 10 180) (uuid "dffeaed9-21ce-51e6-b013-0f6db5b7ddd9"))
@@ -125,7 +124,6 @@
       )
     )
     (page_number "2")
-    (pin "V_in" input (at 0 10 0) (uuid "26fbdf15-1893-5866-9bcb-814e4075d223"))
     (pin "I_ext" input (at 0 15 0) (uuid "503329cd-b3de-5721-acc3-f499a77b5809"))
     (pin "V_tune" input (at 0 20 0) (uuid "b300d49a-6a46-5dec-a0fe-d6335bf0b6cf"))
     (pin "V_m" output (at 50 10 180) (uuid "daed6833-6e62-5ed0-a5ec-b30c477e2b00"))
@@ -148,7 +146,6 @@
       )
     )
     (page_number "3")
-    (pin "V_in" input (at 0 10 0) (uuid "f6ce8f3e-ef1a-5112-bfa2-bcbe9b60c6c9"))
     (pin "I_ext" input (at 0 15 0) (uuid "f4a8febd-ff35-5fd7-8540-175439642843"))
     (pin "V_tune" input (at 0 20 0) (uuid "ae53f5ce-7ebe-5700-ba88-385770b2fa91"))
     (pin "V_m" output (at 50 10 180) (uuid "292d5311-92ed-5197-aae4-573203d14392"))
@@ -171,7 +168,6 @@
       )
     )
     (page_number "4")
-    (pin "V_in" input (at 0 10 0) (uuid "186b49bb-586e-5e1c-8fcf-eb807eda36b8"))
     (pin "I_ext" input (at 0 15 0) (uuid "8fdcc5ce-896a-50a0-a470-7301f1b0c874"))
     (pin "V_tune" input (at 0 20 0) (uuid "fcfa15cf-b3fc-5861-96a3-86f8d51a6801"))
     (pin "V_m" output (at 50 10 180) (uuid "bad56786-d82d-5c6a-a9fa-e682b4332944"))
@@ -194,7 +190,6 @@
       )
     )
     (page_number "5")
-    (pin "V_in" input (at 0 10 0) (uuid "31b0c47d-1740-5d84-b04c-b16ba3e41c7d"))
     (pin "I_ext" input (at 0 15 0) (uuid "0a892ca7-f9f8-53cf-ba20-294632c24c7e"))
     (pin "V_tune" input (at 0 20 0) (uuid "969d4917-1aa0-5ba0-ac4d-d6ad0c2c5b97"))
     (pin "V_m" output (at 50 10 180) (uuid "acdfbae0-f869-5de0-8f06-54c46135200a"))
@@ -217,7 +212,6 @@
       )
     )
     (page_number "6")
-    (pin "V_in" input (at 0 10 0) (uuid "04520963-8eca-5a06-ac77-e2dd070d4350"))
     (pin "I_ext" input (at 0 15 0) (uuid "a44b7fba-f74c-56a8-9ccb-5ad6aabe356c"))
     (pin "V_tune" input (at 0 20 0) (uuid "ac9760a7-3670-56bc-aafc-69190b563bfa"))
     (pin "V_m" output (at 50 10 180) (uuid "86a3f19a-3564-5694-b958-d226a50af6ae"))
@@ -240,7 +234,6 @@
       )
     )
     (page_number "7")
-    (pin "V_in" input (at 0 10 0) (uuid "91e93193-df9c-5f80-ba86-5f33c441f4fa"))
     (pin "I_ext" input (at 0 15 0) (uuid "7ec05f71-e803-5206-8b2e-ea8524732f47"))
     (pin "V_tune" input (at 0 20 0) (uuid "5a0cf47e-c579-5265-9c63-7d7b30a40110"))
     (pin "V_m" output (at 50 10 180) (uuid "b2c13891-d712-5448-b9fd-086f44051e17"))
@@ -263,7 +256,6 @@
       )
     )
     (page_number "8")
-    (pin "V_in" input (at 0 10 0) (uuid "6977a15a-a990-53c3-b7ed-5725ecdd642e"))
     (pin "I_ext" input (at 0 15 0) (uuid "d4f01749-6708-5178-869d-a8ef124b3e46"))
     (pin "V_tune" input (at 0 20 0) (uuid "fd007b2a-fac9-5b03-8d61-968e3fad6862"))
     (pin "V_m" output (at 50 10 180) (uuid "1f69547d-6f17-59fe-aa8a-166400fb7125"))
@@ -286,7 +278,6 @@
       )
     )
     (page_number "9")
-    (pin "V_in" input (at 0 10 0) (uuid "3a23d5a8-a16f-5fea-851c-9728a9d5a75a"))
     (pin "I_ext" input (at 0 15 0) (uuid "c85e121a-d43d-5f12-a3c1-8b93bd740432"))
     (pin "V_tune" input (at 0 20 0) (uuid "99e27d3c-2bdc-50ed-b61c-04db3d842de7"))
     (pin "V_m" output (at 50 10 180) (uuid "c1dbefc9-951c-502c-98c1-39301ccc5e53"))
@@ -309,7 +300,6 @@
       )
     )
     (page_number "10")
-    (pin "V_in" input (at 0 10 0) (uuid "3e6ef7e9-d4d1-54d7-8878-a3966978a9bf"))
     (pin "I_ext" input (at 0 15 0) (uuid "949fd55c-5cf5-50a7-a592-560a7c2d5d4f"))
     (pin "V_tune" input (at 0 20 0) (uuid "843d6944-701d-583d-bf38-13da0dec4db2"))
     (pin "V_m" output (at 50 10 180) (uuid "a67de636-dd85-505b-b401-2fea09c68743"))
@@ -332,7 +322,6 @@
       )
     )
     (page_number "11")
-    (pin "V_in" input (at 0 10 0) (uuid "a2ffb33b-98f7-5922-8ee6-cae48905bdc4"))
     (pin "I_ext" input (at 0 15 0) (uuid "9d733ee1-f8af-5136-aec7-98344feffeb7"))
     (pin "V_tune" input (at 0 20 0) (uuid "93391df0-c9aa-513f-831c-a2b6b2cf5fe4"))
     (pin "V_m" output (at 50 10 180) (uuid "ed2a6b0c-57f7-5de3-a72e-787a8ffcc761"))
@@ -355,7 +344,6 @@
       )
     )
     (page_number "12")
-    (pin "V_in" input (at 0 10 0) (uuid "dacca7c0-92fe-5562-ae64-3f4236b64887"))
     (pin "I_ext" input (at 0 15 0) (uuid "f93dc520-2d5c-55e3-95af-7234ae9f98bc"))
     (pin "V_tune" input (at 0 20 0) (uuid "1478f59a-2a7e-5e95-aafe-e3c6366f09ab"))
     (pin "V_m" output (at 50 10 180) (uuid "afd89c48-a307-59fa-a1e8-03791a4e5380"))
@@ -378,7 +366,6 @@
       )
     )
     (page_number "13")
-    (pin "V_in" input (at 0 10 0) (uuid "01cc163f-cc4a-545d-ab80-731b3332a2cb"))
     (pin "I_ext" input (at 0 15 0) (uuid "39168a1e-abd2-5c57-8446-0e0f9133ca00"))
     (pin "V_tune" input (at 0 20 0) (uuid "fdb61f65-ac7a-5db8-a352-ed0dc5dc5cb8"))
     (pin "V_m" output (at 50 10 180) (uuid "55bec99e-94e5-507c-838d-21f1d3881f89"))
@@ -401,7 +388,6 @@
       )
     )
     (page_number "14")
-    (pin "V_in" input (at 0 10 0) (uuid "c87f39ae-bb24-5669-a444-4961d32a55b5"))
     (pin "I_ext" input (at 0 15 0) (uuid "c8aff99c-d0c5-57f2-b1c3-9087dde21d0f"))
     (pin "V_tune" input (at 0 20 0) (uuid "42022e99-304c-556b-807f-2601494f3301"))
     (pin "V_m" output (at 50 10 180) (uuid "1cb7e118-ef89-5c66-9c5a-b458b611b2f7"))
@@ -424,7 +410,6 @@
       )
     )
     (page_number "15")
-    (pin "V_in" input (at 0 10 0) (uuid "c87a106a-26c1-58fa-acd5-3387c0a0c19d"))
     (pin "I_ext" input (at 0 15 0) (uuid "f8c63fb9-a164-585c-9f9c-3acc3e4577a3"))
     (pin "V_tune" input (at 0 20 0) (uuid "a6b09d48-b710-58e2-93da-6f82f5670a21"))
     (pin "V_m" output (at 50 10 180) (uuid "5cbbfea7-31ad-5b82-a71a-c4b3b8c2fc3f"))
@@ -447,7 +432,6 @@
       )
     )
     (page_number "16")
-    (pin "V_in" input (at 0 10 0) (uuid "81404d28-624c-5066-8689-2210ad050202"))
     (pin "I_ext" input (at 0 15 0) (uuid "7436607f-3596-56c2-b0b0-23cb5df723c5"))
     (pin "V_tune" input (at 0 20 0) (uuid "ba84b340-7c28-5fd5-9004-3fdc17dea06d"))
     (pin "V_m" output (at 50 10 180) (uuid "faed6473-41e8-579c-b8f4-ad556e7f6078"))
@@ -456,5 +440,390 @@
     (pin "VSS" bidirectional (at 20 0 90) (uuid "63386dbd-32a5-5b26-b36b-be7dd6083910"))
     (pin "GND" bidirectional (at 30 0 90) (uuid "4070c983-bb11-5a6b-845e-9d425dcef1fb"))
   )
+;; ──────────────────────────────────────────────
+  ;;  Hierarchical Sheets — LC Bridge Instances B1 … B15
+  ;;  Interconnect adjacent neuron pairs for phase locking
+  ;; ──────────────────────────────────────────────
+
+  ;; --- Sheet B1 (N1 ↔ N2) ---
+  (sheet (at 80 50) (size 50 40)
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (fill (color 0 0 0 0))
+    (uuid "b1000001-0001-4001-b001-000000000001")
+    (path "/b1000001-0001-4001-b001-000000000001")
+    (property "Sheet name" "B1")
+    (property "Sheet file" "lc_bridge_cell.kicad_sch")
+    (sheet_instances
+      (path "/b1000001-0001-4001-b001-000000000001"
+        (reference "B1") (unit 1) (value "B1")
+      )
+    )
+    (page_number "17")
+    (pin "NODE_A" input (at 0 10 0) (uuid "b1p00001-0001-4001-p001-000000000001"))
+    (pin "NODE_B" input (at 0 15 0) (uuid "b1p00002-0002-4002-p002-000000000002"))
+    (pin "V_tune" input (at 0 20 0) (uuid "b1p00003-0003-4003-p003-000000000003"))
+    (pin "GND" bidirectional (at 30 0 90) (uuid "b1p00004-0004-4004-p004-000000000004"))
+  )
+
+  ;; --- Sheet B2 (N2 ↔ N3) ---
+  (sheet (at 140 50) (size 50 40)
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (fill (color 0 0 0 0))
+    (uuid "b2000002-0002-4002-b002-000000000002")
+    (path "/b2000002-0002-4002-b002-000000000002")
+    (property "Sheet name" "B2")
+    (property "Sheet file" "lc_bridge_cell.kicad_sch")
+    (sheet_instances
+      (path "/b2000002-0002-4002-b002-000000000002"
+        (reference "B2") (unit 1) (value "B2")
+      )
+    )
+    (page_number "18")
+    (pin "NODE_A" input (at 0 10 0) (uuid "b2p00001-0001-4001-p001-000000000001"))
+    (pin "NODE_B" input (at 0 15 0) (uuid "b2p00002-0002-4002-p002-000000000002"))
+    (pin "V_tune" input (at 0 20 0) (uuid "b2p00003-0003-4003-p003-000000000003"))
+    (pin "GND" bidirectional (at 30 0 90) (uuid "b2p00004-0004-4004-p004-000000000004"))
+  )
+
+  ;; --- Sheet B3 (N3 ↔ N4) ---
+  (sheet (at 200 50) (size 50 40)
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (fill (color 0 0 0 0))
+    (uuid "b3000003-0003-4003-b003-000000000003")
+    (path "/b3000003-0003-4003-b003-000000000003")
+    (property "Sheet name" "B3")
+    (property "Sheet file" "lc_bridge_cell.kicad_sch")
+    (sheet_instances
+      (path "/b3000003-0003-4003-b003-000000000003"
+        (reference "B3") (unit 1) (value "B3")
+      )
+    )
+    (page_number "19")
+    (pin "NODE_A" input (at 0 10 0) (uuid "b3p00001-0001-4001-p001-000000000001"))
+    (pin "NODE_B" input (at 0 15 0) (uuid "b3p00002-0002-4002-p002-000000000002"))
+    (pin "V_tune" input (at 0 20 0) (uuid "b3p00003-0003-4003-p003-000000000003"))
+    (pin "GND" bidirectional (at 30 0 90) (uuid "b3p00004-0004-4004-p004-000000000004"))
+  )
+
+  ;; --- Sheet B4 (N5 ↔ N6) ---
+  (sheet (at 80 100) (size 50 40)
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (fill (color 0 0 0 0))
+    (uuid "b4000004-0004-4004-b004-000000000004")
+    (path "/b4000004-0004-4004-b004-000000000004")
+    (property "Sheet name" "B4")
+    (property "Sheet file" "lc_bridge_cell.kicad_sch")
+    (sheet_instances
+      (path "/b4000004-0004-4004-b004-000000000004"
+        (reference "B4") (unit 1) (value "B4")
+      )
+    )
+    (page_number "20")
+    (pin "NODE_A" input (at 0 10 0) (uuid "b4p00001-0001-4001-p001-000000000001"))
+    (pin "NODE_B" input (at 0 15 0) (uuid "b4p00002-0002-4002-p002-000000000002"))
+    (pin "V_tune" input (at 0 20 0) (uuid "b4p00003-0003-4003-p003-000000000003"))
+    (pin "GND" bidirectional (at 30 0 90) (uuid "b4p00004-0004-4004-p004-000000000004"))
+  )
+
+  ;; --- Sheet B5 (N6 ↔ N7) ---
+  (sheet (at 140 100) (size 50 40)
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (fill (color 0 0 0 0))
+    (uuid "b5000005-0005-4005-b005-000000000005")
+    (path "/b5000005-0005-4005-b005-000000000005")
+    (property "Sheet name" "B5")
+    (property "Sheet file" "lc_bridge_cell.kicad_sch")
+    (sheet_instances
+      (path "/b5000005-0005-4005-b005-000000000005"
+        (reference "B5") (unit 1) (value "B5")
+      )
+    )
+    (page_number "21")
+    (pin "NODE_A" input (at 0 10 0) (uuid "b5p00001-0001-4001-p001-000000000001"))
+    (pin "NODE_B" input (at 0 15 0) (uuid "b5p00002-0002-4002-p002-000000000002"))
+    (pin "V_tune" input (at 0 20 0) (uuid "b5p00003-0003-4003-p003-000000000003"))
+    (pin "GND" bidirectional (at 30 0 90) (uuid "b5p00004-0004-4004-p004-000000000004"))
+  )
+
+  ;; --- Sheet B6 (N7 ↔ N8) ---
+  (sheet (at 200 100) (size 50 40)
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (fill (color 0 0 0 0))
+    (uuid "b6000006-0006-4006-b006-000000000006")
+    (path "/b6000006-0006-4006-b006-000000000006")
+    (property "Sheet name" "B6")
+    (property "Sheet file" "lc_bridge_cell.kicad_sch")
+    (sheet_instances
+      (path "/b6000006-0006-4006-b006-000000000006"
+        (reference "B6") (unit 1) (value "B6")
+      )
+    )
+    (page_number "22")
+    (pin "NODE_A" input (at 0 10 0) (uuid "b6p00001-0001-4001-p001-000000000001"))
+    (pin "NODE_B" input (at 0 15 0) (uuid "b6p00002-0002-4002-p002-000000000002"))
+    (pin "V_tune" input (at 0 20 0) (uuid "b6p00003-0003-4003-p003-000000000003"))
+    (pin "GND" bidirectional (at 30 0 90) (uuid "b6p00004-0004-4004-p004-000000000004"))
+  )
+;; --- Sheet B7 (N9 ↔ N10) ---
+  (sheet (at 80 150) (size 50 40)
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (fill (color 0 0 0 0))
+    (uuid "b7000007-0007-4007-b007-000000000007")
+    (path "/b7000007-0007-4007-b007-000000000007")
+    (property "Sheet name" "B7")
+    (property "Sheet file" "lc_bridge_cell.kicad_sch")
+    (sheet_instances
+      (path "/b7000007-0007-4007-b007-000000000007"
+        (reference "B7") (unit 1) (value "B7")
+      )
+    )
+    (page_number "23")
+    (pin "NODE_A" input (at 0 10 0) (uuid "b7p00001-0001-4001-p001-000000000001"))
+    (pin "NODE_B" input (at 0 15 0) (uuid "b7p00002-0002-4002-p002-000000000002"))
+    (pin "V_tune" input (at 0 20 0) (uuid "b7p00003-0003-4003-p003-000000000003"))
+    (pin "GND" bidirectional (at 30 0 90) (uuid "b7p00004-0004-4004-p004-000000000004"))
+  )
+
+  ;; --- Sheet B8 (N10 ↔ N11) ---
+  (sheet (at 140 150) (size 50 40)
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (fill (color 0 0 0 0))
+    (uuid "b8000008-0008-4008-b008-000000000008")
+    (path "/b8000008-0008-4008-b008-000000000008")
+    (property "Sheet name" "B8")
+    (property "Sheet file" "lc_bridge_cell.kicad_sch")
+    (sheet_instances
+      (path "/b8000008-0008-4008-b008-000000000008"
+        (reference "B8") (unit 1) (value "B8")
+      )
+    )
+    (page_number "24")
+    (pin "NODE_A" input (at 0 10 0) (uuid "b8p00001-0001-4001-p001-000000000001"))
+    (pin "NODE_B" input (at 0 15 0) (uuid "b8p00002-0002-4002-p002-000000000002"))
+    (pin "V_tune" input (at 0 20 0) (uuid "b8p00003-0003-4003-p003-000000000003"))
+    (pin "GND" bidirectional (at 30 0 90) (uuid "b8p00004-0004-4004-p004-000000000004"))
+  )
+
+  ;; --- Sheet B9 (N11 ↔ N12) ---
+  (sheet (at 200 150) (size 50 40)
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (fill (color 0 0 0 0))
+    (uuid "b9000009-0009-4009-b009-000000000009")
+    (path "/b9000009-0009-4009-b009-000000000009")
+    (property "Sheet name" "B9")
+    (property "Sheet file" "lc_bridge_cell.kicad_sch")
+    (sheet_instances
+      (path "/b9000009-0009-4009-b009-000000000009"
+        (reference "B9") (unit 1) (value "B9")
+      )
+    )
+    (page_number "25")
+    (pin "NODE_A" input (at 0 10 0) (uuid "b9p00001-0001-4001-p001-000000000001"))
+    (pin "NODE_B" input (at 0 15 0) (uuid "b9p00002-0002-4002-p002-000000000002"))
+    (pin "V_tune" input (at 0 20 0) (uuid "b9p00003-0003-4003-p003-000000000003"))
+    (pin "GND" bidirectional (at 30 0 90) (uuid "b9p00004-0004-4004-p004-000000000004"))
+  )
+
+  ;; --- Sheet B10 (N13 ↔ N14) ---
+  (sheet (at 80 200) (size 50 40)
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (fill (color 0 0 0 0))
+    (uuid "ba000010-0010-4010-b010-000000000010")
+    (path "/ba000010-0010-4010-b010-000000000010")
+    (property "Sheet name" "B10")
+    (property "Sheet file" "lc_bridge_cell.kicad_sch")
+    (sheet_instances
+      (path "/ba000010-0010-4010-b010-000000000010"
+        (reference "B10") (unit 1) (value "B10")
+      )
+    )
+    (page_number "26")
+    (pin "NODE_A" input (at 0 10 0) (uuid "bap00001-0001-4001-p001-000000000001"))
+    (pin "NODE_B" input (at 0 15 0) (uuid "bap00002-0002-4002-p002-000000000002"))
+    (pin "V_tune" input (at 0 20 0) (uuid "bap00003-0003-4003-p003-000000000003"))
+    (pin "GND" bidirectional (at 30 0 90) (uuid "bap00004-0004-4004-p004-000000000004"))
+  )
+
+  ;; --- Sheet B11 (N14 ↔ N15) ---
+  (sheet (at 140 200) (size 50 40)
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (fill (color 0 0 0 0))
+    (uuid "bb000011-0011-4011-b011-000000000011")
+    (path "/bb000011-0011-4011-b011-000000000011")
+    (property "Sheet name" "B11")
+    (property "Sheet file" "lc_bridge_cell.kicad_sch")
+    (sheet_instances
+      (path "/bb000011-0011-4011-b011-000000000011"
+        (reference "B11") (unit 1) (value "B11")
+      )
+    )
+    (page_number "27")
+    (pin "NODE_A" input (at 0 10 0) (uuid "bbp00001-0001-4001-p001-000000000001"))
+    (pin "NODE_B" input (at 0 15 0) (uuid "bbp00002-0002-4002-p002-000000000002"))
+    (pin "V_tune" input (at 0 20 0) (uuid "bbp00003-0003-4003-p003-000000000003"))
+    (pin "GND" bidirectional (at 30 0 90) (uuid "bbp00004-0004-4004-p004-000000000004"))
+  )
+
+  ;; --- Sheet B12 (N15 ↔ N16) ---
+  (sheet (at 200 200) (size 50 40)
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (fill (color 0 0 0 0))
+    (uuid "bc000012-0012-4012-b012-000000000012")
+    (path "/bc000012-0012-4012-b012-000000000012")
+    (property "Sheet name" "B12")
+    (property "Sheet file" "lc_bridge_cell.kicad_sch")
+    (sheet_instances
+      (path "/bc000012-0012-4012-b012-000000000012"
+        (reference "B12") (unit 1) (value "B12")
+      )
+    )
+    (page_number "28")
+    (pin "NODE_A" input (at 0 10 0) (uuid "bcp00001-0001-4001-p001-000000000001"))
+    (pin "NODE_B" input (at 0 15 0) (uuid "bcp00002-0002-4002-p002-000000000002"))
+    (pin "V_tune" input (at 0 20 0) (uuid "bcp00003-0003-4003-p003-000000000003"))
+    (pin "GND" bidirectional (at 30 0 90) (uuid "bcp00004-0004-4004-p004-000000000004"))
+  )
+;; --- Sheet B13 (N4 ↔ N5 — inter-row) ---
+  (sheet (at 260 75) (size 50 40)
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (fill (color 0 0 0 0))
+    (uuid "bd000013-0013-4013-b013-000000000013")
+    (path "/bd000013-0013-4013-b013-000000000013")
+    (property "Sheet name" "B13")
+    (property "Sheet file" "lc_bridge_cell.kicad_sch")
+    (sheet_instances
+      (path "/bd000013-0013-4013-b013-000000000013"
+        (reference "B13") (unit 1) (value "B13")
+      )
+    )
+    (page_number "29")
+    (pin "NODE_A" input (at 0 10 0) (uuid "bdp00001-0001-4001-p001-000000000001"))
+    (pin "NODE_B" input (at 0 15 0) (uuid "bdp00002-0002-4002-p002-000000000002"))
+    (pin "V_tune" input (at 0 20 0) (uuid "bdp00003-0003-4003-p003-000000000003"))
+    (pin "GND" bidirectional (at 30 0 90) (uuid "bdp00004-0004-4004-p004-000000000004"))
+  )
+
+  ;; --- Sheet B14 (N8 ↔ N9 — inter-row) ---
+  (sheet (at 260 125) (size 50 40)
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (fill (color 0 0 0 0))
+    (uuid "be000014-0014-4014-b014-000000000014")
+    (path "/be000014-0014-4014-b014-000000000014")
+    (property "Sheet name" "B14")
+    (property "Sheet file" "lc_bridge_cell.kicad_sch")
+    (sheet_instances
+      (path "/be000014-0014-4014-b014-000000000014"
+        (reference "B14") (unit 1) (value "B14")
+      )
+    )
+    (page_number "30")
+    (pin "NODE_A" input (at 0 10 0) (uuid "bep00001-0001-4001-p001-000000000001"))
+    (pin "NODE_B" input (at 0 15 0) (uuid "bep00002-0002-4002-p002-000000000002"))
+    (pin "V_tune" input (at 0 20 0) (uuid "bep00003-0003-4003-p003-000000000003"))
+    (pin "GND" bidirectional (at 30 0 90) (uuid "bep00004-0004-4004-p004-000000000004"))
+  )
+
+  ;; --- Sheet B15 (N12 ↔ N13 — inter-row) ---
+  (sheet (at 260 175) (size 50 40)
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (fill (color 0 0 0 0))
+    (uuid "bf000015-0015-4015-b015-000000000015")
+    (path "/bf000015-0015-4015-b015-000000000015")
+    (property "Sheet name" "B15")
+    (property "Sheet file" "lc_bridge_cell.kicad_sch")
+    (sheet_instances
+      (path "/bf000015-0015-4015-b015-000000000015"
+        (reference "B15") (unit 1) (value "B15")
+      )
+    )
+    (page_number "31")
+    (pin "NODE_A" input (at 0 10 0) (uuid "bfp00001-0001-4001-p001-000000000001"))
+    (pin "NODE_B" input (at 0 15 0) (uuid "bfp00002-0002-4002-p002-000000000002"))
+    (pin "V_tune" input (at 0 20 0) (uuid "bfp00003-0003-4003-p003-000000000003"))
+    (pin "GND" bidirectional (at 30 0 90) (uuid "bfp00004-0004-4004-p004-000000000004"))
+  )
+;; ──────────────────────────────────────────────
+  ;;  NET DECLARATIONS & NET CLASS ASSIGNMENTS
+  ;; ──────────────────────────────────────────────
+
+  ;; Global power nets
+  (net (name "+5V")      (net_class "Default"))
+  (net (name "-5V")      (net_class "Default"))
+  (net (name "GND")      (net_class "Default"))
+
+  ;; VDD / VSS aliases
+  (net (name "VDD")      (net_class "Default"))
+  (net (name "VSS")      (net_class "Default"))
+
+  ;; ANALOG_MEMBRANE — neuron membrane potential nets
+  (net (name "V_m")      (net_class "ANALOG_MEMBRANE"))
+  (net (name "V_tune")   (net_class "ANALOG_MEMBRANE"))
+  (net (name "I_ext")    (net_class "ANALOG_MEMBRANE"))
+  (net (name "V_TH")     (net_class "ANALOG_MEMBRANE"))
+
+  ;; RESONANCE_LC — LC tank / bridge coupling nets
+  (net (name "LC_MID")   (net_class "RESONANCE_LC"))
+  (net (name "NODE_A")   (net_class "RESONANCE_LC"))
+  (net (name "NODE_B")   (net_class "RESONANCE_LC"))
+
+  ;; DIGITAL_SPIKE — spike / reset digital signals
+  (net (name "SPIKE_OUT")(net_class "DIGITAL_SPIKE"))
+
+  ;; ──────────────────────────────────────────────
+  ;;  GLOBAL POWER WIRES — VDD / VSS / GND bus
+  ;; ──────────────────────────────────────────────
+
+  ;; VDD (+5V) horizontal distribution
+  (wire (pts (30 10) (290 10))
+    (stroke (width 0.254) (type default) (color 0 0 0 0))
+    (uuid "tpw0001-0001-4001-w001-000000000001")
+  )
+
+  ;; VSS (-5V) horizontal distribution
+  (wire (pts (30 20) (290 20))
+    (stroke (width 0.254) (type default) (color 0 0 0 0))
+    (uuid "tpw0002-0002-4002-w002-000000000002")
+  )
+
+  ;; GND horizontal distribution
+  (wire (pts (30 30) (290 30))
+    (stroke (width 0.254) (type default) (color 0 0 0 0))
+    (uuid "tpw0003-0003-4003-w003-000000000003")
+  )
+
+  ;; GND vertical spurs to sheet rows
+  (wire (pts (80 30) (80 200))
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (uuid "tpw0004-0004-4004-w004-000000000004")
+  )
+  (wire (pts (140 30) (140 200))
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (uuid "tpw0005-0005-4005-w005-000000000005")
+  )
+  (wire (pts (200 30) (200 200))
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (uuid "tpw0006-0006-4006-w006-000000000006")
+  )
+
+  ;; ──────────────────────────────────────────────
+  ;;  GLOBAL NET LABELS
+  ;; ──────────────────────────────────────────────
+  (label "+5V" (at 10 10 0)
+    (fields_autoplaced)
+    (uuid "tpn001-0001-4001-n001-000000000001")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+  (label "-5V" (at 10 20 0)
+    (fields_autoplaced)
+    (uuid "tpn002-0002-4002-n002-000000000002")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+  (label "GND" (at 10 30 0)
+    (fields_autoplaced)
+    (uuid "tpn003-0003-4003-n003-000000000003")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+
+)
 
 )

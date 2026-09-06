@@ -14,52 +14,145 @@
   ;; ──────────────────────────────────────────────
   ;;  Hierarchical Labels — INPUT
   ;; ──────────────────────────────────────────────
-  (hierarchical_label "LC_IN" (shape input) (at 0 50 0)
+  (hierarchical_label "NODE_A" (shape input) (at 50 200 0)
     (fields_autoplaced)
     (uuid "8c575c38-e5c8-5f50-a3f7-8cb1a269f956")
     (font (size 1.27 1.27) (thickness 0.254))
   )
 
-  (hierarchical_label "TUNE" (shape input) (at 0 60 0)
+  (hierarchical_label "NODE_B" (shape input) (at 50 220 0)
     (fields_autoplaced)
     (uuid "4eb5f56c-aaf0-55b1-9042-1661ba186dde")
     (font (size 1.27 1.27) (thickness 0.254))
   )
 
-  ;; ──────────────────────────────────────────────
-  ;;  Hierarchical Labels — OUTPUT
-  ;; ──────────────────────────────────────────────
-  (hierarchical_label "LC_OUT" (shape output) (at 200 50 180)
+  (hierarchical_label "V_tune" (shape input) (at 50 240 0)
     (fields_autoplaced)
-    (uuid "9fe63c40-3665-5ba6-9b29-9da81f08930c")
+    (uuid "e1b55f56-1af1-45b1-9142-1661ba186dde")
     (font (size 1.27 1.27) (thickness 0.254))
   )
 
   ;; ──────────────────────────────────────────────
-  ;;  Hierarchical Labels — POWER
+  ;;  Hierarchical Labels — GND
   ;; ──────────────────────────────────────────────
-  (hierarchical_label "VDD" (shape bidirectional) (at 50 100 90)
-    (fields_autoplaced)
-    (uuid "84c48c9a-95b1-5179-a6b0-cd84759ba29c")
-    (font (size 1.27 1.27) (thickness 0.254))
-  )
-
-  (hierarchical_label "VSS" (shape bidirectional) (at 70 100 90)
-    (fields_autoplaced)
-    (uuid "2b349418-3fd0-54a8-a01d-fc0df645e149")
-    (font (size 1.27 1.27) (thickness 0.254))
-  )
-
-  (hierarchical_label "GND" (shape bidirectional) (at 90 100 90)
+  (hierarchical_label "GND" (shape bidirectional) (at 300 50 90)
     (fields_autoplaced)
     (uuid "e2085afa-9b97-52fd-bc86-918081d6f9a9")
     (font (size 1.27 1.27) (thickness 0.254))
   )
 
   ;; ──────────────────────────────────────────────
-  ;;  Symbol & Schematic Body Placeholder
+  ;;  GLOBAL POWER PORTS
   ;; ──────────────────────────────────────────────
-  ;; (Tunable inductor / capacitor network symbols
-  ;;  will be placed in the detailed design phase.)
+  (symbol (lib_name "power") (entry_id "GLOBAL_GND")
+    (in_bom yes) (on_board yes)
+    (property (name "Reference") (value "#PWR001"))
+    (property (name "Value")   (value "GND"))
+    (property (name "Footprint") (value ""))
+    (property (name "Datasheet") (value ""))
+    (property (name "ki_keywords") (value "global-power"))
+    (at 300 50 0)
+    (uuid "lc01g000-0001-4001-g001-000000000001")
+    (pin (at 0 0 0) (uuid "lc01g000-0001-4001-g001-0000000000p1"))
+;; ──────────────────────────────────────────────
+  ;;  COMPONENT: VARACTOR DIODE — D_var1 (BB833, SOT-23)
+  ;; ──────────────────────────────────────────────
+  (symbol (lib_id "Device:D") (at 200 200 0) (unit 1)
+    (in_bom yes) (on_board yes)
+    (property (name "Reference") (value "D1"))
+    (property (name "Value")   (value "BB833"))
+    (property (name "Footprint") (value "Package_TO_SOT_SMD:SOT-23"))
+    (property (name "Datasheet") (value "https://www.infineon.com/dgdl/bb833.pdf"))
+    (property (name "ki_description") (value "Varactor diode BB833 SOT-23 tuning element"))
+    (uuid "lc01d001-0001-4001-d001-000000000001")
+    (pin (at 0 0 0) (uuid "lc01d001-0001-4001-d001-00000000p1a"))
+    (pin (at 0 100 0) (uuid "lc01d001-0001-4001-d001-00000000p1k"))
+  )
+
+  ;; ──────────────────────────────────────────────
+  ;;  COMPONENT: VARACTOR DIODE — D_var2 (BB833, SOT-23)
+  ;; ──────────────────────────────────────────────
+  (symbol (lib_id "Device:D") (at 200 250 0) (unit 1)
+    (in_bom yes) (on_board yes)
+    (property (name "Reference") (value "D2"))
+    (property (name "Value")   (value "BB833"))
+    (property (name "Footprint") (value "Package_TO_SOT_SMD:SOT-23"))
+    (property (name "Datasheet") (value "https://www.infineon.com/dgdl/bb833.pdf"))
+    (property (name "ki_description") (value "Varactor diode BB833 SOT-23 tuning element"))
+    (uuid "lc01d002-0002-4002-d002-000000000002")
+    (pin (at 0 0 0) (uuid "lc01d002-0002-4002-d002-00000000p2a"))
+    (pin (at 0 100 0) (uuid "lc01d002-0002-4002-d002-00000000p2k"))
+  )
+
+  ;; ──────────────────────────────────────────────
+  ;;  COMPONENT: HIGH-Q SMD INDUCTOR — L1 (100uH, 1008/0805 shielded)
+  ;; ──────────────────────────────────────────────
+  (symbol (lib_id "Device:L") (at 300 200 0) (unit 1)
+    (in_bom yes) (on_board yes)
+    (property (name "Reference") (value "L1"))
+    (property (name "Value")   (value "100uH"))
+    (property (name "Footprint") (value "Inductor_SMD:L_1008_2520Metric"))
+    (property (name "Datasheet") (value ""))
+    (property (name "ki_description") (value "High-Q shielded inductor 100 uH resonance tank"))
+    (uuid "lc01l001-0001-4001-l001-000000000001")
+    (pin (at 0 0 0) (uuid "lc01l001-0001-4001-l001-00000000p1a"))
+    (pin (at 0 100 0) (uuid "lc01l001-0001-4001-l001-00000000p1b"))
+  )
+
+  ;; ──────────────────────────────────────────────
+  ;;  NET LABELS
+  ;; ──────────────────────────────────────────────
+  (label "LC_MID" (at 250 225 0)
+    (fields_autoplaced)
+    (uuid "lc01n001-0001-4001-n001-000000000001")
+    (font (size 1.27 1.27) (thickness 0.254))
+  )
+
+  ;; ──────────────────────────────────────────────
+  ;;  WIRES
+  ;; ──────────────────────────────────────────────
+  ;; NODE_A -> D1 anode
+  (wire (pts (100 200) (200 200))
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (uuid "lc01w001-0001-4001-w001-000000000001")
+  )
+  ;; NODE_B -> D2 anode
+  (wire (pts (100 220) (200 250))
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (uuid "lc01w002-0002-4002-w002-000000000002")
+  )
+  ;; D1 cathode + D2 cathode -> LC_MID node
+  (wire (pts (200 300) (200 350))
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (uuid "lc01w003-0003-4003-w003-000000000003")
+  )
+  (wire (pts (200 300) (250 300))
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (uuid "lc01w004-0004-4004-w004-000000000004")
+  )
+  (wire (pts (250 300) (250 200))
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (uuid "lc01w005-0005-4005-w005-000000000005")
+  )
+  ;; LC_MID -> L1
+  (wire (pts (250 225) (300 200))
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (uuid "lc01w006-0006-4006-w006-000000000006")
+  )
+  ;; V_tune -> LC_MID (bias voltage for varactors)
+  (wire (pts (100 240) (250 240))
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (uuid "lc01w007-0007-4007-w007-000000000007")
+  )
+  ;; L1 bottom -> GND
+  (wire (pts (300 300) (300 350))
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (uuid "lc01w008-0008-4008-w008-000000000008")
+  )
+  (wire (pts (300 350) (300 100))
+    (stroke (width 0.1524) (type default) (color 0 0 0 0))
+    (uuid "lc01w009-0009-4009-w009-000000000009")
+  )
 
 )
+  )
