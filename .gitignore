@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 .venv/
 env/
+__init__.py
 
 # KiCad / EDA
 *.kicad_prl
