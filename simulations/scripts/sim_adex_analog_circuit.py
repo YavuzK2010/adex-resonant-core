@@ -130,6 +130,7 @@ def run_spice(p: P) -> Tuple[np.ndarray, np.ndarray, np.ndarray] | None:
     """Run ngspice -b on the generated netlist.
     Returns (t, V_m, COMP_OUT) arrays, or None on failure."""
     netlist = gen_netlist(p)
+    cir_path: str = ""
     try:
         with tempfile.NamedTemporaryFile(mode="w", suffix=".cir",
                                          delete=False) as f:
@@ -150,17 +151,20 @@ def run_spice(p: P) -> Tuple[np.ndarray, np.ndarray, np.ndarray] | None:
         sys.stderr.write(f"[WARN] Ngspice error: {exc}\n")
         return None
     finally:
-        try:
-            os.unlink(cir_path)
-        except Exception:
-            pass
+        if cir_path:
+            try:
+                os.unlink(cir_path)
+            except Exception:
+                pass
 
     if proc.returncode != 0:
         sys.stderr.write(f"[WARN] Ngspice returned {proc.returncode}\n")
 
     # Parse .print tran output
     capture = False
-    t, vm, comp = [], [], []
+    t: list[float] = []
+    vm: list[float] = []
+    comp: list[float] = []
     for line in proc.stdout.splitlines():
         s = line.strip()
         if not s:
@@ -271,7 +275,7 @@ def plot_and_save(
     a2.set_xlabel("Time (ms)")
     a2.grid(alpha=0.3)
     fig.tight_layout()
-    fig.savefig(str(PNG), dpi=150, bbox_inches="tight")
+    fig.savefig(str(PNG), dpi=150, bbox_inches="tight")  # type: ignore[arg-type]
     plt.close(fig)
 
 
@@ -288,6 +292,11 @@ def main() -> None:
     sys.stderr.write(f"  V_th  = {p.V_th:.2f} V\n")
     sys.stderr.write(f"  C_m   = {p.C_m*1e9:.1f} nF\n")
 
+    # Initialize so they are always bound (avoids Pylance possibly-unbound warnings)
+    t: np.ndarray = np.array([])
+    v: np.ndarray = np.array([])
+    comp: np.ndarray = np.array([])
+
     # ---- Try SPICE simulation first ----
     sys.stderr.write("[INFO] Running SPICE simulation...\n")
     result = run_spice(p)
@@ -296,8 +305,8 @@ def main() -> None:
         t, v, comp = result
         sys.stderr.write(f"[INFO] SPICE: {len(t)} points, "
                          f"V_m range [{v.min():.4f}, {v.max():.4f}]\n")
-        digital = (comp > 2.5).astype(np.int8)
-        spike_count = np.sum(np.diff(digital) == 1)
+        digital: np.ndarray = (comp > 2.5).astype(np.int8)
+        spike_count: int = int(np.sum(np.diff(digital) == 1))
         if spike_count > 0:
             sys.stderr.write(f"[INFO] SPICE spikes detected: {spike_count}\n")
         else:
@@ -321,17 +330,17 @@ def main() -> None:
     sys.stderr.write(f"[INFO] Data -> {CSV}  ({n} rows)\n")
 
     # ---- Spike detection ----
-    digital = (comp > 2.5).astype(np.int8)
-    rising = np.where(np.diff(digital) == 1)[0] + 1
-    spike_times = t[rising]
+    digital: np.ndarray = (comp > 2.5).astype(np.int8)
+    rising: np.ndarray = np.where(np.diff(digital) == 1)[0] + 1
+    spike_times: np.ndarray = t[rising]
 
     # ---- Plot ----
     plot_and_save(t, v, comp, spike_times)
     sys.stderr.write(f"[INFO] Plot -> {PNG}\n")
 
     if len(spike_times) > 1:
-        isi = np.diff(spike_times)
-        freq = 1.0 / np.mean(isi)
+        isi: np.ndarray = np.diff(spike_times)
+        freq: float = 1.0 / float(np.mean(isi))
         sys.stderr.write(
             f"[INFO] Spikes={len(spike_times)}  "
             f"Freq={freq:.1f} Hz  "
