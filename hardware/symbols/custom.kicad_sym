@@ -1,0 +1,15 @@
+(kicad_symbol_lib (version 20240116) (generator "adex-resonant-brain-custom")
+  (symbol "MOSFET_N_GDS"
+    (pin_numbers (hide yes))
+    (pin_names (offset 0) (hide yes))
+    (in_bom yes) (on_board yes)
+    (property "Reference" "Q" (at 5.08 2.54 0) (show_name no) (effects (font (size 1.27 1.27)) (justify left)))
+    (property "Value" "MOSFET_N_GDS" (at 5.08 0 0) (show_name no) (effects (font (size 1.27 1.27)) (justify left)))
+    (symbol "MOSFET_N_GDS_0_1"
+      (rectangle (start -5.08 2.54) (end 5.08 -2.54) (stroke (width 0.254) (type default) (color 0 0 0 0)) (fill (type none)))
+      (pin "G" (at -7.62 0 180) (length 2.54) (name "G") (effects (font (size 1.27 1.27))))
+      (pin "D" (at 7.62 -2.54 0) (length 2.54) (name "D") (effects (font (size 1.27 1.27))))
+      (pin "S" (at 7.62 2.54 0) (length 2.54) (name "S") (effects (font (size 1.27 1.27))))
+    )
+  )
+)

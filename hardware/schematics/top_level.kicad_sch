@@ -48,7 +48,7 @@
   ;; ──────────────────────────────────────────────
   ;;  Global Power Ports
   ;; ──────────────────────────────────────────────
-  (symbol (lib_name "power") (entry_id "GLOBAL_VDD")
+  (symbol (lib_id "custom_power:VDD") (unit 1)
     (in_bom yes) (on_board yes)
     (property (name "Reference") (value "#PWR001"))
     (property (name "Value")   (value "VDD"))
@@ -60,7 +60,7 @@
     (pin (at 0 0 0) (uuid "ef4cd192-3e22-54a4-a6d9-127dc6c8d5f4"))
   )
 
-  (symbol (lib_name "power") (entry_id "GLOBAL_VSS")
+  (symbol (lib_id "custom_power:VSS") (unit 1)
     (in_bom yes) (on_board yes)
     (property (name "Reference") (value "#PWR002"))
     (property (name "Value")   (value "VSS"))
@@ -72,7 +72,7 @@
     (pin (at 0 0 0) (uuid "86859cd0-4c79-5294-8475-d9902bc5bf5e"))
   )
 
-  (symbol (lib_name "power") (entry_id "GLOBAL_GND")
+  (symbol (lib_id "custom_power:GND") (unit 1)
     (in_bom yes) (on_board yes)
     (property (name "Reference") (value "#PWR003"))
     (property (name "Value")   (value "GND"))
@@ -823,7 +823,5 @@
     (uuid "tpn003-0003-4003-n003-000000000003")
     (font (size 1.27 1.27) (thickness 0.254))
   )
-
-)
 
 )

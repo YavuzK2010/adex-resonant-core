@@ -65,7 +65,7 @@
   ;; ──────────────────────────────────────────────
   ;;  GLOBAL POWER PORTS (local instance)
   ;; ──────────────────────────────────────────────
-  (symbol (lib_name "power") (entry_id "GLOBAL_VDD")
+  (symbol (lib_id "custom_power:VDD") (unit 1)
     (in_bom yes) (on_board yes)
     (property (name "Reference") (value "#PWR001"))
     (property (name "Value")   (value "VDD"))
@@ -77,7 +77,7 @@
     (pin (at 0 0 0) (uuid "a1000001-0001-4001-a001-0000000000p1"))
   )
 
-  (symbol (lib_name "power") (entry_id "GLOBAL_VSS")
+  (symbol (lib_id "custom_power:VSS") (unit 1)
     (in_bom yes) (on_board yes)
     (property (name "Reference") (value "#PWR002"))
     (property (name "Value")   (value "VSS"))
@@ -89,7 +89,7 @@
     (pin (at 0 0 0) (uuid "a2000002-0002-4002-a002-0000000000p2"))
   )
 
-  (symbol (lib_name "power") (entry_id "GLOBAL_GND")
+  (symbol (lib_id "custom_power:GND") (unit 1)
     (in_bom yes) (on_board yes)
     (property (name "Reference") (value "#PWR003"))
     (property (name "Value")   (value "GND"))
@@ -168,7 +168,7 @@
   ;; ──────────────────────────────────────────────
   ;;  COMPONENT: RESET SWITCH — M_reset (BSS138, SOT-23)
   ;; ──────────────────────────────────────────────
-  (symbol (lib_id "Device:MOSFET_N_GDS") (at 450 250 0) (unit 1)
+  (symbol (lib_id "custom:MOSFET_N_GDS") (at 450 250 0) (unit 1)
     (in_bom yes) (on_board yes)
     (property (name "Reference") (value "Q2"))
     (property (name "Value")   (value "BSS138"))
@@ -488,6 +488,4 @@
     (stroke (width 0.1524) (type default) (color 0 0 0 0))
     (uuid "w4300061-0061-4061-w061-000000000061")
   )
-)
-
 )

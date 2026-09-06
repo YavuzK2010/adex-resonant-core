@@ -44,7 +44,7 @@
   ;; ──────────────────────────────────────────────
   ;;  GLOBAL POWER PORTS
   ;; ──────────────────────────────────────────────
-  (symbol (lib_name "power") (entry_id "GLOBAL_GND")
+  (symbol (lib_id "power:GND") (unit 1)
     (in_bom yes) (on_board yes)
     (property (name "Reference") (value "#PWR001"))
     (property (name "Value")   (value "GND"))
@@ -54,7 +54,8 @@
     (at 300 50 0)
     (uuid "lc01g000-0001-4001-g001-000000000001")
     (pin (at 0 0 0) (uuid "lc01g000-0001-4001-g001-0000000000p1"))
-;; ──────────────────────────────────────────────
+  )
+  ;; ──────────────────────────────────────────────
   ;;  COMPONENT: VARACTOR DIODE — D_var1 (BB833, SOT-23)
   ;; ──────────────────────────────────────────────
   (symbol (lib_id "Device:D") (at 200 200 0) (unit 1)
@@ -155,4 +156,3 @@
   )
 
 )
-  )
