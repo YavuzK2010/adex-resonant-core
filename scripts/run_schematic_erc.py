@@ -12,7 +12,7 @@ import os
 import sys
 import json
 import subprocess
-import shutil
+
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HW = os.path.join(ROOT, "hardware")
@@ -150,7 +150,7 @@ def create_sym_lib_table():
     print(f"  Symbol library directory: {sym_dir}")
 
 # ── 4. Convert power symbol format ──────────────────
-def convert_power_symbols(sch_path):
+def convert_power_symbols(sch_path: str):
     """Convert old-format power symbols to KiCad 10 (lib_id) format.
 
     Handles both:
@@ -239,8 +239,8 @@ def run_erc():
         return None
 
 # ── 6. Parse report ─────────────────────────────────
-def parse_report(json_path):
-    with open(json_path) as f:
+def parse_report(json_path): # type: ignore
+    with open(json_path) as f: # type: ignore
         data = json.load(f)
     violations = data.get("violations", [])
     errors = [v for v in violations if v.get("severity") == "error"]
@@ -271,8 +271,8 @@ def parse_report(json_path):
     
     return {"errors": len(errors), "warnings": len(warnings), "total": len(violations)}
 
-def parse_txt_report(txt_path):
-    with open(txt_path) as f:
+def parse_txt_report(txt_path): # type: ignore
+    with open(txt_path) as f: # type: ignore
         text = f.read()
     error_count = text.count("  ; error")
     warning_count = text.count("  ; warning")
