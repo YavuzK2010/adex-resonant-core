@@ -13,7 +13,8 @@ Placement Strategy (Board: 50 x 50 mm, Origin (0,0)):
         CR001..CR024  ->  x =  50.0 mm,  y =  2.0 .. 48.0 mm  (pitch 2.0 mm)
 
   2. Every other footprint laid out on a 3.0 mm x 3.0 mm grid within
-     the inner safe region (4.0, 4.0) .. (46.0, 46.0).
+     the inner core area (6.0, 6.0) .. (44.0, 44.0), arranged in a
+     10-column grid centred inside the board.
 
   3. CopperEdgeClearance -> 0.0 mm so castellated pads touching Edge.Cuts
      pass DRC; silk clearance -> 0.0 mm; reference texts on castellated
@@ -40,11 +41,12 @@ EDGE_MIN = 2.0
 EDGE_MAX = 48.0
 EDGE_PITCH = 2.0
 
-INNER_MIN_X = 4.0
-INNER_MIN_Y = 4.0
-INNER_MAX_X = 46.0
-INNER_MAX_Y = 46.0
+INNER_MIN_X = 6.0
+INNER_MIN_Y = 6.0
+INNER_MAX_X = 44.0
+INNER_MAX_Y = 44.0
 INNER_PITCH = 3.0
+INNER_COLS = 10
 
 TEXT_SIZE_MM = 0.6
 TEXT_THICKNESS_MM = 0.12
@@ -111,10 +113,15 @@ def place_inner_components(board: Any) -> int:
     if n == 0:
         print("  [INFO] No inner components to place.")
         return 0
-    ncols = int((INNER_MAX_X - INNER_MIN_X) / INNER_PITCH) + 1
-    nrows = int((INNER_MAX_Y - INNER_MIN_Y) / INNER_PITCH) + 1
-    start_x = INNER_MIN_X + INNER_PITCH / 2.0
-    start_y = INNER_MIN_Y + INNER_PITCH / 2.0
+    ncols: int = INNER_COLS
+    nrows: int = (n + ncols - 1) // ncols
+    # Centre the grid within the core area [INNER_MIN_X .. INNER_MAX_X]
+    grid_width_mm = (ncols - 1) * INNER_PITCH
+    centre_x = (INNER_MIN_X + INNER_MAX_X) / 2.0
+    centre_y = (INNER_MIN_Y + INNER_MAX_Y) / 2.0
+    start_x = centre_x - grid_width_mm / 2.0
+    grid_height_mm = (nrows - 1) * INNER_PITCH
+    start_y = centre_y - grid_height_mm / 2.0
     placed = 0
     for i, fp in enumerate(fps):
         col = i % ncols
@@ -127,13 +134,19 @@ def place_inner_components(board: Any) -> int:
         if x_mm > INNER_MAX_X or y_mm > INNER_MAX_Y:
             print(f"  [WARN] ({x_mm:.1f},{y_mm:.1f}) exceeds safe region.")
             break
+        if x_mm < INNER_MIN_X or y_mm < INNER_MIN_Y:
+            # Grid entirely within core area; this should not fire
+            print(f"  [WARN] ({x_mm:.1f},{y_mm:.1f}) below safe region minimum.")
+            break
         x_nm = mm_to_nm(x_mm)
         y_nm = mm_to_nm(y_mm)
         old_pos: Any = fp.GetPosition()
         fp.SetPosition(pcbnew.VECTOR2I(x_nm, y_nm))
+        fp.SetOrientationDegrees(0.0)            # explicit uniform rotation
+        fp.SetLayer(pcbnew.F_Cu)                 # Top Layer
         placed += 1
         if placed <= 5 or placed == n or (placed % 20 == 0):
-            print(f"    {fp.GetReference():6s}: ({nm_to_mm(old_pos.x):6.2f},{nm_to_mm(old_pos.y):6.2f}) -> ({x_mm:6.2f},{y_mm:6.2f})")
+            print(f"    {fp.GetReference():6s}: ({nm_to_mm(old_pos.x):6.2f},{nm_to_mm(old_pos.y):6.2f}) -> ({x_mm:6.2f},{y_mm:6.2f})  rot=  0.0 deg  layer=F.Cu")
     print(f"  [OK] Placed {placed}/{n} inner components in grid {ncols}x{nrows}.")
     return placed
 
@@ -265,4 +278,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-    print(f"  [FIX] CopperEdgeClearance: {nm_to_mm(old_val_nm):.3f} mm -> 0.000 mm")
