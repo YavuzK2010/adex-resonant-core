@@ -142,7 +142,7 @@
         "max_error": 0.005,
         "min_clearance": 0.0,
         "min_connection": 0.0,
-        "min_copper_edge_clearance": 0.5,
+        "min_copper_edge_clearance": 0.0,
         "min_groove_width": 0.0,
         "min_hole_clearance": 0.25,
         "min_hole_to_hole": 0.25,
@@ -298,29 +298,10 @@
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
         "name": "ANALOG_MEMBRANE",
-        "pcb_color": "rgba(0, 200, 0, 0.500)",
+        "pcb_color": "rgba(0, 200, 0, 0.502)",
         "priority": 30,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.25,
-        "tuning_profile": "",
-        "via_diameter": 0.6,
-        "via_drill": 0.3,
-        "wire_width": 6
-      },
-      {
-        "bus_width": 12,
-        "clearance": 0.4,
-        "diff_pair_gap": 0.25,
-        "diff_pair_via_gap": 0.25,
-        "diff_pair_width": 0.2,
-        "line_style": 0,
-        "microvia_diameter": 0.3,
-        "microvia_drill": 0.1,
-        "name": "RESONANCE_LC",
-        "pcb_color": "rgba(255, 165, 0, 0.500)",
-        "priority": 40,
-        "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.4,
         "tuning_profile": "",
         "via_diameter": 0.6,
         "via_drill": 0.3,
@@ -336,7 +317,7 @@
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
         "name": "DIGITAL_SPIKE",
-        "pcb_color": "rgba(0, 0, 200, 0.500)",
+        "pcb_color": "rgba(0, 0, 200, 0.502)",
         "priority": 20,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.2,
@@ -355,13 +336,32 @@
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
         "name": "POWER",
-        "pcb_color": "rgba(255, 0, 0, 0.500)",
+        "pcb_color": "rgba(255, 0, 0, 0.502)",
         "priority": 50,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.5,
         "tuning_profile": "",
         "via_diameter": 0.8,
         "via_drill": 0.4,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.4,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "RESONANCE_LC",
+        "pcb_color": "rgba(255, 165, 0, 0.502)",
+        "priority": 40,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.4,
+        "tuning_profile": "",
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
         "wire_width": 6
       }
     ],
@@ -370,56 +370,7 @@
     },
     "net_colors": null,
     "netclass_assignments": null,
-    "netclass_patterns": [
-      {
-        "name": "ANALOG_MEMBRANE",
-        "pattern": "ANALOG_*"
-      },
-      {
-        "name": "ANALOG_MEMBRANE",
-        "pattern": "ANALOG*"
-      },
-      {
-        "name": "ANALOG_MEMBRANE",
-        "pattern": "MEMBRANE*"
-      },
-      {
-        "name": "RESONANCE_LC",
-        "pattern": "LC_*"
-      },
-      {
-        "name": "RESONANCE_LC",
-        "pattern": "RESONANCE_*"
-      },
-      {
-        "name": "DIGITAL_SPIKE",
-        "pattern": "DIGITAL_*"
-      },
-      {
-        "name": "DIGITAL_SPIKE",
-        "pattern": "SPIKE_*"
-      },
-      {
-        "name": "POWER",
-        "pattern": "VDD*"
-      },
-      {
-        "name": "POWER",
-        "pattern": "VSS*"
-      },
-      {
-        "name": "POWER",
-        "pattern": "GND*"
-      },
-      {
-        "name": "POWER",
-        "pattern": "POWER*"
-      },
-      {
-        "name": "POWER",
-        "pattern": "PWR*"
-      }
-    ]
+    "netclass_patterns": []
   },
   "pcbnew": {
     "last_paths": {
@@ -436,7 +387,13 @@
     "bus_aliases": {},
     "legacy_lib_dir": "",
     "legacy_lib_list": [],
-    "top_level_sheets": []
+    "top_level_sheets": [
+      {
+        "filename": "adex_resonant_core.kicad_sch",
+        "name": "adex_resonant_core",
+        "uuid": "00000000-0000-0000-0000-000000000000"
+      }
+    ]
   },
   "sheets": [],
   "text_variables": {},

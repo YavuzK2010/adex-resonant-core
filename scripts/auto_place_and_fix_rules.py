@@ -15,6 +15,7 @@ NOTE: No traces are routed here; routing is deferred to FreeRouting.
 
 import os
 import sys
+from typing import Any
 
 # Ensure pcbnew is importable (KiCad Python bindings)
 PCB_EXTRA_PATH = "/usr/lib64/python3.14/site-packages"
@@ -48,7 +49,7 @@ def nm_to_mm(v_nm: int) -> float:
     return v_nm / 1_000_000.0
 
 
-def fix_edge_clearance(board: pcbnew.BOARD) -> None:
+def fix_edge_clearance(board: Any) -> None:
     """
     Set CopperEdgeClearance to 0.0 nm.
 
@@ -56,13 +57,13 @@ def fix_edge_clearance(board: pcbnew.BOARD) -> None:
     edge connectors; the default 0.5 mm clearance causes 192 false
     positives (96 copper + 96 silk).
     """
-    ds = board.GetDesignSettings()
-    old_val_nm = ds.m_CopperEdgeClearance
+    ds: Any = board.GetDesignSettings()
+    old_val_nm: int = ds.m_CopperEdgeClearance
     ds.m_CopperEdgeClearance = 0
     print(f"  [FIX] CopperEdgeClearance: {nm_to_mm(old_val_nm):.3f} mm → 0.000 mm")
 
 
-def unpack_footprints_to_grid(board: pcbnew.BOARD) -> None:
+def unpack_footprints_to_grid(board: Any) -> None:
     """
     Iterate all footprints and arrange them in a (COL_SPACING_MM ×
     ROW_SPACING_MM) grid starting at (START_X_MM, START_Y_MM).
@@ -70,7 +71,7 @@ def unpack_footprints_to_grid(board: pcbnew.BOARD) -> None:
     Each footprint keeps its original rotation so that pad orientations
     are preserved for later routing.
     """
-    fps = list(board.GetFootprints())
+    fps: list[Any] = list(board.GetFootprints())
     n = len(fps)
     print(f"  Footprints found: {n}")
 
@@ -94,7 +95,7 @@ def unpack_footprints_to_grid(board: pcbnew.BOARD) -> None:
         x_nm = mm_to_nm(START_X_MM + col * COL_SPACING_MM)
         y_nm = mm_to_nm(START_Y_MM + row * ROW_SPACING_MM)
 
-        old_pos = fp.GetPosition()
+        old_pos: Any = fp.GetPosition()
         fp.SetPosition(pcbnew.VECTOR2I(x_nm, y_nm))
         placed += 1
 
@@ -120,15 +121,11 @@ def main() -> int:
         print(f"\n[ERROR] Board file not found: {BOARD_FILE}")
         return 1
 
-    if not os.path.exists(PCB_EXTRA_PATH):
-        print(f"\n[WARN] KiCad Python path not found at {PCB_EXTRA_PATH}")
-        print("  The script may still work if pcbnew is on PYTHONPATH.\n")
-
     # -----------------------------------------------------------------
     # Load board
     # -----------------------------------------------------------------
     print(f"\n[1/3] Loading board: {BOARD_FILE}")
-    board = pcbnew.LoadBoard(BOARD_FILE)
+    board: Any = pcbnew.LoadBoard(BOARD_FILE)
     print(f"  Board loaded — {len(list(board.GetFootprints()))} footprints, "
           f"{len(list(board.GetTracks()))} tracks, "
           f"{len(list(board.GetDrawings()))} drawings.")
