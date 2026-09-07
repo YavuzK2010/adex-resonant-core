@@ -92,10 +92,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "015458cf-5220-4cbf-ba92-7bc8561025b7")
-		(at 29 9 180)
+		(at 34 50 180)
 		(property "Reference" "CB017"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "2afdf347-75e4-4e5c-8ea1-884bae6a6062")
 			(effects
 				(font
@@ -138,7 +139,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 34 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -152,10 +153,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "03f0959d-d02d-4049-b0c0-7614d5c822f5")
-		(at 33 21 -90)
+		(at 0 48 -90)
 		(property "Reference" "CL024"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "567813b3-ccb7-4872-adc0-855bffeaf159")
 			(effects
 				(font
@@ -198,7 +200,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -48 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -212,10 +214,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "08c7ec26-d30f-47da-a053-475bcb242e39")
-		(at 33 5 180)
+		(at 16 50 180)
 		(property "Reference" "CB008"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "97bcdee2-9d51-4aa0-9e85-8f64d161b21d")
 			(effects
 				(font
@@ -258,7 +261,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 16 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -272,10 +275,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "0c45f21c-fdef-48da-8dcc-148856094e60")
-		(at 37 21 90)
+		(at 50 2 90)
 		(property "Reference" "CR001"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "f2fc9161-f441-4b6b-b520-44766ea6aff9")
 			(effects
 				(font
@@ -318,7 +322,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 2 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -332,10 +336,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "0c568ac8-0b55-46bd-92e4-d7f46c9759ea")
-		(at 5 41)
+		(at 38 0)
 		(property "Reference" "CT019"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "53f51030-ca27-4b40-8087-8150420b58e5")
 			(effects
 				(font
@@ -378,7 +383,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -38 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -392,10 +397,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "17888091-e508-4df3-8bfd-b5fdeb2f17ad")
-		(at 9 37)
+		(at 20 0)
 		(property "Reference" "CT010"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "86d381c0-82d9-42f2-bf74-242bdf3cf53c")
 			(effects
 				(font
@@ -438,7 +444,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -20 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -452,10 +458,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "1ab72d4c-753a-4306-8c8b-5a5fd8fb057e")
-		(at 37 9 180)
+		(at 38 50 180)
 		(property "Reference" "CB019"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "b3066876-b4e0-415b-830a-cf6a8ea82898")
 			(effects
 				(font
@@ -498,7 +505,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 38 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -512,10 +519,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "1b3f197c-f48f-4a19-bd1d-1a60b21ee954")
-		(at 9 17 -90)
+		(at 0 16 -90)
 		(property "Reference" "CL008"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "130e6acc-3be6-4b11-bded-eba9c0b5c1de")
 			(effects
 				(font
@@ -558,7 +566,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -16 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -572,10 +580,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "1d28681b-a8a6-4d00-9716-072caca0a1d4")
-		(at 41 29 90)
+		(at 50 44 90)
 		(property "Reference" "CR022"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "982c7653-285c-402f-a206-a28c6a6fa0df")
 			(effects
 				(font
@@ -618,7 +627,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 44 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -632,10 +641,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "217ed012-e315-4126-af25-09b063c22b63")
-		(at 17 13 180)
+		(at 48 50 180)
 		(property "Reference" "CB024"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "c678cc6f-c539-4fc9-bc27-4fdef86e930d")
 			(effects
 				(font
@@ -678,7 +688,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 48 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -692,10 +702,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "2266442c-d461-4371-a518-28e4bfd1465e")
-		(at 13 33)
+		(at 2 0)
 		(property "Reference" "CT001"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "fe9100a4-380e-4a47-b0b2-a50b922b784f")
 			(effects
 				(font
@@ -738,7 +749,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -2 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -752,10 +763,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "226fdc87-4299-478b-b57f-1848ef190e79")
-		(at 17 17 -90)
+		(at 0 20 -90)
 		(property "Reference" "CL010"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "442376e7-5538-4664-a462-cacfd0cc68b4")
 			(effects
 				(font
@@ -798,7 +810,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -20 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -812,10 +824,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "257a2e0b-ada2-4c52-8886-580bd16bc631")
-		(at 13 5 180)
+		(at 6 50 180)
 		(property "Reference" "CB003"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "3599fc99-ce68-4838-be19-00e53f71bd36")
 			(effects
 				(font
@@ -858,7 +871,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 6 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -872,10 +885,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "2c3ecd04-2d98-45ca-bc28-3428ef03d504")
-		(at 29 13 -90)
+		(at 0 6 -90)
 		(property "Reference" "CL003"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "ad041967-111c-4a6c-9588-e1006bc18923")
 			(effects
 				(font
@@ -918,7 +932,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -6 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -932,10 +946,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "2ea975b3-1637-4160-92f1-26e12bd39b3c")
-		(at 25 33)
+		(at 8 0)
 		(property "Reference" "CT004"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "51db740e-6589-41c0-838b-efd062908b8e")
 			(effects
 				(font
@@ -978,7 +993,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -8 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -992,10 +1007,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "2fb6d7d4-8443-455d-b47f-caad594912c3")
-		(at 25 13 -90)
+		(at 0 4 -90)
 		(property "Reference" "CL002"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "5f00deb8-69f7-4512-b174-06464f809992")
 			(effects
 				(font
@@ -1038,7 +1054,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -4 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -1052,10 +1068,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "30cd2242-f8ea-478a-83ff-046fc5fafce0")
-		(at 25 29 90)
+		(at 50 36 90)
 		(property "Reference" "CR018"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "594bd8b2-ded9-4b3f-b56c-fe2ffc7d3f34")
 			(effects
 				(font
@@ -1098,7 +1115,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 36 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -1112,10 +1129,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "3479190e-4142-4a8c-a240-529bab8d8f09")
-		(at 21 29 90)
+		(at 50 34 90)
 		(property "Reference" "CR017"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "305599c7-6cd2-463d-9027-44a0ff3d6d30")
 			(effects
 				(font
@@ -1158,7 +1176,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 34 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -1172,10 +1190,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "38ef6108-7eef-4f53-8c55-ec29273c59d6")
-		(at 33 33)
+		(at 12 0)
 		(property "Reference" "CT006"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "d527e990-8aa1-4e09-bff5-1b75dc563f29")
 			(effects
 				(font
@@ -1218,7 +1237,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -12 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -1232,10 +1251,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "3a893570-0ce0-45d1-b8df-93da6919d657")
-		(at 5 13 180)
+		(at 42 50 180)
 		(property "Reference" "CB021"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "519efedd-e851-4503-a85e-cac2c87ff11a")
 			(effects
 				(font
@@ -1278,7 +1298,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 42 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -1292,10 +1312,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "3abf2aca-59ba-47c6-95d5-b3fe56951074")
-		(at 33 29 90)
+		(at 50 40 90)
 		(property "Reference" "CR020"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "8d237122-d90d-476a-9212-1cfc0380aae0")
 			(effects
 				(font
@@ -1338,7 +1359,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 40 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -1352,10 +1373,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "428f2b05-9552-4e5c-a20e-01fa4514f269")
-		(at 33 13 -90)
+		(at 0 8 -90)
 		(property "Reference" "CL004"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "5c1df11c-b9ce-4b52-a04f-d1c0997b18f4")
 			(effects
 				(font
@@ -1398,7 +1420,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -8 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -1412,10 +1434,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "48a860f5-0cfd-454e-95e6-10ad0fbe45bb")
-		(at 21 5 180)
+		(at 10 50 180)
 		(property "Reference" "CB005"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "c8083877-094a-4adb-bb0f-551ca750e130")
 			(effects
 				(font
@@ -1458,7 +1481,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 10 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -1472,10 +1495,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "4a676d02-c62d-4952-b459-867161b2e2e9")
-		(at 5 37)
+		(at 18 0)
 		(property "Reference" "CT009"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "3665c28f-4c21-41fb-8d39-a89514af10fd")
 			(effects
 				(font
@@ -1518,7 +1542,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -18 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -1532,10 +1556,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "4cc4c8ca-56e4-4430-86c9-663d319f7b3a")
-		(at 33 25 90)
+		(at 50 20 90)
 		(property "Reference" "CR010"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "31e55943-6c98-4531-8d0e-00efb261ed1c")
 			(effects
 				(font
@@ -1578,7 +1603,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 20 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -1592,10 +1617,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "4cce6959-949c-4140-8660-8a814e02bf9c")
-		(at 29 33)
+		(at 10 0)
 		(property "Reference" "CT005"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "8ff7b7c1-b2bb-431e-9053-82643ff6d7cb")
 			(effects
 				(font
@@ -1638,7 +1664,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -10 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -1652,10 +1678,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "4d308bb1-6f57-4657-994e-c393a23a9f8c")
-		(at 25 9 180)
+		(at 32 50 180)
 		(property "Reference" "CB016"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "7e544f3c-24d9-48d2-b4b3-b156ce243247")
 			(effects
 				(font
@@ -1698,7 +1725,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 32 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -1712,10 +1739,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "4dd81e6a-8927-48a1-a2cc-a70d8a86382f")
-		(at 37 5 180)
+		(at 18 50 180)
 		(property "Reference" "CB009"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "6be5f570-5423-476a-99cf-cd9495c44d40")
 			(effects
 				(font
@@ -1758,7 +1786,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 18 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -1772,10 +1800,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "4e639215-e866-4847-b28d-9c066ff8a775")
-		(at 41 37)
+		(at 36 0)
 		(property "Reference" "CT018"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "8beecdb2-bcb1-4990-bc89-d53c21de9b5e")
 			(effects
 				(font
@@ -1818,7 +1847,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -36 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -1832,10 +1861,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "51e032fd-460f-4e6e-a9e8-4c38197bbe9b")
-		(at 21 41)
+		(at 46 0)
 		(property "Reference" "CT023"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "18d2e871-d9b8-4dda-9603-e9f09c949079")
 			(effects
 				(font
@@ -1878,7 +1908,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -46 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -1892,10 +1922,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "52b3aac7-87e9-4bcf-8dd7-9921b7d3e126")
-		(at 41 17 -90)
+		(at 0 32 -90)
 		(property "Reference" "CL016"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "7722a7f0-d4eb-48f2-bb74-48cb3fdd5de6")
 			(effects
 				(font
@@ -1938,7 +1969,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -32 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -1952,10 +1983,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "56bb05f5-4cd2-4764-a1bc-cbe10bc9fb5a")
-		(at 9 33 90)
+		(at 50 48 90)
 		(property "Reference" "CR024"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "61eda726-c2f3-4f23-b48a-fa6d8c717ae5")
 			(effects
 				(font
@@ -1998,7 +2030,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 48 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2012,10 +2044,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "587e1bfb-a286-48bf-b118-67120c89bba1")
-		(at 29 17 -90)
+		(at 0 26 -90)
 		(property "Reference" "CL013"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "e73d3f2e-a47d-4c87-8beb-d5dd17c2a3f7")
 			(effects
 				(font
@@ -2058,7 +2091,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -26 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2072,10 +2105,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "5a6ccda9-06eb-41a6-a1ca-dc4de764c6c0")
-		(at 17 29 90)
+		(at 50 32 90)
 		(property "Reference" "CR016"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "8a415e43-3735-4614-93c0-693ce06c4427")
 			(effects
 				(font
@@ -2118,7 +2152,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 32 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2132,10 +2166,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "613a5909-85e8-42ff-9773-d6cc60ea92ab")
-		(at 9 9 180)
+		(at 24 50 180)
 		(property "Reference" "CB012"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "feca995c-7ffe-4348-a72a-7be5e807f6bc")
 			(effects
 				(font
@@ -2178,7 +2213,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 24 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2192,10 +2227,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "66c72a39-ec86-4070-ac45-1867b9f8485c")
-		(at 13 29 90)
+		(at 50 30 90)
 		(property "Reference" "CR015"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "ffb2d0a8-0623-47cd-8689-86fd3dde376a")
 			(effects
 				(font
@@ -2238,7 +2274,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 30 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2252,10 +2288,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "67257b44-e28c-4609-b9d7-92fb75f330be")
-		(at 33 17 -90)
+		(at 0 28 -90)
 		(property "Reference" "CL014"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "4eeef4c9-7216-416a-8a5a-9f43dd9b52e6")
 			(effects
 				(font
@@ -2298,7 +2335,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -28 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2312,10 +2349,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "675eb1a3-ee63-4740-a9c8-1066dc90ecff")
-		(at 29 37)
+		(at 30 0)
 		(property "Reference" "CT015"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "3db397df-7116-4f01-b43b-338ccb805f8d")
 			(effects
 				(font
@@ -2358,7 +2396,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -30 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2372,10 +2410,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "686704f4-dc11-4e78-9635-f2f5017cc29f")
-		(at 9 25 90)
+		(at 50 8 90)
 		(property "Reference" "CR004"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "35de19a0-241b-4506-8d0d-4c04f5b80a7e")
 			(effects
 				(font
@@ -2418,7 +2457,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 8 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2432,10 +2471,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "68bd2b37-26b2-48e6-8feb-9aa3367897dc")
-		(at 9 13 180)
+		(at 44 50 180)
 		(property "Reference" "CB022"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "17e30bda-8eea-4dfa-913d-abfcce49ee8c")
 			(effects
 				(font
@@ -2478,7 +2518,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 44 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2492,10 +2532,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "69b066b7-2ca4-4bdf-99bf-c141af733784")
-		(at 37 29 90)
+		(at 50 42 90)
 		(property "Reference" "CR021"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "aaed99bf-6e9b-4fd5-97ff-54625ba94f5c")
 			(effects
 				(font
@@ -2538,7 +2579,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 42 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2552,10 +2593,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "69ccb4f3-1e94-43a2-ab69-60da71e8f837")
-		(at 9 5 180)
+		(at 4 50 180)
 		(property "Reference" "CB002"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "e9093e45-ac81-4f2a-8a04-3aea6bcae165")
 			(effects
 				(font
@@ -2598,7 +2640,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 4 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2612,10 +2654,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "6a20479d-d0b3-48fb-8771-4b3b913273f7")
-		(at 5 29 90)
+		(at 50 26 90)
 		(property "Reference" "CR013"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "9c1aebcb-6c4d-4977-a62a-230b0c60cdbe")
 			(effects
 				(font
@@ -2658,7 +2701,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 26 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2672,10 +2715,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "6a72c36a-a252-4afe-ac21-696110858735")
-		(at 29 25 90)
+		(at 50 18 90)
 		(property "Reference" "CR009"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "7b7413f3-4390-4fb2-b3b0-c9616804d53f")
 			(effects
 				(font
@@ -2718,7 +2762,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 18 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2732,10 +2776,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "6c0e6a3b-04c4-4d7d-bec8-3ac995e864d3")
-		(at 21 21 -90)
+		(at 0 42 -90)
 		(property "Reference" "CL021"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "c3a0dd73-cae1-4d70-89ec-f0ff501edd4a")
 			(effects
 				(font
@@ -2778,7 +2823,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -42 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2792,10 +2837,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "6e265755-6b2d-4468-9d73-af4335aca58e")
-		(at 17 9 180)
+		(at 28 50 180)
 		(property "Reference" "CB014"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "177fcb6d-d1db-4bf2-82c0-17f05a208357")
 			(effects
 				(font
@@ -2838,7 +2884,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 28 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2852,10 +2898,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "6eee02a6-20a6-41e2-975a-c46301a1c9ec")
-		(at 37 17 -90)
+		(at 0 30 -90)
 		(property "Reference" "CL015"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "16ced233-e9a8-4060-8dc5-de2acd892b00")
 			(effects
 				(font
@@ -2898,7 +2945,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -30 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2912,10 +2959,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "6f0ffa88-d9b1-46e1-8e2b-c5bea3c9e939")
-		(at 5 9 180)
+		(at 22 50 180)
 		(property "Reference" "CB011"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "14906541-18e0-49c3-a135-c7c8c4406bc0")
 			(effects
 				(font
@@ -2958,7 +3006,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 22 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -2972,10 +3020,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "710e6dff-4e61-439b-892a-75c2431ec784")
-		(at 41 33)
+		(at 16 0)
 		(property "Reference" "CT008"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "3fb2b9a1-b47d-460f-ba2c-e5c9f25db99d")
 			(effects
 				(font
@@ -3018,7 +3067,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -16 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3032,10 +3081,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "7661e7f7-0ba1-4ae6-ba1d-429867f386ad")
-		(at 41 13 -90)
+		(at 0 12 -90)
 		(property "Reference" "CL006"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "1c8155e2-6898-440b-bcce-5c8101955501")
 			(effects
 				(font
@@ -3078,7 +3128,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -12 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3092,10 +3142,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "766218a4-a733-42f9-ac3e-40b8cc7608f6")
-		(at 21 9 180)
+		(at 30 50 180)
 		(property "Reference" "CB015"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "179b2be3-a7e6-4ffa-a0f2-445eeb06d7ce")
 			(effects
 				(font
@@ -3138,7 +3189,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 30 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3152,10 +3203,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "80c82bd8-c237-4978-88fe-52276537730a")
-		(at 13 41)
+		(at 42 0)
 		(property "Reference" "CT021"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "bd45a112-6fe5-4678-a807-08d18b9e5104")
 			(effects
 				(font
@@ -3198,7 +3250,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -42 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3212,10 +3264,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "827a0e5a-e99f-402d-a969-364608e2e65f")
-		(at 17 25 90)
+		(at 50 12 90)
 		(property "Reference" "CR006"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "716365d9-1c78-45e3-8ffe-bf0ded741080")
 			(effects
 				(font
@@ -3258,7 +3311,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 12 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3272,10 +3325,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "84aa8271-eb00-45d6-bfd7-956762629cb0")
-		(at 17 33)
+		(at 4 0)
 		(property "Reference" "CT002"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "43d4fecf-5fa0-4974-8a46-e7d3f153927c")
 			(effects
 				(font
@@ -3318,7 +3372,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -4 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3332,10 +3386,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "89c825c5-00ac-47ea-8a54-285e0ace1ece")
-		(at 37 37)
+		(at 34 0)
 		(property "Reference" "CT017"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "dc894776-604b-47e9-8359-a30cec4e99a5")
 			(effects
 				(font
@@ -3378,7 +3433,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -34 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3392,10 +3447,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "8ba03a1a-2ee4-4213-bed3-88583e33464c")
-		(at 21 17 -90)
+		(at 0 22 -90)
 		(property "Reference" "CL011"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "b216c13f-2635-4c6b-9cf8-a71b4105c5fa")
 			(effects
 				(font
@@ -3438,7 +3494,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -22 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3452,10 +3508,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "8f7561b8-7c37-432e-a64f-1d581bb5cc07")
-		(at 21 25 90)
+		(at 50 14 90)
 		(property "Reference" "CR007"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "174e9a03-414a-4186-98ee-c356252065b2")
 			(effects
 				(font
@@ -3498,7 +3555,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 14 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3512,10 +3569,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "91905b9e-91cd-45d2-9267-3045886ae9df")
-		(at 13 9 180)
+		(at 26 50 180)
 		(property "Reference" "CB013"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "85afd93e-14ba-48e6-9e27-243ef2490a6a")
 			(effects
 				(font
@@ -3558,7 +3616,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 26 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3572,10 +3630,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "952e58f7-9c4a-416f-ad7c-a48e83a5384c")
-		(at 33 37)
+		(at 32 0)
 		(property "Reference" "CT016"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "724af3f9-5e24-4812-9fd0-083cebf9b7c9")
 			(effects
 				(font
@@ -3618,7 +3677,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -32 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3632,10 +3691,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "9e62e24e-697d-4aad-8d88-29da9ad05650")
-		(at 5 17 -90)
+		(at 0 14 -90)
 		(property "Reference" "CL007"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "d04fb842-9871-4783-af2d-4645f1796adc")
 			(effects
 				(font
@@ -3678,7 +3738,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -14 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3692,10 +3752,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "9f76c55b-b5af-4ba8-9f58-a7054e74ea32")
-		(at 29 29 90)
+		(at 50 38 90)
 		(property "Reference" "CR019"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "9be9a5f4-cfab-4646-b220-ce308f375525")
 			(effects
 				(font
@@ -3738,7 +3799,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 38 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3752,10 +3813,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "a0f45352-0718-4c1e-93cb-021e9f550c73")
-		(at 33 9 180)
+		(at 36 50 180)
 		(property "Reference" "CB018"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "5244631a-ee8d-465b-9b9a-eb4c6a873b6b")
 			(effects
 				(font
@@ -3798,7 +3860,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 36 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3812,10 +3874,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "a56389f7-7f1f-4edd-875e-0d53dc354aa2")
-		(at 25 37)
+		(at 28 0)
 		(property "Reference" "CT014"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "22fddae9-0fc8-4cbb-9b0a-a1bf8ad9a832")
 			(effects
 				(font
@@ -3858,7 +3921,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -28 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3872,10 +3935,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "a73004c4-cea7-47da-a8b9-a538cf60e7c6")
-		(at 9 41)
+		(at 40 0)
 		(property "Reference" "CT020"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "416c69b7-32b7-4d73-adb7-d4adb234192f")
 			(effects
 				(font
@@ -3918,7 +3982,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -40 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3932,10 +3996,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "a9a155fc-8f91-4c1a-9711-496ef551961a")
-		(at 5 21 -90)
+		(at 0 34 -90)
 		(property "Reference" "CL017"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "f435d1f2-98a2-4962-8d54-5bd71e04e110")
 			(effects
 				(font
@@ -3978,7 +4043,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -34 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -3992,10 +4057,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "aac4b2dd-b595-478a-883c-58ac909418e2")
-		(at 9 21 -90)
+		(at 0 36 -90)
 		(property "Reference" "CL018"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "67aa4877-a55a-407b-868a-0fb5ab0a1070")
 			(effects
 				(font
@@ -4038,7 +4104,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -36 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -4052,10 +4118,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "ae370d89-10cc-4fa3-af01-7841c72f87b0")
-		(at 21 13 -90)
+		(at 0 2 -90)
 		(property "Reference" "CL001"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "2103c1db-09c4-4f9f-82ac-71b5a236636b")
 			(effects
 				(font
@@ -4098,7 +4165,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -2 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -4112,10 +4179,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "b15b2aa9-64ee-4ada-94cc-dcd1cb867d22")
-		(at 41 9 180)
+		(at 40 50 180)
 		(property "Reference" "CB020"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "2ca62064-babc-438e-a4a9-dd9cc34fc845")
 			(effects
 				(font
@@ -4158,7 +4226,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 40 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -4172,10 +4240,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "b98b42fb-252a-4145-8921-3a619e4a4bee")
-		(at 13 17 -90)
+		(at 0 18 -90)
 		(property "Reference" "CL009"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "8a2664ac-9cdb-4959-9704-1f129d26e165")
 			(effects
 				(font
@@ -4218,7 +4287,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -18 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -4232,10 +4301,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "baa1847f-8cdd-4055-8536-925309f47d0a")
-		(at 29 21 -90)
+		(at 0 46 -90)
 		(property "Reference" "CL023"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "d5302046-e73c-4de5-ba89-69deca62bf89")
 			(effects
 				(font
@@ -4278,7 +4348,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -46 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -4292,10 +4362,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "c1518750-1f34-48fa-9c7e-b20d4a6c326c")
-		(at 21 33)
+		(at 6 0)
 		(property "Reference" "CT003"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "5eb77e2e-da49-4b05-8987-4e445a171f47")
 			(effects
 				(font
@@ -4338,7 +4409,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -6 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -4352,10 +4423,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "c1598dc2-a108-4b76-9b03-b979571ec4a0")
-		(at 13 13 180)
+		(at 46 50 180)
 		(property "Reference" "CB023"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "1cc3956e-89a4-47c5-bca9-dc5e541d06c6")
 			(effects
 				(font
@@ -4398,7 +4470,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 46 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -4412,10 +4484,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "c49c2fcb-c8af-4eec-bc86-3a3302e53e0a")
-		(at 17 5 180)
+		(at 8 50 180)
 		(property "Reference" "CB004"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "593e4328-4055-45b7-99a4-d55d16a42e96")
 			(effects
 				(font
@@ -4458,7 +4531,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 8 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -4472,10 +4545,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "cb6ae3e5-5688-479e-af0a-497306f6ec6b")
-		(at 41 5 180)
+		(at 20 50 180)
 		(property "Reference" "CB010"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "3c80b369-067b-4d94-b65a-6d5de2dd8910")
 			(effects
 				(font
@@ -4518,7 +4592,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 20 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -4532,10 +4606,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "cca7c138-c28f-4f49-9de9-a2399b0cb448")
-		(at 13 37)
+		(at 22 0)
 		(property "Reference" "CT011"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "20f25654-9162-4282-ba0d-6bdd56f3529a")
 			(effects
 				(font
@@ -4578,7 +4653,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -22 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -4592,10 +4667,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "cd438d98-77d3-4336-a93d-fda423bff806")
-		(at 17 41)
+		(at 44 0)
 		(property "Reference" "CT022"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "efd45c10-c956-46ed-a27a-f459c83bd242")
 			(effects
 				(font
@@ -4638,7 +4714,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -44 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -4652,10 +4728,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "ce70a1d8-9ded-4c15-9b14-639c7cb3e049")
-		(at 5 5 180)
+		(at 2 50 180)
 		(property "Reference" "CB001"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "7c7ae010-4ad6-4472-b110-ca6ea80ef8d8")
 			(effects
 				(font
@@ -4698,7 +4775,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 2 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -4712,10 +4789,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "cfe76916-1db4-42c6-9adf-1209354d2a45")
-		(at 9 29 90)
+		(at 50 28 90)
 		(property "Reference" "CR014"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "a636e01c-b0a1-4d5e-9a2d-801067cf931a")
 			(effects
 				(font
@@ -4758,7 +4836,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 28 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -4772,10 +4850,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "d57a6532-19ae-48ba-871b-2760fb3fd19a")
-		(at 25 41)
+		(at 48 0)
 		(property "Reference" "CT024"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "7d3fbe46-27c8-4a84-a8b1-93804623199f")
 			(effects
 				(font
@@ -4818,7 +4897,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -48 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -4832,10 +4911,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "d75d0d09-9f4c-4863-aa62-897db7890714")
-		(at 5 33 90)
+		(at 50 46 90)
 		(property "Reference" "CR023"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "a3902280-4b58-4298-b21e-935c84977ce7")
 			(effects
 				(font
@@ -4878,7 +4958,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 46 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -4892,10 +4972,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "d8792896-a969-4ed0-9b8e-5ec9170cfc5b")
-		(at 37 33)
+		(at 14 0)
 		(property "Reference" "CT007"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "8d27575e-298f-4add-b079-1d63a2a27748")
 			(effects
 				(font
@@ -4938,7 +5019,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -14 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -4952,10 +5033,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "db7b8759-34a7-4763-81b4-2054b811efeb")
-		(at 17 37)
+		(at 24 0)
 		(property "Reference" "CT012"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "b5be8454-10af-47b3-95bd-385c4d5f1c52")
 			(effects
 				(font
@@ -4998,7 +5080,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -24 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -5012,10 +5094,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "e0a3cb17-9627-4b52-812a-6c0781952397")
-		(at 25 5 180)
+		(at 12 50 180)
 		(property "Reference" "CB006"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "82d3ee7f-e766-4751-815f-2a9f93fa2ca3")
 			(effects
 				(font
@@ -5058,7 +5141,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 12 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -5072,10 +5155,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "e15d7d1a-609d-4be2-a187-6b679ae7537f")
-		(at 29 5 180)
+		(at 14 50 180)
 		(property "Reference" "CB007"
 			(at -1.6 -1.6 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "2a6d4a3a-abf4-4208-a682-11ee9c023ab7")
 			(effects
 				(font
@@ -5118,7 +5202,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 14 50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -5132,10 +5216,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "e287f5fa-5070-437a-a82e-eeb66933b56e")
-		(at 41 21 90)
+		(at 50 4 90)
 		(property "Reference" "CR002"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "fcb8c7e1-9510-4237-bfe8-6c4b15cbf0cf")
 			(effects
 				(font
@@ -5178,7 +5263,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 4 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -5192,10 +5277,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "e97fd84f-7b9a-4dcb-ac6e-d101d9848406")
-		(at 37 13 -90)
+		(at 0 10 -90)
 		(property "Reference" "CL005"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "ec760686-51d4-41ae-9570-ece130e555d0")
 			(effects
 				(font
@@ -5238,7 +5324,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -10 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -5252,10 +5338,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "ee69eb7d-e32e-4c28-98e2-6a9216699211")
-		(at 41 25 90)
+		(at 50 24 90)
 		(property "Reference" "CR012"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "afdd34e4-b025-4a37-a9f9-e8cdb2a92a76")
 			(effects
 				(font
@@ -5298,7 +5385,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 24 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -5312,10 +5399,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "ee885f88-e745-4b7c-844d-2c8743c368eb")
-		(at 25 17 -90)
+		(at 0 24 -90)
 		(property "Reference" "CL012"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "b255759a-26a6-4742-a04a-9d220e013c98")
 			(effects
 				(font
@@ -5358,7 +5446,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -24 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -5372,10 +5460,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "f31faf06-fac7-467f-be6b-09f422fa10a4")
-		(at 13 25 90)
+		(at 50 10 90)
 		(property "Reference" "CR005"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "a9655380-e34e-456d-b0fc-591587b40f02")
 			(effects
 				(font
@@ -5418,7 +5507,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 10 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -5432,10 +5521,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "f3e16ebd-569c-4ce1-96ee-2c92504b59ba")
-		(at 25 21 -90)
+		(at 0 44 -90)
 		(property "Reference" "CL022"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "8ce31ca4-07d4-4f5b-bc50-0cf3d3a28e56")
 			(effects
 				(font
@@ -5478,7 +5568,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -44 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -5492,10 +5582,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "f4f04aaf-85e9-4b60-81ae-94e152419ad2")
-		(at 37 25 90)
+		(at 50 22 90)
 		(property "Reference" "CR011"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "d1d3b55d-c703-477f-897f-71b662bc0714")
 			(effects
 				(font
@@ -5538,7 +5629,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 22 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -5552,10 +5643,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "f659f4fb-fda8-414d-b381-cbbe684fd465")
-		(at 5 25 90)
+		(at 50 6 90)
 		(property "Reference" "CR003"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "b8cd8a67-07a4-413e-8c5f-d2da82add458")
 			(effects
 				(font
@@ -5598,7 +5690,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 6 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -5612,10 +5704,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "f9bc025a-558b-4d2b-8b56-b7d049dcefa5")
-		(at 17 21 -90)
+		(at 0 40 -90)
 		(property "Reference" "CL020"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "c90c0497-f119-4ebb-b16b-dab5d943020e")
 			(effects
 				(font
@@ -5658,7 +5751,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -40 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -5672,10 +5765,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "fa362799-6f69-45c1-8864-b49e88c65908")
-		(at 25 25 90)
+		(at 50 16 90)
 		(property "Reference" "CR008"
 			(at -1.6 1.6 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "0c7939b1-3f44-42da-952b-bb65fb433acb")
 			(effects
 				(font
@@ -5718,7 +5812,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at 16 -50)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -5732,10 +5826,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "fdf5ccfd-ad56-4c8e-91bf-fdb97d543755")
-		(at 13 21 -90)
+		(at 0 38 -90)
 		(property "Reference" "CL019"
 			(at 1.6 -1.6 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "3f55529e-3536-45c9-9bc7-c6ed33b12ad2")
 			(effects
 				(font
@@ -5778,7 +5873,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -38 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
@@ -5792,10 +5887,11 @@
 	(footprint ""
 		(layer "F.Cu")
 		(uuid "ff0c4f7f-1fb4-42d0-96b2-d63e7a6b2ad5")
-		(at 21 37)
+		(at 26 0)
 		(property "Reference" "CT013"
 			(at 1.6 1.6 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "9538d83e-4a8a-42be-906f-c58ac2b39888")
 			(effects
 				(font
@@ -5838,7 +5934,7 @@
 		)
 		(duplicate_pad_numbers_are_jumpers no)
 		(pad "" thru_hole roundrect
-			(at -26 0)
+			(at 0 0)
 			(size 0.5 1)
 			(drill 0.762)
 			(layers "*.Cu")
