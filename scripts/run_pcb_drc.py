@@ -11,6 +11,15 @@ import os
 import subprocess
 import sys
 from collections import Counter
+from typing import Any, TypedDict
+
+
+class DrcSummary(TypedDict):
+    """Structured return type for DRC report parsing."""
+    errors: int
+    warnings: int
+    unconnected: int
+    total: int
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HW = os.path.join(ROOT, "hardware")
@@ -28,7 +37,7 @@ def ensure_dirs() -> None:
     os.makedirs(EXPORTS, exist_ok=True)
 
 
-def run_drc() -> dict | None:
+def run_drc() -> DrcSummary | None:
     """Run kicad-cli pcb drc and return parsed report data."""
     print(f"  Board:      {BOARD_FILE}")
     print(f"  Project:    {PRO_FILE}")
@@ -79,13 +88,13 @@ def run_drc() -> dict | None:
         return parse_stdout_report(result.stdout)
 
 
-def parse_report(json_path: str) -> dict:
+def parse_report(json_path: str) -> DrcSummary:
     """Parse the DRC JSON report and print summary."""
     with open(json_path) as f:
-        data = json.load(f)
+        data: Any = json.load(f)
 
-    violations = data.get("violations", [])
-    unconnected = data.get("unconnected_items", [])
+    violations: list[dict[str, Any]] = data.get("violations", [])
+    unconnected: list[dict[str, Any]] = data.get("unconnected_items", [])
 
     # Count by severity
     severity_counts: dict[str, int] = Counter()
@@ -145,7 +154,7 @@ def parse_report(json_path: str) -> dict:
     }
 
 
-def parse_stdout_report(stdout: str) -> dict:
+def parse_stdout_report(stdout: str) -> DrcSummary:
     """Fallback: parse the text stdout report when JSON is unavailable."""
     lines = stdout.strip().splitlines()
     error_count = 0
