@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# pyright: basic  # pcbnew is a C++ extension without type stubs — all pcbnew.* types are unknown
 """
 AdEx Resonant Core — Auto-Place & Fix DRC Rules.
 
