@@ -1,9 +1,14 @@
-(kicad_sch (version 20240116) (generator "test")
+(kicad_sch (version 20240116) (generator "adex-resonant-brain")
   (uuid "11111111-1111-1111-1111-111111111111")
   (paper "A4")
-  (title_block (title "Full Test3") (date "2026-09-06") (rev "1.0") (company "Test"))
+  (title_block
+    (title "LC Bridge Cell — Resonant LC Tank with Varactor Tuning")
+    (date "2026-09-06")
+    (rev "1.0")
+    (company "AdEx Resonant Brain Project")
+  )
   (symbol
-    (lib_id "power:GND")
+    (lib_id "custom_power:GND")
     (at 50 50 0)
     (unit 1)
     (exclude_from_sim no)
