@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """AdEx Resonant Core - 4-Layer KiCad 10 PCB Layout Generator."""
-import os, sys, subprocess, uuid
-from datetime import datetime
+import os, subprocess, uuid
+from typing import Any
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HW = os.path.join(ROOT, "hardware")
@@ -15,8 +15,8 @@ CASTELLATED_DIA_MM = 0.8
 PAD_WIDTH_MM = 1.0
 PAD_LENGTH_MM = 0.5
 
-def mm(v): return int(round(v * 1_000_000))
-def xy(x, y): return f"(xy {mm(x)} {mm(y)})"
+def mm(v: float) -> int: return int(round(v * 1_000_000))
+def xy(x: float, y: float) -> str: return f"(xy {mm(x)} {mm(y)})"
 def uid(): return uuid.uuid4().hex[:16]
 
 def ensure_sym_lib_table():
@@ -34,7 +34,7 @@ def ensure_sym_lib_table():
     with open(tp, 'w') as f: f.write(c)
     print("  [OK] Created", tp)
 
-def convert_power_symbols(sch_path):
+def convert_power_symbols(sch_path: str) -> int:
     with open(sch_path) as f: text = f.read()
     count = 0
     for p in ["VDD", "VSS", "GND"]:
@@ -47,26 +47,32 @@ def convert_power_symbols(sch_path):
     if count > 0:
         with open(sch_path, 'w') as f: f.write(text)
     return count
-def build_pcb_file():
+
+
+def build_pcb_file() -> None:
     import sys
     sys.path.insert(0, '/usr/lib64/python3.14/site-packages')
-    import pcbnew
+    import pcbnew  # type: ignore[import-untyped]
+    pcbnew_mod: Any = pcbnew
     b = BOARD_SIZE_MM
     p = CASTELLATED_PITCH_MM
-    board = pcbnew.CreateEmptyBoard()
+    board = pcbnew_mod.CreateEmptyBoard()
     board.SetCopperLayerCount(4)
     
     # Board edge on Edge.Cuts
-    for sx,sy,ex,ey in [(0,0,b,0),(b,0,b,b),(b,b,0,b),(0,b,0,0)]:
-        line = pcbnew.PCB_SHAPE(board, pcbnew.SHAPE_T_SEGMENT)
-        line.SetLayer(pcbnew.Edge_Cuts)
-        line.SetStart(pcbnew.VECTOR2I(int(sx*1e6), int(sy*1e6)))
-        line.SetEnd(pcbnew.VECTOR2I(int(ex*1e6), int(ey*1e6)))
+    for sx, sy, ex, ey in [(0, 0, b, 0), (b, 0, b, b), (b, b, 0, b), (0, b, 0, 0)]:
+        sx: float
+        sy: float
+        ex: float
+        ey: float
+        line = pcbnew_mod.PCB_SHAPE(board, pcbnew_mod.SHAPE_T_SEGMENT)
+        line.SetLayer(pcbnew_mod.Edge_Cuts)
+        line.SetStart(pcbnew_mod.VECTOR2I(int(sx*1e6), int(sy*1e6)))
+        line.SetEnd(pcbnew_mod.VECTOR2I(int(ex*1e6), int(ey*1e6)))
         line.SetWidth(int(0.1 * 1e6))
         board.Add(line)
     
     # Castellated hole footprints on periphery
-    import uuid as _uuid
     n = int(b / p) - 1
     for pos, label, angle in [
         ([(i*p, 0.0) for i in range(1, n+1)], 'CT', 0),
@@ -76,20 +82,20 @@ def build_pcb_file():
     ]:
         for j, (x, y) in enumerate(pos, 1):
             ref = label + '%03d' % j
-            fp = pcbnew.FOOTPRINT(board)
+            fp = pcbnew_mod.FOOTPRINT(board)
             fp.SetReference(ref)
             fp.SetValue('')
-            fp.SetLayer(pcbnew.F_Cu)
-            fp.SetPosition(pcbnew.VECTOR2I(int(x*1e6), int(y*1e6)))
+            fp.SetLayer(pcbnew_mod.F_Cu)
+            fp.SetPosition(pcbnew_mod.VECTOR2I(int(x * 1e6), int(y * 1e6)))
             fp.SetOrientationDegrees(angle)
-            pad = pcbnew.PAD(fp)
+            pad = pcbnew_mod.PAD(fp)
             pad.SetNumber('1')
-            pad.SetSize(pcbnew.VECTOR2I(int(0.5*1e6), int(1.0*1e6)))
-            pad.SetPosition(pcbnew.VECTOR2I(0, 0))
-            pad.SetLayerSet(pcbnew.LSET())
-            for l in [pcbnew.F_Cu, pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.B_Cu]:
-                pad.GetLayerSet().AddLayer(l)
-            pad.SetShape(pcbnew.PAD_SHAPE_ROUNDRECT)
+            pad.SetSize(pcbnew_mod.VECTOR2I(int(0.5 * 1e6), int(1.0 * 1e6)))
+            pad.SetPosition(pcbnew_mod.VECTOR2I(0, 0))
+            pad.SetLayerSet(pcbnew_mod.LSET())
+            for layer in [pcbnew_mod.F_Cu, pcbnew_mod.In1_Cu, pcbnew_mod.In2_Cu, pcbnew_mod.B_Cu]:
+                pad.GetLayerSet().AddLayer(layer)
+            pad.SetShape(pcbnew_mod.PAD_SHAPE_ROUNDRECT)
             fp.Add(pad)
             board.Add(fp)
     
@@ -98,7 +104,7 @@ def build_pcb_file():
     sz = os.path.getsize(PCB_FILE)
     print("  [OK] Wrote", PCB_FILE, "(" + str(sz) + " bytes)")
 
-def validate_pcb():
+def validate_pcb() -> bool:
     r = subprocess.run(['kicad-cli','pcb','upgrade','--force',PCB_FILE],
                        capture_output=True,text=True,timeout=60)
     if r.returncode != 0:
@@ -107,7 +113,7 @@ def validate_pcb():
     print('  [OK] PCB validated')
     return True
 
-def run_drc():
+def run_drc() -> None:
     report = os.path.join(LAYOUTS, 'drc_report.json')
     r = subprocess.run(['kicad-cli','pcb','drc','--format','json',
                         '--output',report,PCB_FILE],
@@ -117,7 +123,7 @@ def run_drc():
         return
     print('  [OK] DRC report:', report)
 
-def main():
+def main() -> None:
     print('='*60)
     print('  AdEx Resonant Core - 4-Layer PCB Layout Generation')
     print('='*60)
