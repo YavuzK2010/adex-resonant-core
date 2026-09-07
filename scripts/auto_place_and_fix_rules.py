@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-# pyright: basic  # pcbnew is a C++ extension without type stubs — all pcbnew.* types are unknown
+# pyright: basic
+# pcbnew is a C++ extension without type stubs — all pcbnew.* types are unknown.
+# pyrightconfig.json at project root disables reportUnknown* diagnostics project-wide.
 """
 AdEx Resonant Core — Auto-Place & Fix DRC Rules.
 

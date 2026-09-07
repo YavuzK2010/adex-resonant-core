@@ -1,0 +1,18 @@
+{
+  "typeCheckingMode": "basic",
+  "reportUnknownParameterType": "none",
+  "reportUnknownMemberType": "none",
+  "reportUnknownVariableType": "none",
+  "reportUnknownArgumentType": "none",
+  "reportUnknownLambdaType": "none",
+  "include": [
+    "scripts",
+    "simulations",
+    "hardware"
+  ],
+  "exclude": [
+    ".venv",
+    "__pycache__",
+    "**/__pycache__"
+  ]
+}
