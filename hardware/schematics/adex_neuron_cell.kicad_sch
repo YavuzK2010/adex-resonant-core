@@ -202,7 +202,7 @@
   ;;  COMPONENT: EXPONENTIAL CURRENT SOURCE — Q_exp
   ;; ──────────────────────────────────────────────
   (symbol
-    (lib_id "Device:Q_NPN_BCE")
+    (lib_id "Transistor_BJT:Q_NPN_BCE")
     (at 150 400 0)
     (unit 1)
     (exclude_from_sim no)

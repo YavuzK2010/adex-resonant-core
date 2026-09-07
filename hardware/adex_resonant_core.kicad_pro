@@ -389,7 +389,7 @@
     "legacy_lib_list": [],
     "top_level_sheets": [
       {
-        "filename": "adex_resonant_core.kicad_sch",
+        "filename": "schematics/top_level.kicad_sch",
         "name": "adex_resonant_core",
         "uuid": "00000000-0000-0000-0000-000000000000"
       }

@@ -1,0 +1,9 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "custom_power") (type "KiCad") (uri "${KIPRJMOD}/symbols/custom_power.kicad_sym") (options "") (descr "Custom power symbols"))
+  (lib (name "custom") (type "KiCad") (uri "${KIPRJMOD}/symbols/custom.kicad_sym") (options "") (descr "Custom project symbols"))
+  (lib (name "Package_IC") (type "KiCad") (uri "${KIPRJMOD}/symbols/Comparator.kicad_sym") (options "") (descr "Comparator symbols"))
+  (lib (name "Transistor_FET") (type "KiCad") (uri "${KIPRJMOD}/symbols/Transistor_FET.kicad_sym") (options "") (descr "FET symbols"))
+  (lib (name "Transistor_BJT") (type "KiCad") (uri "${KIPRJMOD}/symbols/Transistor_BJT.kicad_sym") (options "") (descr "BJT symbols"))
+  (lib (name "Device") (type "KiCad") (uri "/usr/share/kicad/symbols/Device.kicad_sym") (options "") (descr "System device symbols"))
+)

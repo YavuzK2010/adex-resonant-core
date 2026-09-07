@@ -32,9 +32,9 @@ if os.path.isdir(PCB_EXTRA_PATH):
 import pcbnew  # type: ignore[import-untyped]
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LAYOUTS = os.path.join(ROOT, "hardware", "layouts")
-BOARD_FILE = os.path.join(LAYOUTS, "adex_resonant_core.kicad_pcb")
-PRO_FILE = os.path.join(LAYOUTS, "adex_resonant_core.kicad_pro")
+HW = os.path.join(ROOT, "hardware")
+BOARD_FILE = os.path.join(HW, "adex_resonant_core.kicad_pcb")
+PRO_FILE = os.path.join(HW, "adex_resonant_core.kicad_pro")
 
 BOARD_SIZE_MM = 50.0
 EDGE_MIN = 2.0

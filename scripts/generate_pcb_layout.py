@@ -6,8 +6,7 @@ from typing import Any
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HW = os.path.join(ROOT, "hardware")
 SCH = os.path.join(HW, "schematics")
-LAYOUTS = os.path.join(HW, "layouts")
-PCB_FILE = os.path.join(LAYOUTS, "adex_resonant_core.kicad_pcb")
+PCB_FILE = os.path.join(HW, "adex_resonant_core.kicad_pcb")
 TOP_SCH = os.path.join(SCH, "top_level.kicad_sch")
 BOARD_SIZE_MM = 50.0
 CASTELLATED_PITCH_MM = 2.0
@@ -20,7 +19,7 @@ def xy(x: float, y: float) -> str: return f"(xy {mm(x)} {mm(y)})"
 def uid(): return uuid.uuid4().hex[:16]
 
 def ensure_sym_lib_table():
-    tp = os.path.join(SCH, "sym-lib-table")
+    tp = os.path.join(HW, "sym-lib-table")
     if os.path.exists(tp): return
     c = '(sym_lib_table\n'
     c += '  (lib (name "custom_power")(type "KiCad")'
@@ -101,7 +100,7 @@ def build_pcb_file() -> None:
             fp.Add(pad)
             board.Add(fp)
     
-    os.makedirs(LAYOUTS, exist_ok=True)
+    os.makedirs(HW, exist_ok=True)
     board.Save(PCB_FILE)
     sz = os.path.getsize(PCB_FILE)
     print("  [OK] Wrote", PCB_FILE, "(" + str(sz) + " bytes)")
@@ -116,7 +115,7 @@ def validate_pcb() -> bool:
     return True
 
 def run_drc() -> None:
-    report = os.path.join(LAYOUTS, 'drc_report.json')
+    report = os.path.join(HW, 'exports', 'drc_report.json')
     r = subprocess.run(['kicad-cli','pcb','drc','--format','json',
                         '--output',report,PCB_FILE],
                        capture_output=True,text=True,timeout=120)
@@ -137,9 +136,9 @@ def main() -> None:
             n = convert_power_symbols(p)
             if n: print('  [OK]', f + ':', n, 'power symbol conversions')
     print('\n[1/4] Exporting netlist ...')
-    os.makedirs(LAYOUTS, exist_ok=True)
+    os.makedirs(os.path.join(HW, 'exports'), exist_ok=True)
     r = subprocess.run(['kicad-cli','sch','export','netlist',
-                        '--output',os.path.join(LAYOUTS,'adex_resonant_core.net'),TOP_SCH],
+                        '--output',os.path.join(HW, 'exports', 'adex_resonant_core.net'),TOP_SCH],
                        capture_output=True,text=True,timeout=60)
     if r.returncode == 0:
         print('  [OK] netlist exported')

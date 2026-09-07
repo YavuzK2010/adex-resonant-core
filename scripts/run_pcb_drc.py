@@ -23,11 +23,10 @@ class DrcSummary(TypedDict):
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HW = os.path.join(ROOT, "hardware")
-LAYOUTS = os.path.join(HW, "layouts")
 EXPORTS = os.path.join(HW, "exports")
 
-BOARD_FILE = os.path.join(LAYOUTS, "adex_resonant_core.kicad_pcb")
-PRO_FILE = os.path.join(LAYOUTS, "adex_resonant_core.kicad_pro")
+BOARD_FILE = os.path.join(HW, "adex_resonant_core.kicad_pcb")
+PRO_FILE = os.path.join(HW, "adex_resonant_core.kicad_pro")
 REPORT_JSON = os.path.join(EXPORTS, "drc_report.json")
 REPORT_TXT = os.path.join(EXPORTS, "drc_report.txt")
 
