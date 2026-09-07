@@ -1,0 +1,141 @@
+#!/usr/bin/env python3
+"""Convert KiCad 7/8 schematics to KiCad 10 native format."""
+import os, re, sys
+
+SCH_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                       "hardware", "schematics")
+
+def parse_symbol_block(raw):
+    """Extract fields from a (symbol ...) block using regex."""
+    data = {}
+    m = re.search(r'\(lib_id "([^"]+)"\)', raw)
+    if m: data['lib_id'] = m.group(1)
+    m = re.search(r'\(unit (\d+)\)', raw)
+    if m: data['unit'] = m.group(1)
+    m = re.search(r'\(at ([\d.\-]+) ([\d.\-]+) ([\d.\-]+)\)', raw)
+    if m: data['at'] = (m.group(1), m.group(2), m.group(3))
+    m = re.search(r'\(uuid "([^"]+)"\)', raw)
+    if m: data['uuid'] = m.group(1)
+    data['in_bom'] = 'yes' if '(in_bom yes)' in raw else 'no'
+    data['on_board'] = 'yes' if '(on_board yes)' in raw else 'no'
+    data['properties'] = {}
+    for m in re.finditer(r'\(property \(name "([^"]+)"\)\s*\(value "([^"]*)"\)\s*\)', raw):
+        data['properties'][m.group(1)] = m.group(2)
+    return data
+
+def make_kicad10_symbol(data):
+    """Build KiCad 10 format symbol from parsed data."""
+    lines = []
+    lines.append('  (symbol')
+    lines.append(f'    (lib_id "{data["lib_id"]}")')
+    if 'at' in data:
+        lines.append(f'    (at {data["at"][0]} {data["at"][1]} {data["at"][2]})')
+    lines.append(f'    (unit {data.get("unit", "1")})')
+    lines.append('    (exclude_from_sim no)')
+    lines.append(f'    (in_bom {data["in_bom"]})')
+    lines.append(f'    (on_board {data["on_board"]})')
+    lines.append('    (dnp no)')
+    if 'uuid' in data:
+        lines.append(f'    (uuid "{data["uuid"]}")')
+    for pname, pval in data['properties'].items():
+        hide = pname in ('Footprint', 'Datasheet', 'ki_keywords')
+        at_x = data.get('at', ('0','0','0'))[0]
+        at_y = data.get('at', ('0','0','0'))[1]
+        lines.append(f'    (property "{pname}" "{pval}"')
+        lines.append(f'      (at {at_x} {at_y} 0)')
+        if hide:
+            lines.append('      (effects (font (size 1.27 1.27)) (hide yes))')
+        else:
+            lines.append('      (effects (font (size 1.27 1.27)))')
+        lines.append('    )')
+    lines.append('  )')
+    return lines
+
+def convert_sch(filepath):
+    """Convert a single schematic file."""
+    with open(filepath) as f:
+        text = f.read()
+    original = text
+
+    # 1. Convert symbol blocks
+    lines = text.split('\n')
+    i = 0
+    result = []
+    sym_lines = []
+    in_sym = False
+    for line in lines:
+        s = line.strip()
+        if s.startswith('(symbol'):
+            in_sym = True
+            sym_lines = [line]
+        elif in_sym:
+            sym_lines.append(line)
+            if s == ')':
+                in_sym = False
+                raw = ' '.join(l.strip() for l in sym_lines)
+                data = parse_symbol_block(raw)
+                if 'lib_id' in data and 'at' in data:
+                    result.extend(make_kicad10_symbol(data))
+                else:
+                    result.extend(sym_lines)  # fallback
+                sym_lines = []
+        else:
+            result.append(line)
+    if sym_lines:
+        result.extend(sym_lines)
+
+    new_text = '\n'.join(result)
+
+    # 2. Convert wire points format: (pts (x y) (x y)) -> (pts (xy x y) (xy x y))
+    new_text = re.sub(
+        r'\(wire \(pts \(([\d.\-]+) ([\d.\-]+)\) \(([\d.\-]+) ([\d.\-]+)\)',
+        r'(wire (pts (xy \1 \2) (xy \3 \4)',
+        new_text
+    )
+
+    # 3. Convert stroke type default -> solid (Kicad 10)
+    new_text = new_text.replace('(type default)', '(type solid)')
+
+    # 4. Remove color tuples from strokes
+    new_text = re.sub(r'\(color [\d.]+ [\d.]+ [\d.]+ [\d.]+\)\s*', '', new_text)
+
+    # 5. Convert sheet_instances -> instances
+    new_text = new_text.replace('sheet_instances', 'instances')
+
+    # 6. Convert path format in instances:
+    #    (path "uuid" (reference "N") (unit 1) (value "N")) -> (project "proj" (path "uuid"))
+    def fix_path(m):
+        uuid = m.group(1)
+        return f'(project "adex-core" (path "{uuid}"))'
+    new_text = re.sub(r'\(path "([^"]+)"\)', fix_path, new_text)
+
+    # 7. Remove old (reference ...) (unit ...) (value ...) inside instances
+    new_text = re.sub(r'\s*\(reference "[^"]*"\)', '', new_text)
+    new_text = re.sub(r'\s*\(unit \d+\)', '', new_text)
+    new_text = re.sub(r'\s*\(value "[^"]*"\)', '', new_text)
+
+    # 8. Remove (pin ...) lines that remain
+    new_text = re.sub(r'^\s*\(pin \([^)]*\) \([^)]*\)\)\s*$', '', new_text, flags=re.MULTILINE)
+
+    if new_text != original:
+        with open(filepath, 'w') as f:
+            f.write(new_text)
+        return True
+    return False
+
+def main():
+    print('=' * 60)
+    print('  KiCad 10 Schematic Conversion')
+    print('=' * 60)
+    for sch in ['top_level.kicad_sch', 'adex_neuron_cell.kicad_sch', 'lc_bridge_cell.kicad_sch']:
+        path = os.path.join(SCH_DIR, sch)
+        if not os.path.exists(path):
+            print(f'  [SKIP] {sch} not found')
+            continue
+        print(f'  Converting {sch}...')
+        ok = convert_sch(path)
+        print(f'  {"[OK] Converted!" if ok else "[OK] No changes needed"}')
+    print('  Done!')
+
+if __name__ == '__main__':
+    main()

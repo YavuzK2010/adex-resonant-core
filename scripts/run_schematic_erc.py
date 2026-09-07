@@ -111,27 +111,52 @@ def create_custom_libs():
         print(f"  [WARN] custom.kicad_sym missing - need to create")
 
 # ── 3. Create sym-lib-table ─────────────────────────
+def get_sym_lib_dir():
+    """Return the symbol library directory path (local or system)."""
+    local_sym = os.path.abspath(os.path.join(SCH, "..", "symbols"))
+    if os.path.isdir(local_sym) and os.listdir(local_sym):
+        return local_sym
+    # Fallback: check standard KiCad 10 install paths
+    for candidate in [
+        "/usr/share/kicad/symbols",
+        "/usr/local/share/kicad/symbols",
+    ]:
+        if os.path.isdir(candidate):
+            return candidate
+    return local_sym  # return local anyway as best-effort
+
+
 def create_sym_lib_table():
     path = os.path.join(SCH, "sym-lib-table")
-    # Use local custom_power library for power symbols
-    # Use system libraries for Device, etc. with KICAD10_SYMBOL_DIR
-    content = '''(sym_lib_table
+    sym_dir = get_sym_lib_dir()
+    # Use KIPRJMOD-relative URIs so KiCad resolves them from the project dir
+    local_uri = "${KIPRJMOD}/../symbols"
+
+    # Check which system libs are missing locally; reference via absolute path
+    system_uri = sym_dir
+    content = f'''(sym_lib_table
   (version 7)
-  (lib (name "custom_power") (type "KiCad") (uri "${KIPRJMOD}/../symbols/custom_power.kicad_sym") (options "") (descr "Custom power symbols"))
-  (lib (name "Device") (type "KiCad") (uri "${KICAD10_SYMBOL_DIR}/Device.kicad_sym") (options "") (descr "System device symbols"))
-  (lib (name "custom") (type "KiCad") (uri "${KIPRJMOD}/../symbols/custom.kicad_sym") (options "") (descr "Custom project symbols"))
-  (lib (name "Package_IC") (type "KiCad") (uri "${KICAD10_SYMBOL_DIR}/Comparator.kicad_sym") (options "") (descr "System comparator symbols"))
-  (lib (name "Transistor_FET") (type "KiCad") (uri "${KICAD10_SYMBOL_DIR}/Transistor_FET.kicad_sym") (options "") (descr "System FET symbols"))
-  (lib (name "Transistor_BJT") (type "KiCad") (uri "${KICAD10_SYMBOL_DIR}/Transistor_BJT.kicad_sym") (options "") (descr "System BJT symbols"))
+  (lib (name "custom_power") (type "KiCad") (uri "{local_uri}/custom_power.kicad_sym") (options "") (descr "Custom power symbols"))
+  (lib (name "Device") (type "KiCad") (uri "{system_uri}/Device.kicad_sym") (options "") (descr "System device symbols"))
+  (lib (name "custom") (type "KiCad") (uri "{local_uri}/custom.kicad_sym") (options "") (descr "Custom project symbols"))
+  (lib (name "Package_IC") (type "KiCad") (uri "{system_uri}/Comparator.kicad_sym") (options "") (descr "System comparator symbols"))
+  (lib (name "Transistor_FET") (type "KiCad") (uri "{system_uri}/Transistor_FET.kicad_sym") (options "") (descr "System FET symbols"))
+  (lib (name "Transistor_BJT") (type "KiCad") (uri "{system_uri}/Transistor_BJT.kicad_sym") (options "") (descr "System BJT symbols"))
 )
 '''
     with open(path, "w") as f:
         f.write(content)
     print(f"  [OK] Created {path}")
+    print(f"  Symbol library directory: {sym_dir}")
 
 # ── 4. Convert power symbol format ──────────────────
 def convert_power_symbols(sch_path):
-    """Convert old-format (lib_name + entry_id) power symbols to new (lib_id) format."""
+    """Convert old-format power symbols to KiCad 10 (lib_id) format.
+
+    Handles both:
+      - Legacy (lib_name "power") (entry_id "GLOBAL_*") pattern (KiCad 7/8)
+      - Direct (lib_id "power:GND") pattern (newer but referencing wrong lib)
+    """
     with open(sch_path) as f:
         text = f.read()
     # Map old entry_id -> new lib_id symbol name
@@ -140,15 +165,32 @@ def convert_power_symbols(sch_path):
         'GLOBAL_VSS': 'custom_power:VSS',
         'GLOBAL_GND': 'custom_power:GND',
     }
+    # Map direct lib_id references from power: to custom_power:
+    lib_id_map = {
+        'power:GND': 'custom_power:GND',
+        'power:VDD': 'custom_power:VDD',
+        'power:VSS': 'custom_power:VSS',
+    }
     modifications = 0
+
+    # Step 1: Convert legacy (lib_name "power") (entry_id "OLD") patterns
     for old_entry, new_lib_id in entry_map.items():
-        # Replace (symbol (lib_name "power") (entry_id "OLD") ... ) pattern
         pattern_old = f'(symbol (lib_name "power") (entry_id "{old_entry}")'
         pattern_new = f'(symbol (lib_id "{new_lib_id}") (unit 1)'
         if pattern_old in text:
             text = text.replace(pattern_old, pattern_new)
             modifications += 1
             print(f"    Converted {old_entry} -> {new_lib_id}")
+
+    # Step 2: Convert direct (lib_id "power:*") to (lib_id "custom_power:*")
+    for old_lib_id, new_lib_id in lib_id_map.items():
+        pattern_old = f'(symbol (lib_id "{old_lib_id}")'
+        pattern_new = f'(symbol (lib_id "{new_lib_id}")'
+        if pattern_old in text:
+            text = text.replace(pattern_old, pattern_new)
+            modifications += 1
+            print(f"    Converted {old_lib_id} -> {new_lib_id}")
+
     if modifications > 0:
         with open(sch_path, "w") as f:
             f.write(text)
