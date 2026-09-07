@@ -22,6 +22,15 @@ _autosave-*/
 simulations/results/*.png
 simulations/results/*.csv
 
+# Generated / Exported files
+hardware/exports/
+
+# KiCad system symbol library copies (not project-specific)
+hardware/symbols/Comparator.kicad_sym
+hardware/symbols/Device.kicad_sym
+hardware/symbols/Transistor_BJT.kicad_sym
+hardware/symbols/Transistor_FET.kicad_sym
+
 # IDEs & Editors
 .vscode/
 .idea/
