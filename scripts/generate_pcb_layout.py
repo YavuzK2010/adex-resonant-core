@@ -59,17 +59,19 @@ def build_pcb_file() -> None:
     board = pcbnew_mod.CreateEmptyBoard()
     board.SetCopperLayerCount(4)
     
-    # Board edge on Edge.Cuts
-    for sx, sy, ex, ey in [(0, 0, b, 0), (b, 0, b, b), (b, b, 0, b), (0, b, 0, 0)]:
-        sx: float
-        sy: float
-        ex: float
-        ey: float
+    # Board edge on Edge.Cuts (coordinates in nanometers)
+    b_nm = mm(BOARD_SIZE_MM)
+    for sx, sy, ex, ey in [
+        (0, 0, b_nm, 0),
+        (b_nm, 0, b_nm, b_nm),
+        (b_nm, b_nm, 0, b_nm),
+        (0, b_nm, 0, 0),
+    ]:
         line = pcbnew_mod.PCB_SHAPE(board, pcbnew_mod.SHAPE_T_SEGMENT)
         line.SetLayer(pcbnew_mod.Edge_Cuts)
-        line.SetStart(pcbnew_mod.VECTOR2I(int(sx*1e6), int(sy*1e6)))
-        line.SetEnd(pcbnew_mod.VECTOR2I(int(ex*1e6), int(ey*1e6)))
-        line.SetWidth(int(0.1 * 1e6))
+        line.SetStart(pcbnew_mod.VECTOR2I(sx, sy))
+        line.SetEnd(pcbnew_mod.VECTOR2I(ex, ey))
+        line.SetWidth(mm(0.1))
         board.Add(line)
     
     # Castellated hole footprints on periphery
