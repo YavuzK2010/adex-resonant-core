@@ -231,7 +231,9 @@
         }
       },
       "via_dimensions": [],
-      "zones_allow_external_fillets": false
+      "zones_allow_external_fillets": false,
+      "min_clearance": 0.18,
+      "copper_edge_clearance": 0.0
     },
     "ipc2581": {
       "bom_rev": "",

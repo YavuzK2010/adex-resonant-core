@@ -1,0 +1,1050 @@
+(pcb exports/adex_resonant_core.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.6-1.fc44")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer In1.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (layer In2.Cu
+      (type signal)
+      (property
+        (index 2)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 3)
+      )
+    )
+    (boundary
+      (path pcb 0  70000 -70000  0 -70000  0 0  70000 0  70000 -70000)
+    )
+    (via "Via[0-3]_600:300_um")
+    (rule
+      (width 200)
+      (clearance 180)
+      (clearance 45 (type smd_smd))
+    )
+  )
+  (placement
+    (component R_0603_1608Metric
+      (place N14_R4 28250 -54350 front 0 (PN 100k))
+      (place N7_R1 45550 -31650 front 0 (PN 10M))
+      (place N13_R3 14750 -55950 front 0 (PN 100))
+      (place N11_R3 41750 -42450 front 0 (PN 100))
+      (place N16_R3 55250 -55950 front 0 (PN 100))
+      (place N1_R1 18550 -18150 front 0 (PN 10M))
+      (place N4_R4 55250 -13850 front 0 (PN 100k))
+      (place N10_R4 28250 -40850 front 0 (PN 100k))
+      (place N4_R3 55250 -15450 front 0 (PN 100))
+      (place N2_R3 28250 -15450 front 0 (PN 100))
+      (place N6_R6 28250 -23450 front 0 (PN 10k))
+      (place N2_R1 32050 -18150 front 0 (PN 10M))
+      (place N13_R5 14750 -52750 front 0 (PN 100k))
+      (place N1_R3 14750 -15450 front 0 (PN 100))
+      (place N1_R6 14750 -9950 front 0 (PN 10k))
+      (place N10_R5 28250 -39250 front 0 (PN 100k))
+      (place N15_R5 41750 -52750 front 0 (PN 100k))
+      (place N9_R1 18550 -45150 front 0 (PN 10M))
+      (place N14_R3 28250 -55950 front 0 (PN 100))
+      (place N8_R2 55250 -32150 front 0 (PN 1k))
+      (place N15_R1 45550 -58650 front 0 (PN 10M))
+      (place N7_R4 41750 -27350 front 0 (PN 100k))
+      (place N9_R3 14750 -42450 front 0 (PN 100))
+      (place N3_R6 41750 -9950 front 0 (PN 10k))
+      (place N11_R2 41750 -45650 front 0 (PN 1k))
+      (place N9_R2 14750 -45650 front 0 (PN 1k))
+      (place N15_R4 41750 -54350 front 0 (PN 100k))
+      (place N6_R1 32050 -31650 front 0 (PN 10M))
+      (place N16_R1 59050 -58650 front 0 (PN 10M))
+      (place N4_R2 55250 -18650 front 0 (PN 1k))
+      (place N10_R3 28250 -42450 front 0 (PN 100))
+      (place N1_R4 14750 -13850 front 0 (PN 100k))
+      (place N5_R4 14750 -27350 front 0 (PN 100k))
+      (place N3_R4 41750 -13850 front 0 (PN 100k))
+      (place N8_R5 55250 -25750 front 0 (PN 100k))
+      (place N13_R2 14750 -59150 front 0 (PN 1k))
+      (place N8_R3 55250 -28950 front 0 (PN 100))
+      (place N8_R4 55250 -27350 front 0 (PN 100k))
+      (place N4_R5 55250 -12250 front 0 (PN 100k))
+      (place N14_R2 28250 -59150 front 0 (PN 1k))
+      (place N5_R3 14750 -28950 front 0 (PN 100))
+      (place N10_R2 28250 -45650 front 0 (PN 1k))
+      (place N1_R5 14750 -12250 front 0 (PN 100k))
+      (place N12_R1 59050 -45150 front 0 (PN 10M))
+      (place N9_R6 14750 -36950 front 0 (PN 10k))
+      (place N3_R3 41750 -15450 front 0 (PN 100))
+      (place N14_R1 32050 -58650 front 0 (PN 10M))
+      (place N16_R5 55250 -52750 front 0 (PN 100k))
+      (place N16_R2 55250 -59150 front 0 (PN 1k))
+      (place N4_R1 59050 -18150 front 0 (PN 10M))
+      (place N1_R2 14750 -18650 front 0 (PN 1k))
+      (place N3_R1 45550 -18150 front 0 (PN 10M))
+      (place N5_R5 14750 -25750 front 0 (PN 100k))
+      (place N11_R1 45550 -45150 front 0 (PN 10M))
+      (place N16_R4 55250 -54350 front 0 (PN 100k))
+      (place N13_R6 14750 -50450 front 0 (PN 10k))
+      (place N6_R2 28250 -32150 front 0 (PN 1k))
+      (place N6_R5 28250 -25750 front 0 (PN 100k))
+      (place N6_R3 28250 -28950 front 0 (PN 100))
+      (place N11_R4 41750 -40850 front 0 (PN 100k))
+      (place N8_R1 59050 -31650 front 0 (PN 10M))
+      (place N2_R4 28250 -13850 front 0 (PN 100k))
+      (place N12_R6 55250 -36950 front 0 (PN 10k))
+      (place N14_R6 28250 -50450 front 0 (PN 10k))
+      (place N7_R3 41750 -28950 front 0 (PN 100))
+      (place N9_R4 14750 -40850 front 0 (PN 100k))
+      (place N16_R6 55250 -50450 front 0 (PN 10k))
+      (place N13_R4 14750 -54350 front 0 (PN 100k))
+      (place N8_R6 55250 -23450 front 0 (PN 10k))
+      (place N2_R6 28250 -9950 front 0 (PN 10k))
+      (place N14_R5 28250 -52750 front 0 (PN 100k))
+      (place N5_R6 14750 -23450 front 0 (PN 10k))
+      (place N10_R6 28250 -36950 front 0 (PN 10k))
+      (place N13_R1 18550 -58650 front 0 (PN 10M))
+      (place N6_R4 28250 -27350 front 0 (PN 100k))
+      (place N12_R3 55250 -42450 front 0 (PN 100))
+      (place N5_R2 14750 -32150 front 0 (PN 1k))
+      (place N2_R2 28250 -18650 front 0 (PN 1k))
+      (place N12_R2 55250 -45650 front 0 (PN 1k))
+      (place N12_R4 55250 -40850 front 0 (PN 100k))
+      (place N11_R5 41750 -39250 front 0 (PN 100k))
+      (place N10_R1 32050 -45150 front 0 (PN 10M))
+      (place N15_R2 41750 -59150 front 0 (PN 1k))
+      (place N9_R5 14750 -39250 front 0 (PN 100k))
+      (place N3_R5 41750 -12250 front 0 (PN 100k))
+      (place N2_R5 28250 -12250 front 0 (PN 100k))
+      (place N7_R2 41750 -32150 front 0 (PN 1k))
+      (place N11_R6 41750 -36950 front 0 (PN 10k))
+      (place N15_R6 41750 -50450 front 0 (PN 10k))
+      (place N4_R6 55250 -9950 front 0 (PN 10k))
+      (place N5_R1 18550 -31650 front 0 (PN 10M))
+      (place N12_R5 55250 -39250 front 0 (PN 100k))
+      (place N15_R3 41750 -55950 front 0 (PN 100))
+      (place N7_R5 41750 -25750 front 0 (PN 100k))
+      (place N3_R2 41750 -18650 front 0 (PN 1k))
+      (place N7_R6 41750 -23450 front 0 (PN 10k))
+    )
+    (component ""
+      (place CB017 47521.739 -70000 front 180)
+      (place CB008 22478.261 -70000 front 180)
+      (place CB019 53086.957 -70000 front 180)
+      (place CB024 67000 -70000 front 180)
+      (place CB003 8565.217 -70000 front 180)
+      (place CB021 58652.174 -70000 front 180)
+      (place CB005 14130.435 -70000 front 180)
+      (place CB016 44739.13 -70000 front 180)
+      (place CB009 25260.87 -70000 front 180)
+      (place CB012 33608.696 -70000 front 180)
+      (place CB022 61434.783 -70000 front 180)
+      (place CB002 5782.609 -70000 front 180)
+      (place CB014 39173.913 -70000 front 180)
+      (place CB011 30826.087 -70000 front 180)
+      (place CB015 41956.522 -70000 front 180)
+      (place CB013 36391.304 -70000 front 180)
+      (place CB018 50304.348 -70000 front 180)
+      (place CB020 55869.565 -70000 front 180)
+      (place CB023 64217.391 -70000 front 180)
+      (place CB004 11347.826 -70000 front 180)
+      (place CB010 28043.478 -70000 front 180)
+      (place CB001 3000 -70000 front 180)
+      (place CB006 16913.043 -70000 front 180)
+      (place CB007 19695.652 -70000 front 180)
+    )
+    (component C_0603_1608Metric
+      (place N5_C1 10950 -31650 front 0 (PN 10nF))
+      (place N12_C1 51450 -45150 front 0 (PN 10nF))
+      (place N2_C1 24450 -18150 front 0 (PN 10nF))
+      (place N3_C1 37950 -18150 front 0 (PN 10nF))
+      (place N8_C1 51450 -31650 front 0 (PN 10nF))
+      (place N7_C1 37950 -31650 front 0 (PN 10nF))
+      (place N16_C1 51450 -58650 front 0 (PN 10nF))
+      (place N10_C1 24450 -45150 front 0 (PN 10nF))
+      (place N9_C1 10950 -45150 front 0 (PN 10nF))
+      (place N4_C1 51450 -18150 front 0 (PN 10nF))
+      (place N15_C1 37950 -58650 front 0 (PN 10nF))
+      (place N14_C1 24450 -58650 front 0 (PN 10nF))
+      (place N11_C1 37950 -45150 front 0 (PN 10nF))
+      (place N13_C1 10950 -58650 front 0 (PN 10nF))
+      (place N6_C1 24450 -31650 front 0 (PN 10nF))
+      (place N1_C1 10950 -18150 front 0 (PN 10nF))
+    )
+    (component "SOT-23"
+      (place N15_Q1 37950 -51100 front 0 (PN 2N3904))
+      (place B2_D2 26250 -21500 front 0 (PN BB833))
+      (place N10_Q1 24450 -37600 front 0 (PN 2N3904))
+      (place B3_D2 39750 -21500 front 0 (PN BB833))
+      (place N13_Q2 18550 -51100 front 0 (PN BSS138))
+      (place N15_Q2 45550 -51100 front 0 (PN BSS138))
+      (place B11_D2 39750 -48500 front 0 (PN BB833))
+      (place N1_Q2 18550 -10600 front 0 (PN BSS138))
+      (place N6_Q1 24450 -24100 front 0 (PN 2N3904))
+      (place N8_Q2 59050 -24100 front 0 (PN BSS138))
+      (place N16_Q2 59050 -51100 front 0 (PN BSS138))
+      (place B13_D2 9950 -62000 front 0 (PN BB833))
+      (place N7_Q1 37950 -24100 front 0 (PN 2N3904))
+      (place N12_Q2 59050 -37600 front 0 (PN BSS138))
+      (place N14_Q1 24450 -51100 front 0 (PN 2N3904))
+      (place N4_Q2 59050 -10600 front 0 (PN BSS138))
+      (place N11_Q1 37950 -37600 front 0 (PN 2N3904))
+      (place N4_Q1 51450 -10600 front 0 (PN 2N3904))
+      (place B14_D2 23450 -62000 front 0 (PN BB833))
+      (place B9_D2 12750 -48500 front 0 (PN BB833))
+      (place N9_Q1 10950 -37600 front 0 (PN 2N3904))
+      (place N5_Q1 10950 -24100 front 0 (PN 2N3904))
+      (place N9_Q2 18550 -37600 front 0 (PN BSS138))
+      (place N2_Q1 24450 -10600 front 0 (PN 2N3904))
+      (place B8_D2 53250 -35000 front 0 (PN BB833))
+      (place N10_Q2 32050 -37600 front 0 (PN BSS138))
+      (place B7_D2 39750 -35000 front 0 (PN BB833))
+      (place B5_D2 12750 -35000 front 0 (PN BB833))
+      (place N2_Q2 32050 -10600 front 0 (PN BSS138))
+      (place N12_Q1 51450 -37600 front 0 (PN 2N3904))
+      (place N7_Q2 45550 -24100 front 0 (PN BSS138))
+      (place N6_Q2 32050 -24100 front 0 (PN BSS138))
+      (place B6_D2 26250 -35000 front 0 (PN BB833))
+      (place B15_D2 36950 -62000 front 0 (PN BB833))
+      (place N3_Q2 45550 -10600 front 0 (PN BSS138))
+      (place N14_Q2 32050 -51100 front 0 (PN BSS138))
+      (place B4_D2 53250 -21500 front 0 (PN BB833))
+      (place B12_D2 53250 -48500 front 0 (PN BB833))
+      (place N16_Q1 51450 -51100 front 0 (PN 2N3904))
+      (place N1_Q1 10950 -10600 front 0 (PN 2N3904))
+      (place N11_Q2 45550 -37600 front 0 (PN BSS138))
+      (place B10_D2 26250 -48500 front 0 (PN BB833))
+      (place N8_Q1 51450 -24100 front 0 (PN 2N3904))
+      (place N5_Q2 18550 -24100 front 0 (PN BSS138))
+      (place N3_Q1 37950 -10600 front 0 (PN 2N3904))
+      (place B1_D2 12750 -21500 front 0 (PN BB833))
+      (place N13_Q1 10950 -51100 front 0 (PN 2N3904))
+    )
+    (component ::1
+      (place CL024 0 -67000 front -90)
+      (place CL008 0 -22478.261 front -90)
+      (place CL010 0 -28043.478 front -90)
+      (place CL003 0 -8565.217 front -90)
+      (place CL002 0 -5782.609 front -90)
+      (place CL004 0 -11347.826 front -90)
+      (place CL016 0 -44739.13 front -90)
+      (place CL013 0 -36391.304 front -90)
+      (place CL014 0 -39173.913 front -90)
+      (place CL021 0 -58652.174 front -90)
+      (place CL015 0 -41956.522 front -90)
+      (place CL006 0 -16913.043 front -90)
+      (place CL011 0 -30826.087 front -90)
+      (place CL007 0 -19695.652 front -90)
+      (place CL017 0 -47521.739 front -90)
+      (place CL018 0 -50304.348 front -90)
+      (place CL001 0 -3000 front -90)
+      (place CL009 0 -25260.87 front -90)
+      (place CL023 0 -64217.391 front -90)
+      (place CL005 0 -14130.435 front -90)
+      (place CL012 0 -33608.696 front -90)
+      (place CL022 0 -61434.783 front -90)
+      (place CL020 0 -55869.565 front -90)
+      (place CL019 0 -53086.957 front -90)
+    )
+    (component ::2
+      (place CR001 70000 -3000 front 90)
+      (place CR022 70000 -61434.783 front 90)
+      (place CR018 70000 -50304.348 front 90)
+      (place CR017 70000 -47521.739 front 90)
+      (place CR020 70000 -55869.565 front 90)
+      (place CR010 70000 -28043.478 front 90)
+      (place CR024 70000 -67000 front 90)
+      (place CR016 70000 -44739.13 front 90)
+      (place CR015 70000 -41956.522 front 90)
+      (place CR004 70000 -11347.826 front 90)
+      (place CR021 70000 -58652.174 front 90)
+      (place CR013 70000 -36391.304 front 90)
+      (place CR009 70000 -25260.87 front 90)
+      (place CR006 70000 -16913.043 front 90)
+      (place CR007 70000 -19695.652 front 90)
+      (place CR019 70000 -53086.957 front 90)
+      (place CR014 70000 -39173.913 front 90)
+      (place CR023 70000 -64217.391 front 90)
+      (place CR002 70000 -5782.609 front 90)
+      (place CR012 70000 -33608.696 front 90)
+      (place CR005 70000 -14130.435 front 90)
+      (place CR011 70000 -30826.087 front 90)
+      (place CR003 70000 -8565.217 front 90)
+      (place CR008 70000 -22478.261 front 90)
+    )
+    (component ::3
+      (place CT019 53086.957 0 front 0)
+      (place CT010 28043.478 0 front 0)
+      (place CT001 3000 0 front 0)
+      (place CT004 11347.826 0 front 0)
+      (place CT006 16913.043 0 front 0)
+      (place CT009 25260.87 0 front 0)
+      (place CT005 14130.435 0 front 0)
+      (place CT018 50304.348 0 front 0)
+      (place CT023 64217.391 0 front 0)
+      (place CT015 41956.522 0 front 0)
+      (place CT008 22478.261 0 front 0)
+      (place CT021 58652.174 0 front 0)
+      (place CT002 5782.609 0 front 0)
+      (place CT017 47521.739 0 front 0)
+      (place CT016 44739.13 0 front 0)
+      (place CT014 39173.913 0 front 0)
+      (place CT020 55869.565 0 front 0)
+      (place CT003 8565.217 0 front 0)
+      (place CT011 30826.087 0 front 0)
+      (place CT022 61434.783 0 front 0)
+      (place CT024 67000 0 front 0)
+      (place CT007 19695.652 0 front 0)
+      (place CT012 33608.696 0 front 0)
+      (place CT013 36391.304 0 front 0)
+    )
+    (component "SOIC-8_3.9x4.9mm_P1.27mm"
+      (place N4_U1 55250 -14750 front 0 (PN LM393))
+      (place N14_U1 28250 -55250 front 0 (PN LM393))
+      (place N9_U1 14750 -41750 front 0 (PN LM393))
+      (place N6_U1 28250 -28250 front 0 (PN LM393))
+      (place N16_U1 55250 -55250 front 0 (PN LM393))
+      (place N8_U1 55250 -28250 front 0 (PN LM393))
+      (place N3_U1 41750 -14750 front 0 (PN LM393))
+      (place N15_U1 41750 -55250 front 0 (PN LM393))
+      (place N13_U1 14750 -55250 front 0 (PN LM393))
+      (place N10_U1 28250 -41750 front 0 (PN LM393))
+      (place N12_U1 55250 -41750 front 0 (PN LM393))
+      (place N2_U1 28250 -14750 front 0 (PN LM393))
+      (place N11_U1 41750 -41750 front 0 (PN LM393))
+      (place N7_U1 41750 -28250 front 0 (PN LM393))
+      (place N5_U1 14750 -28250 front 0 (PN LM393))
+      (place N1_U1 14750 -14750 front 0 (PN LM393))
+    )
+    (component L_1008_2520Metric
+      (place B4_L1 57250 -21500 front 0 (PN 100uH))
+      (place B13_L1 19550 -62000 front 0 (PN 100uH))
+      (place B15_L1 46550 -62000 front 0 (PN 100uH))
+      (place B5_L1 16750 -35000 front 0 (PN 100uH))
+      (place B2_L1 30250 -21500 front 0 (PN 100uH))
+      (place B1_L1 16750 -21500 front 0 (PN 100uH))
+      (place B11_L1 43750 -48500 front 0 (PN 100uH))
+      (place B7_L1 43750 -35000 front 0 (PN 100uH))
+      (place B12_L1 57250 -48500 front 0 (PN 100uH))
+      (place B8_L1 57250 -35000 front 0 (PN 100uH))
+      (place B6_L1 30250 -35000 front 0 (PN 100uH))
+      (place B10_L1 30250 -48500 front 0 (PN 100uH))
+      (place B14_L1 33050 -62000 front 0 (PN 100uH))
+      (place B9_L1 16750 -48500 front 0 (PN 100uH))
+      (place B3_L1 43750 -21500 front 0 (PN 100uH))
+    )
+  )
+  (library
+    (image R_0603_1608Metric
+      (outline (polygon signal 0  1675 -945  -1675 -945  -1675 945  1675 945))
+      (outline (path signal 120  -227.064 735  227.064 735))
+      (outline (path signal 120  -227.064 -735  227.064 -735))
+      (outline (path signal 100  -1000 625  1000 625  1000 -625  -1000 -625  -1000 625))
+      (pin RoundRect[T]Pad_800.000000x900.000000_200.761000_um_0.000000_0 1 -750 0)
+      (pin RoundRect[T]Pad_800.000000x900.000000_200.761000_um_0.000000_0 2 750 0)
+    )
+    (image ""
+      (pin RoundRect[A]Pad_500.000000x1000.000000_125.476000_um_0.000000_0 (rotate 180) @1 0 0)
+    )
+    (image C_0603_1608Metric
+      (outline (polygon signal 0  1695 -975  -1695 -975  -1695 975  1695 975))
+      (outline (path signal 120  -261.252 735  261.252 735))
+      (outline (path signal 120  -261.252 -735  261.252 -735))
+      (outline (path signal 100  -1000 625  1000 625  1000 -625  -1000 -625  -1000 625))
+      (pin RoundRect[T]Pad_800.000000x900.000000_200.761000_um_0.000000_0 1 -750 0)
+      (pin RoundRect[T]Pad_800.000000x900.000000_200.761000_um_0.000000_0 2 750 0)
+    )
+    (image "SOT-23"
+      (outline (polygon signal 0  895 545  1925 545  1925 -545  895 -545  895 -1695  -895 -1695
+            -895 -1495  -1925 -1495  -1925 -395  -895 -395  -895 395  -1925 395
+            -1925 1495  -895 1495  -895 1695  895 1695))
+      (outline (path signal 120  -760 1560  760 1560))
+      (outline (path signal 120  -760 1510  -760 1560))
+      (outline (path signal 120  -760 -390  -760 390))
+      (outline (path signal 120  -760 -1560  -760 -1510))
+      (outline (path signal 120  760 1560  760 560))
+      (outline (path signal 120  760 -560  760 -1560))
+      (outline (path signal 120  760 -1560  -760 -1560))
+      (pin RoundRect[T]Pad_1475.000000x600.000000_150.571000_um_0.000000_0 1 -937.5 950)
+      (pin RoundRect[T]Pad_1475.000000x600.000000_150.571000_um_0.000000_0 2 -937.5 -950)
+      (pin RoundRect[T]Pad_1475.000000x600.000000_150.571000_um_0.000000_0 3 937.5 0)
+    )
+    (image ::1
+      (pin RoundRect[A]Pad_500.000000x1000.000000_125.476000_um_0.000000_0 (rotate 90) @1 0 0)
+    )
+    (image ::2
+      (pin RoundRect[A]Pad_500.000000x1000.000000_125.476000_um_0.000000_0 (rotate 270) @1 0 0)
+    )
+    (image ::3
+      (pin RoundRect[A]Pad_500.000000x1000.000000_125.476000_um_0.000000_0 @1 0 0)
+    )
+    (image "SOIC-8_3.9x4.9mm_P1.27mm"
+      (outline (polygon signal 0  2195 2455  3695 2455  3695 -2455  2195 -2455  2195 -2695
+            -2195 -2695  -2195 -2455  -3695 -2455  -3695 2455  -2195 2455
+            -2195 2695  2195 2695))
+      (outline (path signal 120  -2060 2560  2060 2560))
+      (outline (path signal 120  -2060 2465  -2060 2560))
+      (outline (path signal 120  -2060 -2560  -2060 -2465))
+      (outline (path signal 120  2060 2560  2060 2465))
+      (outline (path signal 120  2060 -2465  2060 -2560))
+      (outline (path signal 120  2060 -2560  -2060 -2560))
+      (pin RoundRect[T]Pad_1570.000000x600.000000_150.571000_um_0.000000_0 1 -2475 1905)
+      (pin RoundRect[T]Pad_1570.000000x600.000000_150.571000_um_0.000000_0 2 -2475 635)
+      (pin RoundRect[T]Pad_1570.000000x600.000000_150.571000_um_0.000000_0 3 -2475 -635)
+      (pin RoundRect[T]Pad_1570.000000x600.000000_150.571000_um_0.000000_0 4 -2475 -1905)
+      (pin RoundRect[T]Pad_1570.000000x600.000000_150.571000_um_0.000000_0 5 2475 -1905)
+      (pin RoundRect[T]Pad_1570.000000x600.000000_150.571000_um_0.000000_0 6 2475 -635)
+      (pin RoundRect[T]Pad_1570.000000x600.000000_150.571000_um_0.000000_0 7 2475 635)
+      (pin RoundRect[T]Pad_1570.000000x600.000000_150.571000_um_0.000000_0 8 2475 1905)
+    )
+    (image L_1008_2520Metric
+      (outline (polygon signal 0  1945 -1345  -1945 -1345  -1945 1345  1945 1345))
+      (outline (path signal 120  -261.252 1110  261.252 1110))
+      (outline (path signal 120  -261.252 -1110  261.252 -1110))
+      (outline (path signal 100  -1250 1000  1250 1000  1250 -1000  -1250 -1000  -1250 1000))
+      (pin RoundRect[T]Pad_1250.000000x2200.000000_250.951000_um_0.000000_0 1 -1075 0)
+      (pin RoundRect[T]Pad_1250.000000x2200.000000_250.951000_um_0.000000_0 2 1075 0)
+    )
+    (padstack RoundRect[A]Pad_500.000000x1000.000000_125.476000_um_0.000000_0
+      (shape (polygon F.Cu 0  -250.476 375  -240.925 423.018  -213.725 463.725  -173.018 490.925
+            -125 500.476  125 500.476  173.018 490.925  213.725 463.725
+            240.925 423.018  250.476 375  250.476 -375  240.925 -423.018
+            213.725 -463.725  173.018 -490.925  125 -500.476  -125 -500.476
+            -173.018 -490.925  -213.725 -463.725  -240.925 -423.018  -250.476 -375
+            -250.476 375))
+      (shape (polygon In1.Cu 0  -250.476 375  -240.925 423.018  -213.725 463.725  -173.018 490.925
+            -125 500.476  125 500.476  173.018 490.925  213.725 463.725
+            240.925 423.018  250.476 375  250.476 -375  240.925 -423.018
+            213.725 -463.725  173.018 -490.925  125 -500.476  -125 -500.476
+            -173.018 -490.925  -213.725 -463.725  -240.925 -423.018  -250.476 -375
+            -250.476 375))
+      (shape (polygon In2.Cu 0  -250.476 375  -240.925 423.018  -213.725 463.725  -173.018 490.925
+            -125 500.476  125 500.476  173.018 490.925  213.725 463.725
+            240.925 423.018  250.476 375  250.476 -375  240.925 -423.018
+            213.725 -463.725  173.018 -490.925  125 -500.476  -125 -500.476
+            -173.018 -490.925  -213.725 -463.725  -240.925 -423.018  -250.476 -375
+            -250.476 375))
+      (shape (polygon B.Cu 0  -250.476 375  -240.925 423.018  -213.725 463.725  -173.018 490.925
+            -125 500.476  125 500.476  173.018 490.925  213.725 463.725
+            240.925 423.018  250.476 375  250.476 -375  240.925 -423.018
+            213.725 -463.725  173.018 -490.925  125 -500.476  -125 -500.476
+            -173.018 -490.925  -213.725 -463.725  -240.925 -423.018  -250.476 -375
+            -250.476 375))
+      (attach off)
+    )
+    (padstack RoundRect[T]Pad_800.000000x900.000000_200.761000_um_0.000000_0
+      (shape (polygon F.Cu 0  -400.761 250  -385.479 326.828  -341.959 391.959  -276.828 435.479
+            -199.999 450.76  200 450.761  276.828 435.479  341.959 391.959
+            385.479 326.828  400.76 249.999  400.761 -250  385.479 -326.828
+            341.959 -391.959  276.828 -435.479  199.999 -450.76  -200 -450.761
+            -276.828 -435.479  -341.959 -391.959  -385.479 -326.828  -400.76 -249.999
+            -400.761 250))
+      (attach off)
+    )
+    (padstack RoundRect[T]Pad_1250.000000x2200.000000_250.951000_um_0.000000_0
+      (shape (polygon F.Cu 0  -625.951 850  -606.848 946.035  -552.449 1027.45  -471.035 1081.85
+            -374.999 1100.95  375 1100.95  471.035 1081.85  552.449 1027.45
+            606.848 946.035  625.95 849.999  625.951 -850  606.848 -946.035
+            552.449 -1027.45  471.035 -1081.85  374.999 -1100.95  -375 -1100.95
+            -471.035 -1081.85  -552.449 -1027.45  -606.848 -946.035  -625.95 -849.999
+            -625.951 850))
+      (attach off)
+    )
+    (padstack RoundRect[T]Pad_1475.000000x600.000000_150.571000_um_0.000000_0
+      (shape (polygon F.Cu 0  -738.071 150  -726.609 207.621  -693.97 256.47  -645.121 289.109
+            -587.499 300.57  587.5 300.571  645.121 289.109  693.97 256.47
+            726.609 207.621  738.07 149.999  738.071 -150  726.609 -207.621
+            693.97 -256.47  645.121 -289.109  587.499 -300.57  -587.5 -300.571
+            -645.121 -289.109  -693.97 -256.47  -726.609 -207.621  -738.07 -149.999
+            -738.071 150))
+      (attach off)
+    )
+    (padstack RoundRect[T]Pad_1570.000000x600.000000_150.571000_um_0.000000_0
+      (shape (polygon F.Cu 0  -785.571 150  -774.109 207.621  -741.47 256.47  -692.621 289.109
+            -634.999 300.57  635 300.571  692.621 289.109  741.47 256.47
+            774.109 207.621  785.57 149.999  785.571 -150  774.109 -207.621
+            741.47 -256.47  692.621 -289.109  634.999 -300.57  -635 -300.571
+            -692.621 -289.109  -741.47 -256.47  -774.109 -207.621  -785.57 -149.999
+            -785.571 150))
+      (attach off)
+    )
+    (padstack "Via[0-3]_600:300_um"
+      (shape (circle F.Cu 600))
+      (shape (circle In1.Cu 600))
+      (shape (circle In2.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net N14_V_tune
+      (pins N14_R4-1)
+    )
+    (net N14_V_TH
+      (pins N14_R4-2 N14_U1-2 N14_R5-1)
+    )
+    (net N7_V_m
+      (pins N7_R1-1 N7_Q1-1 N7_Q1-2 N7_C1-2 N7_Q2-2 N7_U1-3 N7_R2-1 N7_R2-2)
+    )
+    (net N7_GND
+      (pins N7_R1-2 N7_Q2-3 N7_U1-4 N7_R5-2)
+    )
+    (net N13_VSS
+      (pins N13_R3-1 N13_R3-2 N13_Q1-3)
+    )
+    (net N11_VSS
+      (pins N11_R3-1 N11_R3-2 N11_Q1-3)
+    )
+    (net N5_I_ext
+      (pins N5_C1-1)
+    )
+    (net N5_V_m
+      (pins N5_C1-2 N5_Q1-1 N5_Q1-2 N5_R2-1 N5_R2-2 N5_R1-1 N5_U1-3 N5_Q2-2)
+    )
+    (net N15_V_m
+      (pins N15_Q1-1 N15_Q1-2 N15_Q2-2 N15_R1-1 N15_U1-3 N15_C1-2 N15_R2-1 N15_R2-2
+        CB006-@1)
+    )
+    (net N15_VSS
+      (pins N15_Q1-3 N15_R3-1 N15_R3-2)
+    )
+    (net B2_LC_MID
+      (pins B2_D2-1 B2_L1-2)
+    )
+    (net B2_GND
+      (pins B2_D2-2)
+    )
+    (net N16_VSS
+      (pins N16_R3-1 N16_R3-2 N16_Q1-3)
+    )
+    (net N15_SPIKE_OUT
+      (pins CB008-@1 N15_Q2-1 N15_U1-1 N15_R6-2)
+    )
+    (net N1_V_m
+      (pins N1_R1-1 N1_Q2-2 CB014-@1 N1_R2-1 N1_R2-2 N1_Q1-1 N1_Q1-2 N1_C1-2 N1_U1-3)
+    )
+    (net N1_GND
+      (pins N1_R1-2 N1_Q2-3 N1_R5-2 N1_U1-4)
+    )
+    (net N4_V_tune
+      (pins N4_R4-1)
+    )
+    (net N4_V_TH
+      (pins N4_R4-2 N4_U1-2 N4_R5-1)
+    )
+    (net N10_V_tune
+      (pins N10_R4-1)
+    )
+    (net N10_V_TH
+      (pins N10_R4-2 N10_R5-1 N10_U1-2)
+    )
+    (net N4_SPIKE_OUT
+      (pins N4_U1-1 N4_Q2-1 N4_R6-2)
+    )
+    (net N4_V_m
+      (pins N4_U1-3 N4_R2-1 N4_R2-2 N4_Q2-2 N4_Q1-1 N4_Q1-2 N4_R1-1 N4_C1-2)
+    )
+    (net N4_GND
+      (pins N4_U1-4 N4_Q2-3 N4_R5-2 N4_R1-2)
+    )
+    (net N4_VDD
+      (pins N4_U1-8 N4_R6-1)
+    )
+    (net N4_VSS
+      (pins N4_R3-1 N4_R3-2 N4_Q1-3)
+    )
+    (net N2_VSS
+      (pins N2_R3-1 N2_R3-2 N2_Q1-3)
+    )
+    (net N6_VDD
+      (pins N6_R6-1 N6_U1-8)
+    )
+    (net N6_SPIKE_OUT
+      (pins N6_R6-2 N6_U1-1 N6_Q2-1)
+    )
+    (net N10_V_m
+      (pins N10_Q1-1 N10_Q1-2 N10_R2-1 N10_R2-2 N10_Q2-2 N10_C1-2 N10_U1-3 N10_R1-1)
+    )
+    (net N10_VSS
+      (pins N10_Q1-3 N10_R3-1 N10_R3-2)
+    )
+    (net B4_NODE_A
+      (pins B4_L1-1)
+    )
+    (net B4_LC_MID
+      (pins B4_L1-2 B4_D2-1)
+    )
+    (net N2_V_m
+      (pins N2_R1-1 CB019-@1 N2_C1-2 N2_Q1-1 N2_Q1-2 N2_Q2-2 CB018-@1 N2_U1-3 N2_R2-1
+        N2_R2-2)
+    )
+    (net N2_GND
+      (pins N2_R1-2 N2_Q2-3 N2_U1-4 N2_R5-2)
+    )
+    (net N13_V_TH
+      (pins N13_R5-1 N13_U1-2 N13_R4-2)
+    )
+    (net N13_GND
+      (pins N13_R5-2 N13_Q2-3 N13_U1-4 N13_R1-2)
+    )
+    (net B3_LC_MID
+      (pins B3_D2-1 B3_L1-2)
+    )
+    (net B3_GND
+      (pins B3_D2-2)
+    )
+    (net N14_SPIKE_OUT
+      (pins N14_U1-1 N14_R6-2 N14_Q2-1 CB004-@1)
+    )
+    (net N14_V_m
+      (pins N14_U1-3 N14_Q1-1 N14_Q1-2 N14_R2-1 N14_R2-2 N14_R1-1 N14_C1-2 N14_Q2-2)
+    )
+    (net N14_GND
+      (pins N14_U1-4 N14_R1-2 N14_R5-2 N14_Q2-3)
+    )
+    (net N14_VDD
+      (pins N14_U1-8 N14_R6-1)
+    )
+    (net N1_VSS
+      (pins N1_R3-1 N1_R3-2 N1_Q1-3)
+    )
+    (net N1_VDD
+      (pins N1_R6-1 N1_U1-8)
+    )
+    (net N1_SPIKE_OUT
+      (pins N1_R6-2 N1_Q2-1 CB016-@1 N1_U1-1)
+    )
+    (net N13_SPIKE_OUT
+      (pins N13_Q2-1 N13_R6-2 N13_U1-1)
+    )
+    (net N13_V_m
+      (pins N13_Q2-2 N13_R2-1 N13_R2-2 N13_U1-3 N13_R1-1 N13_C1-2 N13_Q1-1 N13_Q1-2)
+    )
+    (net N15_GND
+      (pins N15_Q2-3 N15_R5-2 N15_R1-2 N15_U1-4)
+    )
+    (net N10_GND
+      (pins N10_R5-2 N10_Q2-3 N10_U1-4 N10_R1-2)
+    )
+    (net B13_NODE_A
+      (pins B13_L1-1)
+    )
+    (net B13_LC_MID
+      (pins B13_L1-2 B13_D2-1)
+    )
+    (net N9_SPIKE_OUT
+      (pins N9_U1-1 N9_R6-2 N9_Q2-1)
+    )
+    (net N9_V_TH
+      (pins N9_U1-2 N9_R4-2 N9_R5-1)
+    )
+    (net N9_V_m
+      (pins N9_U1-3 N9_R1-1 N9_R2-1 N9_R2-2 N9_Q1-1 N9_Q1-2 N9_Q2-2 N9_C1-2)
+    )
+    (net N9_GND
+      (pins N9_U1-4 N9_R1-2 N9_Q2-3 N9_R5-2)
+    )
+    (net N9_VDD
+      (pins N9_U1-8 N9_R6-1)
+    )
+    (net B11_LC_MID
+      (pins B11_D2-1 B11_L1-2)
+    )
+    (net B11_GND
+      (pins B11_D2-2)
+    )
+    (net N15_V_TH
+      (pins N15_R5-1 N15_R4-2 N15_U1-2)
+    )
+    (net N14_VSS
+      (pins N14_R3-1 N14_R3-2 N14_Q1-3)
+    )
+    (net N8_V_m
+      (pins N8_R2-1 N8_R2-2 N8_Q2-2 N8_C1-2 N8_U1-3 N8_R1-1 N8_Q1-1 N8_Q1-2)
+    )
+    (net N6_V_m
+      (pins N6_Q1-1 N6_Q1-2 N6_U1-3 N6_R1-1 N6_R2-1 N6_R2-2 N6_Q2-2 N6_C1-2)
+    )
+    (net N6_VSS
+      (pins N6_Q1-3 N6_R3-1 N6_R3-2)
+    )
+    (net N8_SPIKE_OUT
+      (pins N8_Q2-1 N8_U1-1 N8_R6-2)
+    )
+    (net N8_GND
+      (pins N8_Q2-3 N8_R5-2 N8_U1-4 N8_R1-2)
+    )
+    (net N6_V_TH
+      (pins N6_U1-2 N6_R5-1 N6_R4-2)
+    )
+    (net N6_GND
+      (pins N6_U1-4 N6_R1-2 N6_R5-2 N6_Q2-3)
+    )
+    (net N16_SPIKE_OUT
+      (pins N16_Q2-1 N16_U1-1 CB012-@1 N16_R6-2)
+    )
+    (net N16_V_m
+      (pins N16_Q2-2 N16_R1-1 N16_U1-3 N16_C1-2 N16_R2-1 N16_R2-2 CB010-@1 N16_Q1-1
+        N16_Q1-2)
+    )
+    (net N16_GND
+      (pins N16_Q2-3 N16_R1-2 N16_U1-4 N16_R5-2)
+    )
+    (net B15_NODE_A
+      (pins B15_L1-1)
+    )
+    (net B15_LC_MID
+      (pins B15_L1-2 B15_D2-1)
+    )
+    (net N7_V_tune
+      (pins N7_R4-1)
+    )
+    (net N7_V_TH
+      (pins N7_R4-2 N7_U1-2 N7_R5-1)
+    )
+    (net N9_VSS
+      (pins N9_R3-1 N9_R3-2 N9_Q1-3)
+    )
+    (net N3_VDD
+      (pins N3_R6-1 N3_U1-8)
+    )
+    (net N3_SPIKE_OUT
+      (pins N3_R6-2 N3_U1-1 N3_Q2-1)
+    )
+    (net N11_V_m
+      (pins N11_R2-1 N11_R2-2 N11_Q1-1 N11_Q1-2 N11_R1-1 N11_U1-3 N11_C1-2 N11_Q2-2)
+    )
+    (net N12_I_ext
+      (pins N12_C1-1)
+    )
+    (net N12_V_m
+      (pins N12_C1-2 N12_Q2-2 N12_R1-1 N12_Q1-1 N12_Q1-2 N12_U1-3 N12_R2-1 N12_R2-2)
+    )
+    (net N10_VDD
+      (pins CB021-@1 N10_U1-8 N10_R6-1)
+    )
+    (net B13_GND
+      (pins B13_D2-2)
+    )
+    (net N15_V_tune
+      (pins N15_R4-1)
+    )
+    (net B5_NODE_A
+      (pins B5_L1-1)
+    )
+    (net B5_LC_MID
+      (pins B5_L1-2 B5_D2-1)
+    )
+    (net N7_VSS
+      (pins N7_Q1-3 N7_R3-1 N7_R3-2)
+    )
+    (net N16_V_TH
+      (pins N16_U1-2 N16_R5-1 N16_R4-2)
+    )
+    (net N16_VDD
+      (pins N16_U1-8 N16_R6-1)
+    )
+    (net N2_I_ext
+      (pins N2_C1-1)
+    )
+    (net B2_NODE_A
+      (pins B2_L1-1)
+    )
+    (net N12_SPIKE_OUT
+      (pins N12_Q2-1 N12_R6-2 N12_U1-1)
+    )
+    (net N12_GND
+      (pins N12_Q2-3 N12_R1-2 N12_U1-4 N12_R5-2)
+    )
+    (net N1_V_tune
+      (pins N1_R4-1)
+    )
+    (net N1_V_TH
+      (pins N1_R4-2 N1_R5-1 N1_U1-2)
+    )
+    (net N3_I_ext
+      (pins N3_C1-1)
+    )
+    (net N3_V_m
+      (pins N3_C1-2 N3_U1-3 N3_R1-1 N3_Q2-2 N3_Q1-1 N3_Q1-2 N3_R2-1 N3_R2-2)
+    )
+    (net N5_V_tune
+      (pins N5_R4-1)
+    )
+    (net N5_V_TH
+      (pins N5_R4-2 N5_R5-1 N5_U1-2)
+    )
+    (net N3_V_tune
+      (pins N3_R4-1)
+    )
+    (net N3_V_TH
+      (pins N3_R4-2 N3_U1-2 N3_R5-1)
+    )
+    (net N8_V_TH
+      (pins N8_R5-1 N8_R4-2 N8_U1-2)
+    )
+    (net N8_VSS
+      (pins N8_R3-1 N8_R3-2 N8_Q1-3)
+    )
+    (net N8_I_ext
+      (pins N8_C1-1)
+    )
+    (net N8_V_tune
+      (pins N8_R4-1)
+    )
+    (net B1_NODE_A
+      (pins B1_L1-1)
+    )
+    (net B1_LC_MID
+      (pins B1_L1-2 B1_D2-1)
+    )
+    (net N8_VDD
+      (pins N8_U1-8 N8_R6-1)
+    )
+    (net B11_NODE_A
+      (pins B11_L1-1)
+    )
+    (net N3_GND
+      (pins N3_U1-4 N3_R1-2 N3_Q2-3 N3_R5-2)
+    )
+    (net N7_I_ext
+      (pins N7_C1-1)
+    )
+    (net B14_LC_MID
+      (pins B14_D2-1 B14_L1-2)
+    )
+    (net B14_GND
+      (pins B14_D2-2)
+    )
+    (net N16_I_ext
+      (pins N16_C1-1)
+    )
+    (net N5_VSS
+      (pins N5_R3-1 N5_R3-2 N5_Q1-3)
+    )
+    (net B9_LC_MID
+      (pins B9_D2-1 B9_L1-2)
+    )
+    (net B9_GND
+      (pins B9_D2-2)
+    )
+    (net N3_VSS
+      (pins N3_R3-1 N3_R3-2 N3_Q1-3)
+    )
+    (net B7_NODE_A
+      (pins B7_L1-1)
+    )
+    (net B7_LC_MID
+      (pins B7_L1-2 B7_D2-1)
+    )
+    (net B12_NODE_A
+      (pins B12_L1-1)
+    )
+    (net B12_LC_MID
+      (pins B12_L1-2 B12_D2-1)
+    )
+    (net N5_GND
+      (pins N5_R5-2 N5_R1-2 N5_U1-4 N5_Q2-3)
+    )
+    (net N15_VDD
+      (pins N15_U1-8 N15_R6-1)
+    )
+    (net N11_GND
+      (pins N11_R1-2 N11_U1-4 N11_R5-2 N11_Q2-3)
+    )
+    (net N16_V_tune
+      (pins N16_R4-1)
+    )
+    (net B8_LC_MID
+      (pins B8_D2-1 B8_L1-2)
+    )
+    (net B8_GND
+      (pins B8_D2-2)
+    )
+    (net N10_SPIKE_OUT
+      (pins N10_Q2-1 N10_U1-1 N10_R6-2)
+    )
+    (net B8_NODE_A
+      (pins B8_L1-1)
+    )
+    (net B7_GND
+      (pins B7_D2-2)
+    )
+    (net N13_VDD
+      (pins N13_R6-1 N13_U1-8)
+    )
+    (net B5_GND
+      (pins B5_D2-2)
+    )
+    (net N2_SPIKE_OUT
+      (pins N2_Q2-1 N2_R6-2 N2_U1-1)
+    )
+    (net N10_I_ext
+      (pins N10_C1-1)
+    )
+    (net B6_NODE_A
+      (pins B6_L1-1)
+    )
+    (net B6_LC_MID
+      (pins B6_L1-2 B6_D2-1)
+    )
+    (net N9_I_ext
+      (pins N9_C1-1)
+    )
+    (net N12_VSS
+      (pins N12_Q1-3 N12_R3-1 N12_R3-2)
+    )
+    (net N11_V_tune
+      (pins N11_R4-1)
+    )
+    (net N11_V_TH
+      (pins N11_R4-2 N11_U1-2 N11_R5-1)
+    )
+    (net N4_I_ext
+      (pins N4_C1-1)
+    )
+    (net N7_SPIKE_OUT
+      (pins N7_Q2-1 N7_U1-1 N7_R6-2)
+    )
+    (net N2_V_tune
+      (pins N2_R4-1)
+    )
+    (net N2_V_TH
+      (pins N2_R4-2 N2_U1-2 N2_R5-1)
+    )
+    (net N12_VDD
+      (pins N12_R6-1 N12_U1-8)
+    )
+    (net N9_V_tune
+      (pins N9_R4-1)
+    )
+    (net B6_GND
+      (pins B6_D2-2)
+    )
+    (net N12_V_TH
+      (pins N12_U1-2 N12_R4-2 N12_R5-1)
+    )
+    (net N15_I_ext
+      (pins N15_C1-1)
+    )
+    (net N13_V_tune
+      (pins N13_R4-1)
+    )
+    (net N14_I_ext
+      (pins N14_C1-1)
+    )
+    (net N2_VDD
+      (pins N2_R6-1 N2_U1-8)
+    )
+    (net B15_GND
+      (pins B15_D2-2)
+    )
+    (net N5_VDD
+      (pins N5_R6-1 N5_U1-8)
+    )
+    (net N5_SPIKE_OUT
+      (pins N5_R6-2 N5_U1-1 N5_Q2-1)
+    )
+    (net N6_V_tune
+      (pins N6_R4-1)
+    )
+    (net B4_GND
+      (pins B4_D2-2)
+    )
+    (net N12_V_tune
+      (pins N12_R4-1)
+    )
+    (net N11_SPIKE_OUT
+      (pins N11_U1-1 N11_R6-2 N11_Q2-1)
+    )
+    (net N11_VDD
+      (pins N11_U1-8 N11_R6-1)
+    )
+    (net N11_I_ext
+      (pins N11_C1-1)
+    )
+    (net B12_GND
+      (pins B12_D2-2)
+    )
+    (net N7_VDD
+      (pins N7_U1-8 N7_R6-1)
+    )
+    (net B10_NODE_A
+      (pins B10_L1-1)
+    )
+    (net B10_LC_MID
+      (pins B10_L1-2 B10_D2-1)
+    )
+    (net B14_NODE_A
+      (pins B14_L1-1)
+    )
+    (net N13_I_ext
+      (pins N13_C1-1)
+    )
+    (net B9_NODE_A
+      (pins B9_L1-1)
+    )
+    (net B10_GND
+      (pins B10_D2-2)
+    )
+    (net B3_NODE_A
+      (pins B3_L1-1)
+    )
+    (net N6_I_ext
+      (pins N6_C1-1)
+    )
+    (net N1_I_ext
+      (pins N1_C1-1)
+    )
+    (net B1_GND
+      (pins B1_D2-2)
+    )
+    (class kicad_default B10_GND B10_LC_MID B10_NODE_A B11_GND B11_LC_MID
+      B11_NODE_A B12_GND B12_LC_MID B12_NODE_A B13_GND B13_LC_MID B13_NODE_A
+      B14_GND B14_LC_MID B14_NODE_A B15_GND B15_LC_MID B15_NODE_A B1_GND B1_LC_MID
+      B1_NODE_A B2_GND B2_LC_MID B2_NODE_A B3_GND B3_LC_MID B3_NODE_A B4_GND
+      B4_LC_MID B4_NODE_A B5_GND B5_LC_MID B5_NODE_A B6_GND B6_LC_MID B6_NODE_A
+      B7_GND B7_LC_MID B7_NODE_A B8_GND B8_LC_MID B8_NODE_A B9_GND B9_LC_MID
+      B9_NODE_A N10_GND N10_I_ext N10_SPIKE_OUT N10_VDD N10_VSS N10_V_TH N10_V_m
+      N10_V_tune N11_GND N11_I_ext N11_SPIKE_OUT N11_VDD N11_VSS N11_V_TH
+      N11_V_m N11_V_tune N12_GND N12_I_ext N12_SPIKE_OUT N12_VDD N12_VSS N12_V_TH
+      N12_V_m N12_V_tune N13_GND N13_I_ext N13_SPIKE_OUT N13_VDD N13_VSS N13_V_TH
+      N13_V_m N13_V_tune N14_GND N14_I_ext N14_SPIKE_OUT N14_VDD N14_VSS N14_V_TH
+      N14_V_m N14_V_tune N15_GND N15_I_ext N15_SPIKE_OUT N15_VDD N15_VSS N15_V_TH
+      N15_V_m N15_V_tune N16_GND N16_I_ext N16_SPIKE_OUT N16_VDD N16_VSS N16_V_TH
+      N16_V_m N16_V_tune N1_GND N1_I_ext N1_SPIKE_OUT N1_VDD N1_VSS N1_V_TH
+      N1_V_m N1_V_tune N2_GND N2_I_ext N2_SPIKE_OUT N2_VDD N2_VSS N2_V_TH
+      N2_V_m N2_V_tune N3_GND N3_I_ext N3_SPIKE_OUT N3_VDD N3_VSS N3_V_TH
+      N3_V_m N3_V_tune N4_GND N4_I_ext N4_SPIKE_OUT N4_VDD N4_VSS N4_V_TH
+      N4_V_m N4_V_tune N5_GND N5_I_ext N5_SPIKE_OUT N5_VDD N5_VSS N5_V_TH
+      N5_V_m N5_V_tune N6_GND N6_I_ext N6_SPIKE_OUT N6_VDD N6_VSS N6_V_TH
+      N6_V_m N6_V_tune N7_GND N7_I_ext N7_SPIKE_OUT N7_VDD N7_VSS N7_V_TH
+      N7_V_m N7_V_tune N8_GND N8_I_ext N8_SPIKE_OUT N8_VDD N8_VSS N8_V_TH
+      N8_V_m N8_V_tune N9_GND N9_I_ext N9_SPIKE_OUT N9_VDD N9_VSS N9_V_TH
+      N9_V_m N9_V_tune
+      (circuit
+        (use_via "Via[0-3]_600:300_um")
+      )
+      (rule
+        (width 200)
+        (clearance 180)
+      )
+    )
+  )
+  (wiring
+  )
+)
