@@ -155,11 +155,11 @@ _BRIDGE_CORRIDORS: list[tuple[float, float, float]] = [
     (28.25, 48.5, 0.0),    # B10 - col 1
     (41.75, 48.5, 0.0),    # B11 - col 2
     (55.25, 48.5, 0.0),    # B12 - col 3
-    # Between row 3 (Cy=55.25) and board edge (y=70.0): corridor shifted upward
-    # by 2.5mm (from 62.0 to 59.5) to open routing corridors for CB* pads.
-    (14.75, 59.5, 0.0),    # B13 - col 0
-    (28.25, 59.5, 0.0),    # B14 - col 1
-    (41.75, 59.5, 0.0),    # B15 - col 2
+    # Between row 3 (Cy=55.25) and board edge (y=70.0): corridor shifted downward
+    # by 2.5mm (from 59.5 to 62.0) to open routing corridors for CB* pads.
+    (14.75, 62.0, 0.0),    # B13 - col 0
+    (28.25, 62.0, 0.0),    # B14 - col 1
+    (41.75, 62.0, 0.0),    # B15 - col 2
 ]
 
 # Bridge intra-pair separation. D2 (SOT-23) pad3 extends to +1.68mm from the
@@ -167,7 +167,7 @@ _BRIDGE_CORRIDORS: list[tuple[float, float, float]] = [
 # BRIDGE_OFFSET = 2.0 gives gap = 0.625mm between pads (used for vertical corridors).
 # BRIDGE_OFFSET_INTERROW = 5.0 gives more clearance for cross-corridor bridges.
 BRIDGE_OFFSET = 2.0  # mm from corridor centreline (standard)
-BRIDGE_OFFSET_INTERROW = 4.8  # mm for inter-row bridges (B13-B15)
+BRIDGE_OFFSET_INTERROW = 3.5  # mm for inter-row bridges (B13-B15)
 
 # ── Utility functions ─────────────────────────────────────────────────
 

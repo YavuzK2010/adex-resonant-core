@@ -6108,7 +6108,7 @@
 	(footprint "L_1008_2520Metric"
 		(layer "F.Cu")
 		(uuid "1b3b4665-4d37-4a43-8826-0e041af7c4a7")
-		(at 19.55 59.5)
+		(at 18.25 62)
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B13_L1"
@@ -10103,7 +10103,7 @@
 	(footprint "L_1008_2520Metric"
 		(layer "F.Cu")
 		(uuid "309a35a3-d184-476f-9d8a-4bf4158c37b1")
-		(at 46.55 59.5)
+		(at 45.25 62)
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B15_L1"
@@ -11450,7 +11450,7 @@
 	(footprint "SOT-23"
 		(layer "F.Cu")
 		(uuid "3c2feb26-de29-41f4-b96c-704e445b4f75")
-		(at 9.95 59.5)
+		(at 11.25 62)
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B13_D2"
@@ -19068,7 +19068,7 @@
 	(footprint "SOT-23"
 		(layer "F.Cu")
 		(uuid "63e4621d-de09-4a04-b046-5401e2ec3171")
-		(at 23.45 59.5)
+		(at 24.75 62)
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B14_D2"
@@ -34266,7 +34266,7 @@
 	(footprint "SOT-23"
 		(layer "F.Cu")
 		(uuid "b6eee695-05a9-43da-829c-e285dfdced4d")
-		(at 36.95 59.5)
+		(at 38.25 62)
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B15_D2"
@@ -41166,7 +41166,7 @@
 	(footprint "L_1008_2520Metric"
 		(layer "F.Cu")
 		(uuid "d7b00abb-4d8d-42cc-8e6e-299ffe9356c6")
-		(at 33.05 59.5)
+		(at 31.75 62)
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B14_L1"
@@ -47816,7 +47816,7 @@
 			(type default)
 		)
 		(layer "Edge.Cuts")
-		(uuid "18b2facc-17a7-4135-972f-1afadbbfe00e")
+		(uuid "6eea3e6f-a144-4994-9e83-8b28c868b615")
 	)
 	(gr_line
 		(start 0 70)
@@ -47826,7 +47826,7 @@
 			(type default)
 		)
 		(layer "Edge.Cuts")
-		(uuid "2f5aee43-d53b-4761-9c35-cc3304102d9e")
+		(uuid "c3c82bcd-f1d7-4973-9a1a-399eeeba34d5")
 	)
 	(gr_line
 		(start 70 0)
@@ -47836,7 +47836,7 @@
 			(type default)
 		)
 		(layer "Edge.Cuts")
-		(uuid "d7ef27b0-60a9-4606-abf6-73613948f3a8")
+		(uuid "7f8d4444-6df6-4889-9ac3-f5c32c4765b4")
 	)
 	(gr_line
 		(start 70 70)
@@ -47846,7 +47846,7 @@
 			(type default)
 		)
 		(layer "Edge.Cuts")
-		(uuid "73267497-961b-407b-ab75-7e65431af092")
+		(uuid "134e1b41-f7a3-423b-8fe8-69520278b8e6")
 	)
 	(segment
 		(start 27.5 52.75)
@@ -48537,6 +48537,14 @@
 		(uuid "8b1bf449-319f-46f7-ae2e-2237d01a53fd")
 	)
 	(segment
+		(start 16.913043 70)
+		(end 38.1727 58.1227)
+		(width 0.15)
+		(layer "F.Cu")
+		(net "N15_V_m")
+		(uuid "a25e5341-c5ab-4327-80f0-389cd92a0514")
+	)
+	(segment
 		(start 38.1727 58.1227)
 		(end 38.7 58.65)
 		(width 0.2)
@@ -48575,14 +48583,6 @@
 		(layer "F.Cu")
 		(net "N15_V_m")
 		(uuid "c9d99d36-fc72-499c-923c-be1a3b91bb98")
-	)
-	(segment
-		(start 16.913043 70)
-		(end 38.1727 58.1227)
-		(width 0.15)
-		(layer "F.Cu")
-		(net "N15_V_m")
-		(uuid "d7e7eb88-c67c-4b68-92de-69479500c77d")
 	)
 	(segment
 		(start 37.0125 52.05)
@@ -48729,14 +48729,6 @@
 		(uuid "36ace795-3eb0-4e52-a83a-417ae5bcdcb5")
 	)
 	(segment
-		(start 22.478261 70)
-		(end 39.275 53.345)
-		(width 0.15)
-		(layer "F.Cu")
-		(net "N15_SPIKE_OUT")
-		(uuid "46151a5f-8129-4771-91fc-68fb4fa51c39")
-	)
-	(segment
 		(start 39.9787 51.8609)
 		(end 39.9787 52.6413)
 		(width 0.2)
@@ -48809,6 +48801,14 @@
 		(uuid "a14656dd-5680-43bc-8b6b-30ea0963376e")
 	)
 	(segment
+		(start 22.478261 70)
+		(end 39.275 53.345)
+		(width 0.15)
+		(layer "F.Cu")
+		(net "N15_SPIKE_OUT")
+		(uuid "a9e759d8-0345-482d-87aa-5053fa13ac42")
+	)
+	(segment
 		(start 40.319 49.5036)
 		(end 40.319 50.0729)
 		(width 0.15)
@@ -48839,6 +48839,14 @@
 		(layer "F.Cu")
 		(net "N1_V_m")
 		(uuid "3f1ba571-ed74-4cbc-bd60-11ce20708e75")
+	)
+	(segment
+		(start 39.173913 70)
+		(end 17.3 18.65)
+		(width 0.15)
+		(layer "F.Cu")
+		(net "N1_V_m")
+		(uuid "458d83e8-3c91-4017-9404-d25aa4874eb2")
 	)
 	(segment
 		(start 16.5915 10.529)
@@ -48975,14 +48983,6 @@
 		(layer "F.Cu")
 		(net "N1_V_m")
 		(uuid "db8552a9-8598-4110-b0c7-ff1016c01aca")
-	)
-	(segment
-		(start 39.173913 70)
-		(end 17.3 18.65)
-		(width 0.15)
-		(layer "F.Cu")
-		(net "N1_V_m")
-		(uuid "f1ed5489-9195-4d87-92c1-28bf2a4e2a25")
 	)
 	(segment
 		(start 15.5 12.5143)
@@ -50073,6 +50073,14 @@
 		(uuid "0580a5fd-6890-4c21-ba32-01d7083837f4")
 	)
 	(segment
+		(start 50.304348 70)
+		(end 53.086957 70)
+		(width 0.15)
+		(layer "F.Cu")
+		(net "N2_V_m")
+		(uuid "060d60f7-eec3-43df-b51c-e78b5cf353cd")
+	)
+	(segment
 		(start 29 18.65)
 		(end 30.8 18.65)
 		(width 0.2)
@@ -50145,14 +50153,6 @@
 		(uuid "5c98e0df-f0d9-4fc5-9be7-6d0f556a6894")
 	)
 	(segment
-		(start 50.304348 70)
-		(end 53.086957 70)
-		(width 0.15)
-		(layer "F.Cu")
-		(net "N2_V_m")
-		(uuid "5ccd4410-11aa-418e-ab34-ed34109efb88")
-	)
-	(segment
 		(start 23.5125 13.8013)
 		(end 25.0962 15.385)
 		(width 0.2)
@@ -50185,6 +50185,14 @@
 		(uuid "83921696-8d8d-4359-ad56-47a8e5ffa1f2")
 	)
 	(segment
+		(start 53.086957 70)
+		(end 30.8 18.65)
+		(width 0.15)
+		(layer "F.Cu")
+		(net "N2_V_m")
+		(uuid "92ead40b-ab16-4851-a374-69f814f31a44")
+	)
+	(segment
 		(start 23.5125 9.65)
 		(end 24.6382 8.5243)
 		(width 0.2)
@@ -50207,14 +50215,6 @@
 		(layer "F.Cu")
 		(net "N2_V_m")
 		(uuid "acbd7a74-e466-4d95-b09d-3b57de1ffa28")
-	)
-	(segment
-		(start 53.086957 70)
-		(end 30.8 18.65)
-		(width 0.15)
-		(layer "F.Cu")
-		(net "N2_V_m")
-		(uuid "b3903518-c285-4185-a7be-bc9dc1cab147")
 	)
 	(segment
 		(start 31.1125 11.0207)
@@ -50569,14 +50569,6 @@
 		(uuid "0dfb2d4b-b9b6-44c9-8c64-8350e1b55056")
 	)
 	(segment
-		(start 11.347826 70)
-		(end 25.775 53.345)
-		(width 0.15)
-		(layer "F.Cu")
-		(net "N14_SPIKE_OUT")
-		(uuid "4a60c9ec-9305-4db1-b176-1783d0f07908")
-	)
-	(segment
 		(start 30.8125 50.45)
 		(end 31.1125 50.15)
 		(width 0.2)
@@ -50623,6 +50615,14 @@
 		(layer "F.Cu")
 		(net "N14_SPIKE_OUT")
 		(uuid "cc21128c-fb27-467d-8d78-84d03443c452")
+	)
+	(segment
+		(start 11.347826 70)
+		(end 25.775 53.345)
+		(width 0.15)
+		(layer "F.Cu")
+		(net "N14_SPIKE_OUT")
+		(uuid "fae02570-cf7f-4a08-8110-6fbc0839c162")
 	)
 	(segment
 		(start 29 50.45)
@@ -51161,20 +51161,20 @@
 		(uuid "d2639108-393a-4b8c-b117-a9b44b7f6d51")
 	)
 	(segment
+		(start 44.73913 70)
+		(end 16.9791 11.3486)
+		(width 0.15)
+		(layer "B.Cu")
+		(net "N1_SPIKE_OUT")
+		(uuid "0eaf8b77-fc14-4e61-872a-21afd1652209")
+	)
+	(segment
 		(start 16.9791 11.3486)
 		(end 18.8327 9.495)
 		(width 0.2)
 		(layer "B.Cu")
 		(net "N1_SPIKE_OUT")
 		(uuid "9a75381a-873e-4beb-9faf-ae9377847b83")
-	)
-	(segment
-		(start 44.73913 70)
-		(end 16.9791 11.3486)
-		(width 0.15)
-		(layer "B.Cu")
-		(net "N1_SPIKE_OUT")
-		(uuid "9bf54471-7a34-4950-88fd-2396cc7769fa")
 	)
 	(segment
 		(start 14.8033 11.3486)
@@ -52841,6 +52841,14 @@
 		(uuid "10da5c98-f785-48e8-946e-bcdb24c528b8")
 	)
 	(segment
+		(start 33.608696 70)
+		(end 52.775 53.345)
+		(width 0.15)
+		(layer "F.Cu")
+		(net "N16_SPIKE_OUT")
+		(uuid "26c60405-71b6-4ab9-a615-2e6c625b573f")
+	)
+	(segment
 		(start 55.258 49.708)
 		(end 56 50.45)
 		(width 0.2)
@@ -52889,14 +52897,6 @@
 		(uuid "e398a69a-a804-4723-b0b4-f10ec1ea87ef")
 	)
 	(segment
-		(start 33.608696 70)
-		(end 52.775 53.345)
-		(width 0.15)
-		(layer "F.Cu")
-		(net "N16_SPIKE_OUT")
-		(uuid "fde75c1d-98ba-4439-91b4-982a692ce659")
-	)
-	(segment
 		(start 59.3058 47.4989)
 		(end 59.3058 50.4114)
 		(width 0.2)
@@ -52927,6 +52927,14 @@
 		(layer "F.Cu")
 		(net "N16_V_m")
 		(uuid "365ca6dd-7c4f-4dd2-a267-1dfd8600feba")
+	)
+	(segment
+		(start 28.043478 70)
+		(end 51.6821 58.1321)
+		(width 0.15)
+		(layer "F.Cu")
+		(net "N16_V_m")
+		(uuid "36c3c934-f054-4658-88f3-10fd0e979ccd")
 	)
 	(segment
 		(start 52.0858 56.5742)
@@ -53015,14 +53023,6 @@
 		(layer "F.Cu")
 		(net "N16_V_m")
 		(uuid "7c88463e-abf2-4313-9a12-3b53c6fb3062")
-	)
-	(segment
-		(start 28.043478 70)
-		(end 51.6821 58.1321)
-		(width 0.15)
-		(layer "F.Cu")
-		(net "N16_V_m")
-		(uuid "9808c611-3bf5-4f73-bbfb-85f02f5e47d6")
 	)
 	(segment
 		(start 50.5125 52.05)
@@ -53817,14 +53817,6 @@
 		(uuid "1889f533-078f-45e8-a1b5-222b9a98f7cc")
 	)
 	(segment
-		(start 58.652174 70)
-		(end 30.725 39.845)
-		(width 0.15)
-		(layer "F.Cu")
-		(net "N10_VDD")
-		(uuid "32b41ee5-6aba-41a9-865c-fe9fdcc3b8c1")
-	)
-	(segment
 		(start 28.3158 37.7658)
 		(end 27.5 36.95)
 		(width 0.2)
@@ -53847,6 +53839,14 @@
 		(layer "F.Cu")
 		(net "N10_VDD")
 		(uuid "8adb09a1-c74e-43db-95ac-1ce251abe3ea")
+	)
+	(segment
+		(start 58.652174 70)
+		(end 30.725 39.845)
+		(width 0.15)
+		(layer "F.Cu")
+		(net "N10_VDD")
+		(uuid "f825faba-c3e0-44f4-8cb7-7db6ed86405d")
 	)
 	(segment
 		(start 12.2543 33.6082)
