@@ -8,7 +8,7 @@ HW = os.path.join(ROOT, "hardware")
 SCH = os.path.join(HW, "schematics")
 PCB_FILE = os.path.join(HW, "adex_resonant_core.kicad_pcb")
 TOP_SCH = os.path.join(SCH, "top_level.kicad_sch")
-BOARD_SIZE_MM = 50.0
+BOARD_SIZE_MM = 70.0
 CASTELLATED_PITCH_MM = 2.0
 CASTELLATED_DIA_MM = 0.8
 PAD_WIDTH_MM = 1.0
@@ -152,7 +152,7 @@ def main() -> None:
     run_drc()
     print('\n' + '='*60)
     print('  PCB layout generation complete!')
-    print('  Board: 50mm x 50mm, 4-layer, 0.8mm cast. holes @ 2mm pitch')
+    print('  Board: 70mm x 70mm, 4-layer, 0.8mm cast. holes @ 2mm pitch')
     print('  File:', PCB_FILE)
     print('='*60)
 
