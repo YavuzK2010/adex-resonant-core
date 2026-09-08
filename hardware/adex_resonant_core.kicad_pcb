@@ -51606,14 +51606,6 @@
 		(width 0.2)
 		(layer "F.Cu")
 		(net "B13_LC_MID")
-		(uuid "23a2ad48-ccf1-4d53-8a97-43ab9c45397a")
-	)
-	(segment
-		(start 19.325 62)
-		(end 19.218 60.593)
-		(width 0.2)
-		(layer "F.Cu")
-		(net "B13_LC_MID")
 		(uuid "a8799b14-84d7-4c3c-a1b7-fab34af6ef50")
 	)
 	(segment
@@ -51623,6 +51615,14 @@
 		(layer "F.Cu")
 		(net "B13_LC_MID")
 		(uuid "b9d107c2-8d1e-4cc3-a17e-8a3590f1ce61")
+	)
+	(segment
+		(start 19.325 62)
+		(end 19.218 60.593)
+		(width 0.2)
+		(layer "F.Cu")
+		(net "B13_LC_MID")
+		(uuid "a8799b14-84d7-4c3c-a1b7-fab34af6ef51")
 	)
 	(segment
 		(start 15.5 36.95)
