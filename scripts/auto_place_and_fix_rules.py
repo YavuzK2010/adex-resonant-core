@@ -155,10 +155,11 @@ _BRIDGE_CORRIDORS: list[tuple[float, float, float]] = [
     (28.25, 48.5, 0.0),    # B10 - col 1
     (41.75, 48.5, 0.0),    # B11 - col 2
     (55.25, 48.5, 0.0),    # B12 - col 3
-    # Between row 3 (Cy=55.25) and board edge (y=70.0): corridor at y = 62.0
-    (14.75, 62.0, 0.0),    # B13 - col 0
-    (28.25, 62.0, 0.0),    # B14 - col 1
-    (41.75, 62.0, 0.0),    # B15 - col 2
+    # Between row 3 (Cy=55.25) and board edge (y=70.0): corridor shifted upward
+    # by 2.5mm (from 62.0 to 59.5) to open routing corridors for CB* pads.
+    (14.75, 59.5, 0.0),    # B13 - col 0
+    (28.25, 59.5, 0.0),    # B14 - col 1
+    (41.75, 59.5, 0.0),    # B15 - col 2
 ]
 
 # Bridge intra-pair separation. D2 (SOT-23) pad3 extends to +1.68mm from the
@@ -578,7 +579,15 @@ def _relax_text_height(pro_file: str) -> None:
 
 
 def _fix_drc_severities(pro_file: str) -> None:
-    """Set copper_edge_clearance and silk_over_copper severities to 'ignore'."""
+    """Unsuppress all 19 previously-ignored DRC checks for production-grade verification.
+
+    All rule severities are set to 'error' to enforce full DRC enforcement.
+    The only exceptions retained are:
+      - copper_edge_clearance kept 'ignore' (castellated pads intentionally
+        touch the Edge.Cuts boundary on all 4 sides).
+      - silk_over_copper kept 'ignore' (silkscreen clipped by mask is
+        acceptable for dense PCBA; it is a manufacturing, not electrical issue).
+    """
     if not os.path.exists(pro_file):
         print(f"  [WARN] Project file not found: {pro_file}")
         return
@@ -590,25 +599,48 @@ def _fix_drc_severities(pro_file: str) -> None:
         print("  [WARN] No 'board.design_settings.rule_severities' in project file")
         return
 
-    # copper_edge_clearance -> ignore (castellated pads touch Edge.Cuts)
-    old_ce = sev.get("copper_edge_clearance", "error")
-    if old_ce != "ignore":
-        sev["copper_edge_clearance"] = "ignore"
-        print(f"  [FIX] copper_edge_clearance severity: {old_ce} -> ignore")
-    else:
-        print(f"  [OK] copper_edge_clearance severity already 'ignore'")
+    # ── 19 checks that were previously overridden to 'ignore' ──────────────
+    # All set to 'error' for full production-grade DRC enforcement.
+    _UNSUPPRESSED: dict[str, str] = {
+        # Electrical / connectivity (MUST be 'error')
+        "clearance":          "error",
+        "shorting_items":     "error",
+        "tracks_crossing":    "error",
+        "track_dangling":     "error",
+        "via_dangling":       "error",
+        "hole_clearance":     "error",
+        "unconnected_items":  "error",
+        # Physical / mechanical (error for production)
+        "copper_edge_clearance":    "ignore",   # castellated pads on edge
+        "copper_sliver":            "error",
+        "courtyards_overlap":       "error",
+        "missing_courtyard":        "error",
+        "pth_inside_courtyard":     "error",
+        "solder_mask_bridge":       "error",
+        "track_not_centered_on_via":"error",
+        "tuning_profile_track_geometries": "error",
+        "footprint_filters_mismatch":"error",
+        "footprint_type_mismatch":  "error",
+        # Silkscreen checks (warning is fine for non-electrical issues)
+        "silk_overlap":             "warning",
+        "silk_over_copper":         "ignore",   # manufacturing acceptable
+        "silk_edge_clearance":      "warning",
+    }
 
-    # silk_over_copper -> ignore (silkscreen clipped by mask is acceptable)
-    old_soc = sev.get("silk_over_copper", "warning")
-    if old_soc != "ignore":
-        sev["silk_over_copper"] = "ignore"
-        print(f"  [FIX] silk_over_copper severity: {old_soc} -> ignore")
-    else:
-        print(f"  [OK] silk_over_copper severity already 'ignore'")
+    changes = 0
+    for check, target_sev in _UNSUPPRESSED.items():
+        old_sev = sev.get(check, "error")
+        if old_sev != target_sev:
+            sev[check] = target_sev
+            print(f"  [FIX] {check}: {old_sev} -> {target_sev}")
+            changes += 1
+        else:
+            print(f"  [OK] {check} already '{target_sev}'")
 
-    for check in ("clearance", "tracks_crossing", "shorting_items",
-                  "track_dangling", "via_dangling"):
-        sev[check] = "ignore"
+    if changes == 0:
+        print("  [OK] All 19 DRC checks already at production-grade severity.")
+    else:
+        print(f"  [UPDATED] {changes} severity override(s) changed.")
 
     with open(pro_file, "w", encoding="utf-8") as fh:
         _json.dump(data, fh, indent=2, ensure_ascii=False)
