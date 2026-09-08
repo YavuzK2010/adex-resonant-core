@@ -1,4 +1,4 @@
-(pcb exports/adex_resonant_core.dsn
+(pcb hardware/exports/adex_resonant_core.dsn
   (parser
     (string_quote ")
     (space_in_quoted_tokens on)
@@ -15,13 +15,13 @@
       )
     )
     (layer In1.Cu
-      (type signal)
+      (type power)
       (property
         (index 1)
       )
     )
     (layer In2.Cu
-      (type signal)
+      (type power)
       (property
         (index 2)
       )
