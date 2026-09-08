@@ -51609,7 +51609,7 @@
 		(uuid "23a2ad48-ccf1-4d53-8a97-43ab9c45397a")
 	)
 	(segment
-		(start 20.625 62)
+		(start 19.325 62)
 		(end 19.218 60.593)
 		(width 0.2)
 		(layer "F.Cu")
@@ -53185,7 +53185,7 @@
 		(uuid "f5246322-1da0-4db6-8529-91d64fca64c1")
 	)
 	(segment
-		(start 47.625 62)
+		(start 46.325 62)
 		(end 46.218 60.593)
 		(width 0.2)
 		(layer "F.Cu")
@@ -54977,7 +54977,7 @@
 		(uuid "6411a831-56ca-42d5-a399-4434fb76e421")
 	)
 	(segment
-		(start 34.125 62)
+		(start 32.825 62)
 		(end 32.6898 63.4352)
 		(width 0.2)
 		(layer "F.Cu")

@@ -267,6 +267,16 @@ def main() -> int:
         print(f"  B15_D2 Pad 1 at ({nm_to_mm(p15.x):.4f}, {nm_to_mm(p15.y):.4f})")
         snap_endpoint(board, "B15_LC_MID", 36.0125, 61.05, nm_to_mm(p15.x), nm_to_mm(p15.y))
 
+    # Also snap dangling tracks to inductor L1 Pad 2 centers
+    print(f"\n[2b/4] Snapping LC bridge tracks to inductor Pad 2 ...")
+    inductor_snaps = [
+        ("B13_LC_MID", 20.625, 62.0, 19.325, 62.0),   # B13_L1 Pad 2
+        ("B14_LC_MID", 34.125, 62.0, 32.825, 62.0),   # B14_L1 Pad 2
+        ("B15_LC_MID", 47.625, 62.0, 46.325, 62.0),   # B15_L1 Pad 2
+    ]
+    for net_name, ox, oy, nx, ny in inductor_snaps:
+        snap_endpoint(board, net_name, ox, oy, nx, ny)
+
     print(f"\n[3/4] Fixing DRC rule severities in project file ...")
     fix_drc_severities(PRO_FILE)
 
