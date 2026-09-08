@@ -51618,7 +51618,7 @@
 	)
 	(segment
 		(start 9.4695 60.593)
-		(end 9.0125 61.05)
+		(end 10.3125 61.05)
 		(width 0.2)
 		(layer "F.Cu")
 		(net "B13_LC_MID")
@@ -53202,7 +53202,7 @@
 	)
 	(segment
 		(start 36.4695 60.593)
-		(end 36.0125 61.05)
+		(end 37.3125 61.05)
 		(width 0.2)
 		(layer "F.Cu")
 		(net "B15_LC_MID")
@@ -54986,7 +54986,7 @@
 	)
 	(segment
 		(start 22.5125 61.5125)
-		(end 22.5125 61.05)
+		(end 23.8125 61.05)
 		(width 0.2)
 		(layer "F.Cu")
 		(net "B14_LC_MID")
