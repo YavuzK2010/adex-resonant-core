@@ -90,6 +90,27 @@ TRACK_WIDTH_MM = 0.20
 TRACK_CLEAR_R_MM = TRACK_WIDTH_MM / 2.0 + CLEARANCE_MM + 0.01  # 0.21 mm
 GRID_STEP_MM = 0.10
 
+# V_m-specific routing rules (tighter clearance, wider trace for signal integrity)
+V_M_TRACK_WIDTH_MM = 0.20
+V_M_CLEARANCE_MM = 0.18
+V_M_CLEAR_R_MM = V_M_TRACK_WIDTH_MM / 2.0 + V_M_CLEARANCE_MM + 0.01  # 0.20 mm
+
+# Via parameters for F.Cu → B.Cu layer transition
+VIA_DRILL_MM = 0.30
+VIA_PAD_MM = 0.55
+
+# Vertical escape corridors through the bottom bridge area.
+# The bridge placement creates 4mm-wide gaps at X = 11, 19, 27, 35, 43, 51, 59
+# between adjacent bridge D2/L1 pairs. Here we define column-aligned channels
+# (at each neuron column centre) for V_m bottom escape, plus inter-column
+# overflow corridors for general fan-out.
+# Each corridor is 1.5 mm wide, giving a 0.75 mm margin either side of centre.
+ESCAPE_CORRIDOR_X = [19.0, 35.0, 51.0]   # inter-column overflow channels
+VM_ESCAPE_X = [11.0, 27.0, 43.0, 59.0]   # column-aligned V_m escape centers
+ESCAPE_CORRIDOR_HALF_W = 1.00             # half-width (mm), so total = 1.5 mm
+ESCAPE_CORRIDOR_Y_TOP = 58.0              # top of corridor (just below Row-4 passives)
+ESCAPE_CORRIDOR_Y_BOT = 69.5              # bottom (just above Castellations Y=70)
+
 TEXT_SIZE_MM = 0.6
 TEXT_THICKNESS_MM = 0.12
 
@@ -466,7 +487,11 @@ def _pad_bbox_mm(pad: Any) -> tuple[float, float, float, float]:
 
 
 def build_route_mask(board: Any) -> bytearray:
-    """Base routing obstacle mask: all pad copper dilated by track clearance."""
+    """Base routing obstacle mask: all pad copper dilated by track clearance.
+
+    Dedicated vertical escape corridors are cleared through the bottom bridge
+    area at X = 19.0, 35.0, 51.0 mm so V_m traces can reach the CB pads.
+    """
     n = _GRID_N + 1
     mask = bytearray(n * n)
     # Block only the exact board edge cells (castellated pads live ON the
@@ -483,6 +508,18 @@ def build_route_mask(board: Any) -> bytearray:
         for pad in fp.Pads():
             x0, y0, x1, y1 = _pad_bbox_mm(pad)
             _block_rect(mask, x0, y0, x1, y1, TRACK_CLEAR_R_MM)
+
+    # Clear dedicated vertical escape corridors through the bottom bridge area.
+    # Each corridor is 1.5 mm wide (0.75 mm half-width) and runs from just below
+    # Row-4 passives (Y=58 mm) down to just above CB pads (Y=69.5 mm).
+    # V_m column-aligned corridors + inter-column overflow channels are both
+    # cleared so the A* router has free passage for all bottom fan-out nets.
+    for cx in ESCAPE_CORRIDOR_X + VM_ESCAPE_X:
+        _clear_rect(mask,
+                    cx - ESCAPE_CORRIDOR_HALF_W, ESCAPE_CORRIDOR_Y_TOP,
+                    cx + ESCAPE_CORRIDOR_HALF_W, ESCAPE_CORRIDOR_Y_BOT,
+                    TRACK_CLEAR_R_MM)
+
     return mask
 
 
@@ -598,12 +635,19 @@ def _has_castle_pad(pads: list[Any], castle_refs: set[str]) -> bool:
 
 
 def _route_net(board: Any, mask: bytearray, name: str, pads: list[Any]) -> int:
-    """Connect all pads of one net via A*; returns number of segments added."""
+    """Connect all pads of one net via A*; returns number of segments added.
+
+    V_m nets use V_M_TRACK_WIDTH_MM and V_M_CLEAR_R_MM for tighter clearance
+    rules (0.18 mm vs default 0.15 mm).
+    """
     n = _GRID_N + 1
     per_mask = bytearray(mask)
+    is_vm = _is_vm_net(name)
+    clear_r = V_M_CLEAR_R_MM if is_vm else TRACK_CLEAR_R_MM
+    track_w = V_M_TRACK_WIDTH_MM if is_vm else TRACK_WIDTH_MM
     for pad in pads:
         x0, y0, x1, y1 = _pad_bbox_mm(pad)
-        _clear_rect(per_mask, x0, y0, x1, y1, TRACK_CLEAR_R_MM)
+        _clear_rect(per_mask, x0, y0, x1, y1, clear_r)
 
     centres: list[tuple[int, int]] = []
     for pad in pads:
@@ -628,6 +672,35 @@ def _route_net(board: Any, mask: bytearray, name: str, pads: list[Any]) -> int:
                 best_d, best_i = d2, i
         order.append(remaining.pop(best_i))
 
+    # For V_m nets, the CB castellated pad is connected on B.Cu via
+    # route_vm_bottom_segments().  On F.Cu we only route between the
+    # escape via and the cell pads (skip the castellated pad entirely).
+    if is_vm:
+        via_pts: list[tuple[int, int]] = []
+        for t in board.GetTracks():
+            if not isinstance(t, pcbnew.PCB_VIA):
+                continue
+            if t.GetNetCode() == 0:
+                continue
+            try:
+                if t.GetNetname() == name:
+                    pos = t.GetPosition()
+                    via_pts.append((_ix(nm_to_mm(pos.x)), _iy(nm_to_mm(pos.y))))
+            except Exception:
+                pass
+        has_castle = any(is_castellated(p.GetParentFootprint()) for p in pads)
+        if via_pts:
+            if has_castle:
+                # Replace the chain: remove castellated pad, keep only vias + cell pads
+                # The first element in order is the castellated pad (sorted first)
+                order = via_pts + [p for p in order[1:] if p not in via_pts]
+            else:
+                # No castellated pad - insert vias as additional routing points
+                order = via_pts + [p for p in order if p not in via_pts]
+        elif has_castle:
+            # Has CB pad but no via - route from CB pad directly (fallback)
+            pass  # keep original order with castellated pad first
+
     net = board.FindNet(name)
     if net is None:
         print(f"    [WARN] net {name}: FindNet returned None - skipping")
@@ -647,13 +720,13 @@ def _route_net(board: Any, mask: bytearray, name: str, pads: list[Any]) -> int:
             t = pcbnew.PCB_TRACK(board)
             t.SetStart(pcbnew.VECTOR2I(mm_to_nm(px), mm_to_nm(py)))
             t.SetEnd(pcbnew.VECTOR2I(mm_to_nm(qx), mm_to_nm(qy)))
-            t.SetWidth(mm_to_nm(TRACK_WIDTH_MM))
+            t.SetWidth(mm_to_nm(track_w))
             t.SetLayer(pcbnew.F_Cu)
             t.SetNet(net)
             board.Add(t)
             # block this segment for later nets (same net may cross legally)
             _block_rect(mask, min(px, qx), min(py, qy), max(px, qx), max(py, qy),
-                        TRACK_CLEAR_R_MM)
+                        clear_r)
             segments_added += 1
             px, py = qx, qy
     return segments_added
@@ -684,6 +757,163 @@ def route_all_nets(board: Any, mask: bytearray) -> int:
     if failed:
         print(f"  [WARN] {len(failed)} net(s) could not be fully routed: {failed}")
     return routed
+
+
+def _is_vm_net(name: str) -> bool:
+    """Return True if the net name is a V_m net (e.g. N13_V_m)."""
+    return name.endswith("_V_m")
+
+
+def _vm_escape_x(neuron_col: int) -> float:
+    """Return the column-aligned escape corridor X for a neuron column (0..3)."""
+    return VM_ESCAPE_X[neuron_col]
+
+
+def place_vm_escape_vias(board: Any) -> int:
+    """Place vias at the bottom of each V_m escape corridor for F.Cu → B.Cu
+    layer transition.
+
+    For each V_m net (N13_V_m .. N16_V_m) that has a castellated CB pad, this
+    places a via at the top of the escape corridor (Y ≈ 59.5 mm, above the
+    bridge rows at Y=63 and Y=67.5).  The via drills at 0.30 mm with a
+    0.55 mm annular ring.
+
+    Returns the number of vias placed.
+    """
+    via_y_mm = 59.5  # above bridge zone, below Row 4 passives
+    placed = 0
+    nets_placed: set[str] = set()
+    for fp in board.GetFootprints():
+        ref = fp.GetReference().upper().strip()
+        if not CASTELLATED_RE.match(ref):
+            continue
+        if ref[:2] != "CB":
+            continue
+        for pad in fp.Pads():
+            if pad.GetNetCode() == 0:
+                continue
+            netname = pad.GetNetname()
+            if not _is_vm_net(netname):
+                continue
+            if netname in nets_placed:
+                continue
+            nets_placed.add(netname)
+            m = re.match(r"N(\d+)_V_m", netname)
+            if not m:
+                continue
+            neuron_num = int(m.group(1))
+            if neuron_num not in _NEURON_GRID:
+                continue
+            _r, c = _NEURON_GRID[neuron_num]
+            via_x = _vm_escape_x(c)
+
+            px = mm_to_nm(via_x)
+            py = mm_to_nm(via_y_mm)
+            v = pcbnew.PCB_VIA(board)
+            v.SetPosition(pcbnew.VECTOR2I(px, py))
+            v.SetDrill(mm_to_nm(VIA_DRILL_MM))
+            v.SetWidth(mm_to_nm(VIA_PAD_MM))
+            v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu)
+            v.SetNet(pad.GetNet())
+            board.Add(v)
+            placed += 1
+            print(f"    [VIA] {netname:22s} at ({via_x:5.1f}, {via_y_mm:5.1f}) "
+                  f"drill={VIA_DRILL_MM:.2f} pad={VIA_PAD_MM:.2f}")
+
+    print(f"  [OK] Placed {placed} V_m escape vias (F.Cu ↔ B.Cu).")
+    return placed
+    """Snap every castellated-target track endpoint onto the exact pad centre."""
+    snapped = 0
+def route_vm_bottom_segments(board: Any) -> int:
+    """Route the B.Cu segments from V_m escape vias to their CB castellated pads.
+
+    Uses A* on a per-net mask that only has B.Cu pad obstacles.  These short
+    B.Cu segments connect the via placed at (corridor_X, 67.0 mm) down to the
+    CB pad at Y=70 mm.
+
+    Returns the number of segments added.
+    """
+    # Build B.Cu mask (only B.Cu pad obstacles matter)
+    n = _GRID_N + 1
+    b_mask = bytearray(n * n)
+    for fp in board.GetFootprints():
+        for pad in fp.Pads():
+            layers = set()
+            try:
+                layers = set(pad.GetLayerSet().CuStack())
+            except Exception:
+                pass
+            if pcbnew.B_Cu not in layers:
+                continue
+            x0, y0, x1, y1 = _pad_bbox_mm(pad)
+            _block_rect(b_mask, x0, y0, x1, y1, TRACK_CLEAR_R_MM)
+
+    segments = 0
+    # Find all V_m vias
+    via_net_map: dict[str, tuple[float, float]] = {}
+    for t in board.GetTracks():
+        if not isinstance(t, pcbnew.PCB_VIA):
+            continue
+        if t.GetNetCode() == 0:
+            continue
+        netname = t.GetNetname()
+        if not _is_vm_net(netname):
+            continue
+        pos = t.GetPosition()
+        via_net_map[netname] = (nm_to_mm(pos.x), nm_to_mm(pos.y))
+
+    # Match each via to its CB pad
+    for fp in board.GetFootprints():
+        ref = fp.GetReference().upper().strip()
+        if not CASTELLATED_RE.match(ref) or ref[:2] != "CB":
+            continue
+        for pad in fp.Pads():
+            if pad.GetNetCode() == 0:
+                continue
+            netname = pad.GetNetname()
+            if not _is_vm_net(netname):
+                continue
+            if netname not in via_net_map:
+                continue
+            vx, vy = via_net_map[netname]
+            px_mm = nm_to_mm(pad.GetPosition().x)
+            py_mm = nm_to_mm(pad.GetPosition().y)
+            sx, sy = _ix(vx), _iy(vy)
+            tx, ty = _ix(px_mm), _iy(py_mm)
+
+            # Route on B.Cu
+            per_mask = bytearray(b_mask)
+            _clear_rect(per_mask, vx - 0.05, vy - 0.05, vx + 0.05, vy + 0.05,
+                        TRACK_CLEAR_R_MM)
+            _clear_rect(per_mask, px_mm - 0.05, py_mm - 0.05,
+                        px_mm + 0.05, py_mm + 0.05, TRACK_CLEAR_R_MM)
+
+            path = astar(per_mask, sx, sy, tx, ty, margin=5.0)
+            if path is None:
+                print(f"    [FAIL] B.Cu {netname}: no A* path, using straight line")
+                path = [(sx, sy), (tx, ty)]
+
+            pts = cells_from_path(path)
+            px_, py_ = pts[0]
+            segs_added = 0
+            net_obj = pad.GetNet()
+            for (qx, qy) in pts[1:]:
+                t = pcbnew.PCB_TRACK(board)
+                t.SetStart(pcbnew.VECTOR2I(mm_to_nm(px_), mm_to_nm(py_)))
+                t.SetEnd(pcbnew.VECTOR2I(mm_to_nm(qx), mm_to_nm(qy)))
+                t.SetWidth(mm_to_nm(V_M_TRACK_WIDTH_MM))
+                t.SetLayer(pcbnew.B_Cu)
+                t.SetNet(net_obj)
+                board.Add(t)
+                segs_added += 1
+                px_, py_ = qx, qy
+            segments += segs_added
+            del via_net_map[netname]
+            print(f"    [B.Cu] {netname:22s} via ({vx:.1f},{vy:.1f}) -> "
+                  f"CB pad ({px_mm:.1f},{py_mm:.1f}) segs={segs_added}")
+
+    print(f"  [OK] Routed {segments} B.Cu segment(s) for V_m bottom escape.")
+    return segments
 
 
 def snap_castellated_tracks(board: Any) -> int:
@@ -1115,7 +1345,22 @@ def _phase_route() -> int:
     print("\n[7/9] Clearing legacy tracks and re-routing all nets ...")
     n_cleared = clear_existing_tracks(board)
     mask = build_route_mask(board)
+    # Place V_m escape vias BEFORE routing so the A* router can route
+    # F.Cu tracks through them as intermediate connection points.
+    n_vm_vias = place_vm_escape_vias(board)
+    # Clear the via pad positions in the routing mask so the A* can
+    # reach the via centre (its pad copper is otherwise blocked).
+    for t in board.GetTracks():
+        if not isinstance(t, pcbnew.PCB_VIA):
+            continue
+        if t.GetNetCode() == 0:
+            continue
+        pos = t.GetPosition()
+        px_mm, py_mm = nm_to_mm(pos.x), nm_to_mm(pos.y)
+        _clear_rect(mask, px_mm - 0.05, py_mm - 0.05,
+                    px_mm + 0.05, py_mm + 0.05, TRACK_CLEAR_R_MM)
     n_segments = route_all_nets(board, mask)
+    n_bcu = route_vm_bottom_segments(board)
     n_snapped = snap_castellated_tracks(board)
     n_0402fixed = fix_0402_track_exit(board)
     n_edgefix = fix_edge_track_overshoots(board)
@@ -1123,8 +1368,9 @@ def _phase_route() -> int:
     print("\n[9/9] Saving board ...")
     board.Save(BOARD_FILE)
     print(f"  [OK] Written {BOARD_FILE} ({os.path.getsize(BOARD_FILE):,} bytes)")
-    print(f"  Summary: cleared={n_cleared}, segments={n_segments}, snapped={n_snapped}, "
-          f"0402-exits={n_0402fixed}, edge-fix={n_edgefix}.")
+    print(f"  Summary: cleared={n_cleared}, segments={n_segments}, "
+          f"vm_vias={n_vm_vias}, bcu_segs={n_bcu}, "
+          f"snapped={n_snapped}, 0402-exits={n_0402fixed}, edge-fix={n_edgefix}.")
     return 0
 
 
