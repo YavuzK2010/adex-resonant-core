@@ -956,29 +956,27 @@ def _is_0402_footprint(fp: Any) -> bool:
 
 
 def fix_0402_track_exit(board: Any) -> int:
-    """Ensure every track leaving a 0402 pad exits perpendicularly for >= min_exit mm.
+    """Ensure every track leaving a 0402 pad exits perpendicularly for >= 0.20 mm.
 
     For horizontal 0402 pads (rotation 0 or 180), the pad's long axis is
     horizontal.  The first track segment must run horizontally (perpendicular
-    to the pad's short/vertical edge) for at least min_exit mm before any turn.
+    to the pad's short/vertical edge) for at least 0.20 mm before any turn.
 
-    N13/N15 pads use min_exit=0.25mm; all others use min_exit=0.3mm.
-
-    This prevents the solder-mask aperture of one pad from merging with the
-    aperture of the adjacent pad on a different net (solder_mask_bridge DRC).
+    A 0.20 mm perpendicular exit with SolderMaskExpansion=0.00 mm ensures
+    the solder-mask aperture of one pad never merges with the aperture of
+    the adjacent pad on a different net (solder_mask_bridge DRC).
     """
     fixed = 0
     for fp in board.GetFootprints():
         if not _is_0402_footprint(fp):
             continue
-        # Get the footprint reference to detect N13/N15
+        # Get the footprint reference (only used for logging)
         ref = ""
         try:
             ref = fp.GetReference()
         except Exception:
             ref = ""
-        is_n13n15 = ref.startswith("N13") or ref.startswith("N15") if ref else False
-        min_exit = 0.25 if is_n13n15 else 0.3
+        min_exit = 0.30  # uniform 0.30mm for all 0402s to ensure mask dam clearance
 
         for pad in fp.Pads():
             if pad.GetNetCode() == 0:
@@ -1105,6 +1103,341 @@ def fix_edge_track_overshoots(board: Any) -> int:
 
     print(f"  [OK] Fixed {fixed} edge-track endpoint(s) (snapped to castellated pad centres).")
     return fixed
+
+
+def _is_sot23_footprint(fp: Any) -> bool:
+    """Return True if the footprint is an SOT-23 (transistor or MOSFET)."""
+    try:
+        fpid: Any = fp.GetFPID()
+        lib_item = str(fpid.GetLibItemName()) if fpid else ""
+    except Exception:
+        lib_item = ""
+    return "SOT-23" in lib_item
+
+
+def fix_sot23_track_exit(board: Any) -> int:
+    """Ensure every track leaving a SOT-23 pad exits perpendicularly for >= 0.20 mm."""
+    fixed = 0
+    min_exit = 0.30
+    for fp in board.GetFootprints():
+        if not _is_sot23_footprint(fp):
+            continue
+        for pad in fp.Pads():
+            if pad.GetNetCode() == 0:
+                continue
+            try:
+                rot = pad.GetOrientationDegrees()
+            except Exception:
+                rot = 0.0
+            horizontal = (abs(rot % 180.0) < 45.0 or abs(rot % 180.0 - 180.0) < 45.0)
+            p_pos = pad.GetPosition()
+            p_x = nm_to_mm(p_pos.x)
+            p_y = nm_to_mm(p_pos.y)
+            for t in board.GetTracks():
+                if t.GetNetCode() != pad.GetNetCode():
+                    continue
+                s, e = t.GetStart(), t.GetEnd()
+                s_mm = (nm_to_mm(s.x), nm_to_mm(s.y))
+                e_mm = (nm_to_mm(e.x), nm_to_mm(e.y))
+                d_start = math.hypot(s_mm[0] - p_x, s_mm[1] - p_y)
+                d_end = math.hypot(e_mm[0] - p_x, e_mm[1] - p_y)
+                if d_start > 0.05 and d_end > 0.05:
+                    continue
+                if d_start <= 0.05:
+                    pad_end = s_mm
+                    far_end = e_mm
+                else:
+                    pad_end = e_mm
+                    far_end = s_mm
+                dx = far_end[0] - pad_end[0]
+                dy = far_end[1] - pad_end[1]
+                seg_len = math.hypot(dx, dy)
+                if seg_len < 0.001:
+                    continue
+                if horizontal:
+                    if abs(dy) < 0.01 and seg_len >= min_exit:
+                        continue
+                    dir_x = 1.0 if dx >= 0 else -1.0
+                    exit_x = pad_end[0] + dir_x * min_exit
+                    exit_y = pad_end[1]
+                else:
+                    if abs(dx) < 0.01 and seg_len >= min_exit:
+                        continue
+                    dir_y = 1.0 if dy >= 0 else -1.0
+                    exit_x = pad_end[0]
+                    exit_y = pad_end[1] + dir_y * min_exit
+                t.SetEnd(pcbnew.VECTOR2I(mm_to_nm(exit_x), mm_to_nm(exit_y)))
+                seg2 = pcbnew.PCB_TRACK(board)
+                seg2.SetStart(pcbnew.VECTOR2I(mm_to_nm(exit_x), mm_to_nm(exit_y)))
+                seg2.SetEnd(pcbnew.VECTOR2I(mm_to_nm(far_end[0]), mm_to_nm(far_end[1])))
+                seg2.SetWidth(t.GetWidth())
+                seg2.SetLayer(t.GetLayer())
+                try:
+                    seg2.SetNet(t.GetNet())
+                except Exception:
+                    seg2.SetNetCode(t.GetNetCode())
+                board.Add(seg2)
+                fixed += 1
+    print(f"  [OK] Fixed {fixed} SOT-23 pad track exits (perpendicular exit >= {min_exit:.2f}mm).")
+    return fixed
+
+
+# Specific trace push-away rules: push named traces >0.15mm from adjacent pad bounding boxes
+# Generated for all 16 neuron clusters (N1..N16)
+_PUSH_RULES: list[tuple[str, str, str, float]] = []
+for n in range(1, 17):
+    prefix = f"N{n}"
+    _PUSH_RULES.extend([
+        (f"{prefix}_VDD", f"{prefix}_R2", "1", 0.30),   # VDD tracks away from R2/V_m pad
+        (f"{prefix}_VDD", f"{prefix}_R4", "2", 0.30),   # VDD tracks away from R4/V_TH pad
+        (f"{prefix}_V_m", f"{prefix}_R4", "2", 0.30),   # V_m tracks away from R4/V_TH pad
+        (f"{prefix}_V_m", f"{prefix}_Q1", "3", 0.30),   # V_m tracks away from Q1/VSS pad
+    ])
+# SPIKE_OUT tracks near varactor D2 pad3 (no net or passive net)
+for b in range(1, 16):
+    _PUSH_RULES.append((f"SPIKE_OUT", f"B{b}_D2", "3", 0.30))
+
+
+def push_traces_away_from_adjacent_pads(board: Any) -> int:
+    """Push specific trace segments >= 0.15 mm away from adjacent-pad bounding boxes.
+
+    For each rule in _PUSH_RULES, finds tracks on F.Cu belonging to the named
+    net, checks their endpoints against the target pad's bounding box centre,
+    and pushes any endpoint closer than 0.15 mm radially outward.
+    """
+    fixed = 0
+    # Build lookup: pad_ref -> {pad_num -> (fp, pad_obj)}
+    target_pads: dict[str, dict[str, tuple[Any, Any]]] = {}
+    for fp in board.GetFootprints():
+        ref = ""
+        try:
+            ref = fp.GetReference()
+        except Exception:
+            ref = ""
+        for _, rule_pad_ref, rule_pad_num, _ in _PUSH_RULES:
+            if ref == rule_pad_ref:
+                if ref not in target_pads:
+                    target_pads[ref] = {}
+                for pad in fp.Pads():
+                    if str(pad.GetNumber()) == str(rule_pad_num):
+                        target_pads[ref][rule_pad_num] = (fp, pad)
+                        break
+
+    for t in board.GetTracks():
+        try:
+            net_info = t.GetNet()
+            net_name = str(net_info.GetNetname()) if net_info else ""
+        except Exception:
+            net_name = ""
+        if not net_name:
+            continue
+        for rule_net_substr, rule_pad_ref, rule_pad_num, min_clr in _PUSH_RULES:
+            if rule_net_substr not in net_name:
+                continue
+            if rule_pad_ref not in target_pads:
+                continue
+            if rule_pad_num not in target_pads[rule_pad_ref]:
+                continue
+            _, pad = target_pads[rule_pad_ref][rule_pad_num]
+            pad_pos = pad.GetPosition()
+            p_cx = nm_to_mm(pad_pos.x)
+            p_cy = nm_to_mm(pad_pos.y)
+            try:
+                p_size = pad.GetSize()
+                phw = nm_to_mm(p_size.x) / 2.0
+                phh = nm_to_mm(p_size.y) / 2.0
+            except Exception:
+                phw = 0.7
+                phh = 0.3
+            s, e = t.GetStart(), t.GetEnd()
+            s_mm = (nm_to_mm(s.x), nm_to_mm(s.y))
+            e_mm = (nm_to_mm(e.x), nm_to_mm(e.y))
+            # Compute closest point on this segment to the pad centre
+            ax, ay = s_mm
+            bx, by = e_mm
+            abx = bx - ax
+            aby = by - ay
+            seg_len_sq = abx*abx + aby*aby
+
+            # First check endpoints
+            pushed_this = False
+            for endpoint_key, ep in [("s", s_mm), ("e", e_mm)]:
+                ep_x, ep_y = ep
+                dx = ep_x - p_cx
+                dy = ep_y - p_cy
+                cx_clamp = max(abs(dx) - phw, 0.0)
+                cy_clamp = max(abs(dy) - phh, 0.0)
+                dist_to_bbox = math.hypot(cx_clamp, cy_clamp)
+                if dist_to_bbox < min_clr:
+                    if abs(dx) < 0.001 and abs(dy) < 0.001:
+                        push_x = ep_x + min_clr
+                        push_y = ep_y
+                    else:
+                        dist = math.hypot(dx, dy)
+                        if dist < 0.001:
+                            continue
+                        push_dist = (min_clr - dist_to_bbox) + 0.02
+                        push_x = ep_x + (dx / dist) * push_dist
+                        push_y = ep_y + (dy / dist) * push_dist
+                    if endpoint_key == "s":
+                        t.SetStart(pcbnew.VECTOR2I(mm_to_nm(push_x), mm_to_nm(push_y)))
+                    else:
+                        t.SetEnd(pcbnew.VECTOR2I(mm_to_nm(push_x), mm_to_nm(push_y)))
+                    fixed += 1
+                    pushed_this = True
+                    break
+
+            if not pushed_this and seg_len_sq > 0.001:
+                # Check closest mid-segment point
+                t_param = ((p_cx - ax)*abx + (p_cy - ay)*aby) / seg_len_sq
+                t_param = max(0.0, min(1.0, t_param))
+                if 0.05 < t_param < 0.95:  # mid-segment, not near endpoints
+                    cpx = ax + t_param * abx
+                    cpy = ay + t_param * aby
+                    dx = cpx - p_cx
+                    dy = cpy - p_cy
+                    cx_clamp = max(abs(dx) - phw, 0.0)
+                    cy_clamp = max(abs(dy) - phh, 0.0)
+                    mid_dist = math.hypot(cx_clamp, cy_clamp)
+                    if mid_dist < min_clr:
+                        dist = math.hypot(dx, dy)
+                        if dist > 0.001:
+                            push_dist = (min_clr - mid_dist) + 0.02
+                            new_cpx = cpx + (dx / dist) * push_dist
+                            new_cpy = cpy + (dy / dist) * push_dist
+                            # Shorten original track to split point
+                            t.SetEnd(pcbnew.VECTOR2I(mm_to_nm(new_cpx), mm_to_nm(new_cpy)))
+                            # Create new track from split point to original endpoint
+                            seg2 = pcbnew.PCB_TRACK(board)
+                            seg2.SetStart(pcbnew.VECTOR2I(mm_to_nm(new_cpx), mm_to_nm(new_cpy)))
+                            seg2.SetEnd(pcbnew.VECTOR2I(mm_to_nm(e_mm[0]), mm_to_nm(e_mm[1])))
+                            seg2.SetWidth(t.GetWidth())
+                            seg2.SetLayer(t.GetLayer())
+                            try:
+                                seg2.SetNet(t.GetNet())
+                            except Exception:
+                                seg2.SetNetCode(t.GetNetCode())
+                            board.Add(seg2)
+                            fixed += 1
+    print(f"  [OK] Pushed {fixed} track endpoint(s) away from adjacent pad bounding boxes (>= 0.15 mm).")
+    return fixed
+
+
+def fix_solder_mask_bridges_direct(board: Any) -> int:
+    """Scan all F.Cu tracks against all foreign-net pads and push tracks that are too close.
+
+    For every track on F.Cu, checks the distance from the track segment
+    (closest endpoint or mid-segment point) to every pad on a different net.
+    If closer than MIN_CLR (0.30 mm), pushes the track point away.
+    """
+    fixed = 0
+    MIN_CLR = 0.30
+
+    # Collect all F.Cu pads with their positions and net codes
+    pads_info: list[tuple[int, float, float, float, float]] = []  # (net_code, cx, cy, hw, hh)
+    for fp in board.GetFootprints():
+        for pad in fp.Pads():
+            try:
+                nc = pad.GetNetCode()
+            except Exception:
+                nc = 0
+            if nc == 0:
+                continue
+            pos = pad.GetPosition()
+            cx = nm_to_mm(pos.x)
+            cy = nm_to_mm(pos.y)
+            try:
+                sz = pad.GetSize()
+                hw = nm_to_mm(sz.x) / 2.0
+                hh = nm_to_mm(sz.y) / 2.0
+            except Exception:
+                hw = 0.5
+                hh = 0.3
+            pads_info.append((nc, cx, cy, hw, hh))
+
+    for t in board.GetTracks():
+        try:
+            tnc = t.GetNetCode()
+        except Exception:
+            tnc = 0
+        if tnc == 0:
+            continue
+        s, e = t.GetStart(), t.GetEnd()
+        s_mm = (nm_to_mm(s.x), nm_to_mm(s.y))
+        e_mm = (nm_to_mm(e.x), nm_to_mm(e.y))
+
+        for pnc, pcx, pcy, phw, phh in pads_info:
+            if pnc == tnc:
+                continue  # same net - no bridge possible
+
+            # Check endpoints
+            pushed = False
+            for ep_key, ep in [("s", s_mm), ("e", e_mm)]:
+                dx = ep[0] - pcx
+                dy = ep[1] - pcy
+                cx_clamp = max(abs(dx) - phw, 0.0)
+                cy_clamp = max(abs(dy) - phh, 0.0)
+                dist = math.hypot(cx_clamp, cy_clamp)
+                if dist < MIN_CLR:
+                    dist_to_centre = math.hypot(dx, dy)
+                    if dist_to_centre < 0.001:
+                        push_x = ep[0] + MIN_CLR
+                        push_y = ep[1]
+                    else:
+                        push_dist = MIN_CLR - dist + 0.05
+                        push_x = ep[0] + (dx / dist_to_centre) * push_dist
+                        push_y = ep[1] + (dy / dist_to_centre) * push_dist
+                    if ep_key == "s":
+                        t.SetStart(pcbnew.VECTOR2I(mm_to_nm(push_x), mm_to_nm(push_y)))
+                        s_mm = (push_x, push_y)
+                    else:
+                        t.SetEnd(pcbnew.VECTOR2I(mm_to_nm(push_x), mm_to_nm(push_y)))
+                        e_mm = (push_x, push_y)
+                    fixed += 1
+                    pushed = True
+                    break
+
+            if not pushed:
+                # Mid-segment check
+                ax, ay = s_mm
+                bx, by = e_mm
+                abx = bx - ax
+                aby = by - ay
+                seg_len_sq = abx*abx + aby*aby
+                if seg_len_sq > 0.001:
+                    t_param = ((pcx - ax)*abx + (pcy - ay)*aby) / seg_len_sq
+                    t_param = max(0.0, min(1.0, t_param))
+                    if 0.1 < t_param < 0.9:
+                        cpx = ax + t_param * abx
+                        cpy = ay + t_param * aby
+                        dx = cpx - pcx
+                        dy = cpy - pcy
+                        cx_clamp = max(abs(dx) - phw, 0.0)
+                        cy_clamp = max(abs(dy) - phh, 0.0)
+                        mid_dist = math.hypot(cx_clamp, cy_clamp)
+                        if mid_dist < MIN_CLR:
+                            d = math.hypot(dx, dy)
+                            if d > 0.001:
+                                push_dist = MIN_CLR - mid_dist + 0.05
+                                new_cpx = cpx + (dx / d) * push_dist
+                                new_cpy = cpy + (dy / d) * push_dist
+                                t.SetEnd(pcbnew.VECTOR2I(mm_to_nm(new_cpx), mm_to_nm(new_cpy)))
+                                seg2 = pcbnew.PCB_TRACK(board)
+                                seg2.SetStart(pcbnew.VECTOR2I(mm_to_nm(new_cpx), mm_to_nm(new_cpy)))
+                                seg2.SetEnd(pcbnew.VECTOR2I(mm_to_nm(bx), mm_to_nm(by)))
+                                seg2.SetWidth(t.GetWidth())
+                                seg2.SetLayer(t.GetLayer())
+                                try:
+                                    seg2.SetNet(t.GetNet())
+                                except Exception:
+                                    seg2.SetNetCode(t.GetNetCode())
+                                board.Add(seg2)
+                                fixed += 1
+
+    print(f"  [OK] Direct mask-bridge fix: adjusted {fixed} track point(s) to stay >= {MIN_CLR:.2f} mm from foreign-net pad bounding boxes.")
+    return fixed
+
+
 # ── Silkscreen clean-up ──────────────────────────────────────────────
 
 def _is_small_footprint(fp: Any) -> bool:
@@ -1215,19 +1548,19 @@ def fix_edge_clearance(board: Any) -> None:
         board.GetDesignSettings().m_SilkToSolderMaskClearance = 0
     except Exception:
         pass
-    # Solder mask settings: 0.02mm expansion (pad_to_mask_clearance),
-    # 0.08mm minimum mask width
+    # Solder mask settings: 0.00mm expansion (pads = mask openings 1:1),
+    # 0.05mm minimum mask dam width (JLCPCB high-density spec)
     try:
-        board.GetDesignSettings().m_SolderMaskExpansion = mm_to_nm(0.02)
+        board.GetDesignSettings().m_SolderMaskExpansion = mm_to_nm(0.00)
     except Exception:
         pass
     try:
-        board.GetDesignSettings().m_SolderMaskMinWidth = mm_to_nm(0.08)
+        board.GetDesignSettings().m_SolderMaskMinWidth = mm_to_nm(0.05)
     except Exception:
         pass
     print("  [OK] Copper-to-edge clearance set to 0.0 mm.")
     print("  [OK] Silkscreen clearances set to 0.0 mm.")
-    print("  [OK] Solder mask: expansion=0.02 mm, min_width=0.08 mm.")
+    print("  [OK] Solder mask: expansion=0.00 mm (1:1), min_width=0.05 mm.")
 
 
 # ── Project (kicad_pro) DRC rule hardening ───────────────────────────
@@ -1259,7 +1592,7 @@ def _fix_drc_severities(pro_file: str) -> int:
         #   the exact pad centre, but that centre is ON the Edge.Cuts line, so
         #   the test would still flag the pad itself — this is by design.
         "copper_edge_clearance",
-        # solder_mask_bridge: resolved by 0.02mm global solder mask expansion, 0.08mm min width, + perpendicular 0402 exits
+        # solder_mask_bridge: resolved by 0.00mm global solder mask expansion (1:1), 0.05mm min width, + perpendicular 0402/SOT-23 exits
         "clearance",               # corner castellated PTH overlap by design
         "pth_inside_courtyard",
         "hole_clearance",
@@ -1309,7 +1642,7 @@ def _relax_design_rules(pro_file: str) -> None:
     rules["min_copper_edge_clearance"] = 0.0
     rules["min_silk_clearance"] = 0.0
     rules["min_silk_to_solder_mask_clearance"] = 0.0
-    rules["solder_mask_to_copper_clearance"] = 0.02   # JLCPCB high-density spec: prevents aperture bridges between adjacent-net tracks
+    rules["solder_mask_to_copper_clearance"] = 0.00   # 1:1 mask-to-copper clearance eliminates aperture bridges between adjacent-net tracks
     for netclass in data.get("net_settings", {}).get("classes", []):
         netclass["clearance"] = 0.15
         netclass["track_width"] = 0.2
@@ -1317,7 +1650,7 @@ def _relax_design_rules(pro_file: str) -> None:
         _json.dump(data, fh, indent=2, ensure_ascii=False)
         fh.write("\n")
     print("  [OK] Design rules: min clearance 0.15 mm, min track 0.15 mm, "
-          "copper-edge clearance 0.0 mm, solder-mask-to-copper 0.02 mm.")
+          "copper-edge clearance 0.0 mm, solder-mask-to-copper 0.00 mm.")
 
 
 # ── Main ────────────────────────────────────────────────────────────────
@@ -1388,6 +1721,142 @@ def _phase_route() -> int:
     n_bcu = route_vm_bottom_segments(board)
     n_snapped = snap_castellated_tracks(board)
     n_0402fixed = fix_0402_track_exit(board)
+    n_sot23fixed = fix_sot23_track_exit(board)
+    n_pushed = push_traces_away_from_adjacent_pads(board)
+    n_drcfix = 0
+    # Iterative DRC-driven fix: run kicad-cli DRC and fix solder_mask_bridge violations
+    EXPORTS_DIR = os.path.join(ROOT, "hardware", "exports")
+    os.makedirs(EXPORTS_DIR, exist_ok=True)
+    MAX_ITER = 10
+    for drc_iter in range(MAX_ITER):
+        temp_board = os.path.join(HW, "drc_fix_temp.kicad_pcb")
+        board.Save(temp_board)
+        import subprocess
+        report_json = os.path.join(HW, "drc_iter_report.json")
+        cmd = [
+            "kicad-cli", "pcb", "drc",
+            "--severity-all", "--exit-code-violations",
+            "--format", "json", "--output", report_json, temp_board,
+        ]
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+        if r.returncode == 0:
+            # No violations!
+            break
+        try:
+            with open(report_json) as fh:
+                import json as _json
+                d = _json.load(fh)
+        except Exception:
+            break
+        violations = d.get("violations", [])
+        bridges = [v for v in violations if v.get("type") == "solder_mask_bridge"]
+        if not bridges:
+            break
+        iter_fixed = 0
+        MIN_CLR = 0.35
+        for vb in bridges:
+            items = vb.get("items", [])
+            track_item = None
+            pad_item = None
+            for it in items:
+                desc = it.get("description", "")
+                pos = it.get("pos", it.get("position", {}))
+                if "Track" in desc and pos:
+                    track_item = (desc, pos)
+                elif "Pad" in desc and pos:
+                    pad_item = (desc, pos)
+            if not track_item or not pad_item:
+                continue
+            _, pp = pad_item
+            px = pp.get("x", 0)
+            py = pp.get("y", 0)
+            # Find the closest point on any track to this pad position
+            best_t = None
+            best_key = None
+            best_dist = 1e9
+            best_mid_params = None  # (t_param, cx, cy, e_mm)
+            for t in board.GetTracks():
+                s, e = t.GetStart(), t.GetEnd()
+                s_mm = (nm_to_mm(s.x), nm_to_mm(s.y))
+                e_mm = (nm_to_mm(e.x), nm_to_mm(e.y))
+                # Check endpoints
+                for key, pt in [("s", s_mm), ("e", e_mm)]:
+                    d = math.hypot(pt[0] - px, pt[1] - py)
+                    if d < best_dist:
+                        best_dist = d
+                        best_t = t
+                        best_key = key
+                        best_mid_params = None
+                # Check mid-segment closest point
+                ax, ay = s_mm
+                bx, by = e_mm
+                abx = bx - ax
+                aby = by - ay
+                seg_len_sq = abx*abx + aby*aby
+                if seg_len_sq > 0.001:
+                    t_param = ((px - ax)*abx + (py - ay)*aby) / seg_len_sq
+                    t_param = max(0.0, min(1.0, t_param))
+                    if 0.05 < t_param < 0.95:
+                        cpx = ax + t_param * abx
+                        cpy = ay + t_param * aby
+                        d = math.hypot(cpx - px, cpy - py)
+                        if d < best_dist:
+                            best_dist = d
+                            best_t = t
+                            best_key = "mid"
+                            best_mid_params = (t_param, cpx, cpy, e_mm)
+            if best_t is None or best_dist > 2.0:
+                continue
+            # Push this point radially away from pad centre
+            if best_key == "mid" and best_mid_params is not None:
+                # Mid-segment split
+                _, cpx, cpy, e_orig = best_mid_params
+                dx_m = cpx - px
+                dy_m = cpy - py
+                d_m = math.hypot(dx_m, dy_m)
+                if d_m < MIN_CLR and d_m > 0.001:
+                    push_dist = MIN_CLR - d_m + 0.05
+                    new_cx = cpx + (dx_m / d_m) * push_dist
+                    new_cy = cpy + (dy_m / d_m) * push_dist
+                    best_t.SetEnd(pcbnew.VECTOR2I(mm_to_nm(new_cx), mm_to_nm(new_cy)))
+                    seg2 = pcbnew.PCB_TRACK(board)
+                    seg2.SetStart(pcbnew.VECTOR2I(mm_to_nm(new_cx), mm_to_nm(new_cy)))
+                    seg2.SetEnd(pcbnew.VECTOR2I(mm_to_nm(e_orig[0]), mm_to_nm(e_orig[1])))
+                    seg2.SetWidth(best_t.GetWidth())
+                    seg2.SetLayer(best_t.GetLayer())
+                    try:
+                        seg2.SetNet(best_t.GetNet())
+                    except Exception:
+                        seg2.SetNetCode(best_t.GetNetCode())
+                    board.Add(seg2)
+                    iter_fixed += 1
+            else:
+                # Endpoint push
+                s2, e2 = best_t.GetStart(), best_t.GetEnd()
+                if best_key == "s":
+                    ep = (nm_to_mm(s2.x), nm_to_mm(s2.y))
+                else:
+                    ep = (nm_to_mm(e2.x), nm_to_mm(e2.y))
+                dx = ep[0] - px
+                dy = ep[1] - py
+                dist = math.hypot(dx, dy)
+                if dist < MIN_CLR:
+                    if dist < 0.001:
+                        new_x = ep[0] + MIN_CLR
+                        new_y = ep[1]
+                    else:
+                        push_dist = MIN_CLR - dist + 0.05
+                        new_x = ep[0] + (dx / dist) * push_dist
+                        new_y = ep[1] + (dy / dist) * push_dist
+                    if best_key == "s":
+                        best_t.SetStart(pcbnew.VECTOR2I(mm_to_nm(new_x), mm_to_nm(new_y)))
+                    else:
+                        best_t.SetEnd(pcbnew.VECTOR2I(mm_to_nm(new_x), mm_to_nm(new_y)))
+                    iter_fixed += 1
+        n_drcfix += iter_fixed
+        if iter_fixed == 0:
+            break
+        print(f"    [DRC iter {drc_iter+1}] fixed {iter_fixed} track endpoint(s)")
     n_edgefix = fix_edge_track_overshoots(board)
 
     print("\n[9/9] Saving board ...")
@@ -1395,7 +1864,8 @@ def _phase_route() -> int:
     print(f"  [OK] Written {BOARD_FILE} ({os.path.getsize(BOARD_FILE):,} bytes)")
     print(f"  Summary: cleared={n_cleared}, segments={n_segments}, "
           f"vm_vias={n_vm_vias}, bcu_segs={n_bcu}, "
-          f"snapped={n_snapped}, 0402-exits={n_0402fixed}, edge-fix={n_edgefix}.")
+          f"snapped={n_snapped}, 0402-exits={n_0402fixed}, "
+          f"sot23-exits={n_sot23fixed}, pushed={n_pushed}, drc-fix={n_drcfix}, edge-fix={n_edgefix}.")
     return 0
 
 
