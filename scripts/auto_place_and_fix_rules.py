@@ -126,9 +126,9 @@ _CELL_LAYOUT: dict[str, tuple[float, float, float]] = {
     # +4.5 mm vertical so they stay clear of inter-row bridge corridors.
     "C1": (0.0, -5.0, 0.0),      # 0402    C_m   top centre (closer to IC)
     "R1": (-4.0, 3.0, 0.0),      # 0402    R1    bottom-left
-    "R2": (-4.0, 4.5, 0.0),      # 0402    R2    bottom-left
+    "R2": (-4.0, 4.3, 0.0),      # 0402    R2    bottom-left (1.3 mm Y-spacing from R3)
     "R3": (-1.0, 3.0, 0.0),      # 0402    R3    bottom-centre-left
-    "R4": (-1.0, 4.5, 0.0),      # 0402    R4    bottom-centre-left
+    "R4": (-1.0, 4.3, 0.0),      # 0402    R4    bottom-centre-left (1.3 mm Y-spacing from R3)
     "R5": (3.0, 3.0, 0.0),       # 0402    R5    bottom-centre-right
     "R6": (3.0, 4.5, 0.0),       # 0402    R6    bottom-right
 }
@@ -185,7 +185,12 @@ def castellated_target(fp: Any) -> tuple[float, float, float]:
     ref: str = fp.GetReference()
     prefix: str = ref[:2]
     num: int = int(ref[2:])  # 1-indexed pin number CT001..CT024
-    pos = EDGE_MIN + (num - 1) * EDGE_STEP
+
+    EDGE_SPAN_START = 1.0   # 0.5 mm inwards from absolute edge
+    EDGE_SPAN_END   = 69.0  # 0.5 mm inwards from absolute edge
+    EDGE_SPAN_STEP  = (EDGE_SPAN_END - EDGE_SPAN_START) / (EDGE_NUM - 1)
+
+    pos = EDGE_SPAN_START + (num - 1) * EDGE_SPAN_STEP
     if prefix == "CT":
         return (pos, 0.0, _PREFIX_ROTATION["CT"])
     elif prefix == "CB":
@@ -838,10 +843,14 @@ def fix_silk(board: Any) -> int:
 
 
 def fix_edge_clearance(board: Any) -> None:
-    """Set CopperCourtEdgeClearance / BoardEdgeClearance to 0.0 mm,
+    """Set CopperToEdgeClearance / BoardEdgeClearance to 0.0 mm,
     and silkscreen clearances to 0.0 mm."""
     try:
         board.GetDesignSettings().m_CopperEdgeClearance = 0
+    except Exception:
+        pass
+    try:
+        board.GetDesignSettings().m_CopperToEdgeClearance = 0
     except Exception:
         pass
     try:
