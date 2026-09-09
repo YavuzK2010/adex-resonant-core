@@ -131,7 +131,7 @@
   )
 
   ;; ──────────────────────────────────────────────
-  ;;  COMPONENT: INTEGRATOR — C_m  (10 nF, 0805, C0G/NP0)
+  ;;  COMPONENT: INTEGRATOR — C_m  (10 nF, 0603, C0G/NP0)
   ;; ──────────────────────────────────────────────
   (symbol
     (lib_id "Device:C")
@@ -150,7 +150,7 @@
       (at 180 250 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+    (property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
       (at 180 250 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
@@ -158,14 +158,14 @@
       (at 180 250 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
-    (property "ki_description" "Membrane capacitor, C0G/NP0, 0805"
+    (property "ki_description" "Membrane capacitor, C0G/NP0, 0402"
       (at 180 250 0)
       (effects (font (size 1.27 1.27)))
     )
   )
 
   ;; ──────────────────────────────────────────────
-  ;;  COMPONENT: INTEGRATOR — R_L  (10 MΩ, 0805)
+  ;;  COMPONENT: INTEGRATOR — R_L  (10 MΩ, 0603)
   ;; ──────────────────────────────────────────────
   (symbol
     (lib_id "Device:R")
@@ -184,7 +184,7 @@
       (at 280 250 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric"
       (at 280 250 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
@@ -192,7 +192,7 @@
       (at 280 250 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
-    (property "ki_description" "Leak resistance, 10 MOhm, 0805"
+    (property "ki_description" "Leak resistance, 10 MOhm, 0402"
       (at 280 250 0)
       (effects (font (size 1.27 1.27)))
     )
@@ -252,7 +252,7 @@
       (at 350 400 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
+    (property "Footprint" "Package_SO:TSSOP-8_4.4x3mm_P0.65mm"
       (at 350 400 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
@@ -260,7 +260,7 @@
       (at 350 400 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
-    (property "ki_description" "Low-power open-collector comparator SOIC-8"
+    (property "ki_description" "Low-power open-collector comparator TSSOP-8"
       (at 350 400 0)
       (effects (font (size 1.27 1.27)))
     )
@@ -321,7 +321,7 @@
       (at 150 480 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric"
       (at 150 480 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
@@ -349,7 +349,7 @@
       (at 100 540 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric"
       (at 100 540 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
@@ -377,7 +377,7 @@
       (at 300 550 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric"
       (at 300 550 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
@@ -405,7 +405,7 @@
       (at 350 550 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric"
       (at 350 550 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
@@ -433,7 +433,7 @@
       (at 400 620 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric"
       (at 400 620 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )

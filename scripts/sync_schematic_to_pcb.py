@@ -463,10 +463,10 @@ PAD_NUMBER_MAP: dict[str, dict[str, str]] = {
 }
 
 FOOTPRINT_LIB: dict[str, tuple[str, str]] = {
-    "Capacitor_SMD:C_0805_2012Metric": ("Capacitor_SMD", "C_0805_2012Metric"),
-    "Resistor_SMD:R_0805_2012Metric": ("Resistor_SMD", "R_0805_2012Metric"),
+    "Capacitor_SMD:C_0402_1005Metric": ("Capacitor_SMD", "C_0402_1005Metric"),
+    "Resistor_SMD:R_0402_1005Metric": ("Resistor_SMD", "R_0402_1005Metric"),
     "Inductor_SMD:L_1008_2520Metric": ("Inductor_SMD", "L_1008_2520Metric"),
-    "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm": ("Package_SO", "SOIC-8_3.9x4.9mm_P1.27mm"),
+    "Package_SO:TSSOP-8_4.4x3mm_P0.65mm": ("Package_SO", "TSSOP-8_4.4x3mm_P0.65mm"),
     "Package_TO_SOT_SMD:SOT-23": ("Package_TO_SOT_SMD", "SOT-23"),
 }
 
@@ -835,8 +835,8 @@ def load_footprint(lib_id: str) -> Optional[Any]:
         pad = pcbnew.PAD(fp)
         pad.SetNumber(str(i))
         pad.SetShape(pcbnew.PAD_SHAPE_ROUNDRECT)
-        pad.SetSize(pcbnew.VECTOR2I(mm_nm(1.0), mm_nm(1.4)))
-        pad.SetPosition(pcbnew.VECTOR2I(int((i - 1.5) * mm_nm(1.9)), 0))
+        pad.SetSize(pcbnew.VECTOR2I(mm_nm(0.8), mm_nm(0.9)))
+        pad.SetPosition(pcbnew.VECTOR2I(int((i - 1.5) * mm_nm(1.5)), 0))
         layers = pcbnew.LSET()
         layers.AddLayer(pcbnew.F_Cu)
         layers.AddLayer(pcbnew.F_Paste)
@@ -871,14 +871,23 @@ def apply_netlist(board: Any, nl: Netlist) -> tuple[dict[str, int], dict[str, An
             continue
         old = existing.get(ref.upper())
         if old is not None:
-            fp = old
+            # Force-replace footprint to pick up new lib shape (0402/TSSOP-8).
+            fp = loaded_fp
             fp.SetReference(ref)
             fp.SetValue(comp.value)
             fp.SetLayer(pcbnew.F_Cu)
-            # reuse the footprint object in place: rebuilding footprints by
-            # Remove+Add can destabilise pcbnew's C++ ownership model when
-            # re-syncing an already-populated board.
-            stats["updated"] += 1
+            # Insert before the old footprint's board position so removal is safe.
+            try:
+                pos = old.GetPosition()
+                fp.SetPosition(pos)
+            except Exception:
+                pass
+            board.Add(fp)
+            try:
+                board.Remove(old)
+            except Exception:
+                pass
+            stats["created"] += 1
         else:
             fp = loaded_fp
             fp.SetReference(ref)
