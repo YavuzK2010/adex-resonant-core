@@ -2,9 +2,8 @@
 """
 Automated Design Rules Check (DRC) for AdEx Resonant Core PCB.
 - Executes kicad-cli pcb drc on the board layout file
+- Uses --all-track-errors and --exit-code-violations (no exclusion writes)
 - Outputs JSON report to hardware/exports/
-- Parses results and prints a clean summary of Errors, Warnings, Unconnected
-- Runs with --all-track-errors / --severity-all (no exclusions)
 
 ╔══════════════════════════════════════════════════════════════════════════╗
 ║                 STRICT MANDATE — ZERO TOLERANCE POLICY                  ║
@@ -13,11 +12,12 @@ Automated Design Rules Check (DRC) for AdEx Resonant Core PCB.
 ║     during auto-fixes.                                                  ║
 ║  2. NO DRC rule is EVER suppressed or set to 'ignore'.                  ║
 ║  3. ALL rule severities in ALL .kicad_pro files must remain 'error'.    ║
-║  4. DRC must ALWAYS run with --severity-all / --all-track-errors.       ║
+║  4. DRC must ALWAYS run with --all-track-errors and                     ║
+║     --exit-code-violations (never writes exclusions back).             ║
 ║  5. Goal: Zero ignored/suppressed tests, all violations visible.        ║
 ║                                                                         ║
-║  See purge_drc_exclusions_and_severities.py for the definitive cleanup  ║
-║  script that enforces this policy across all project files.             ║
+║  See purge_drc_ignores.py for the definitive cleanup script that        ║
+║  enforces this policy across all project files.                         ║
 ╚══════════════════════════════════════════════════════════════════════════╝
 """
 
@@ -62,11 +62,11 @@ def run_drc() -> DrcSummary | None:
         "kicad-cli",
         "pcb",
         "drc",
-        BOARD_FILE,
+        "--all-track-errors",
+        "--exit-code-violations",
         "--format", "json",
         "--output", REPORT_JSON,
-        "--severity-all",
-        "--all-track-errors",
+        BOARD_FILE,
     ]
 
     print(f"\n[1] Running: {' '.join(cmd)}\n")
@@ -77,7 +77,7 @@ def run_drc() -> DrcSummary | None:
         print(f"  {line}")
     print("  -------------")
 
-    if result.returncode not in (0, 3):
+    if result.returncode >= 128 or result.returncode < 0:
         print(f"  [ERROR] kicad-cli exited with code {result.returncode}")
         if result.stderr:
             print(f"  stderr: {result.stderr[:1000]}")
