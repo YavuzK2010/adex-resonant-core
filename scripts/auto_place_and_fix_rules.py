@@ -87,7 +87,7 @@ CLEARANCE_MM = 0.15
 
 # Routing parameters
 TRACK_WIDTH_MM = 0.20
-TRACK_CLEAR_R_MM = TRACK_WIDTH_MM / 2.0 + CLEARANCE_MM + 0.01  # 0.21 mm
+TRACK_CLEAR_R_MM = TRACK_WIDTH_MM / 2.0 + CLEARANCE_MM + 0.01  # 0.26 mm
 GRID_STEP_MM = 0.10
 
 # V_m-specific routing rules (tighter clearance, wider trace for signal integrity)
@@ -956,11 +956,13 @@ def _is_0402_footprint(fp: Any) -> bool:
 
 
 def fix_0402_track_exit(board: Any) -> int:
-    """Ensure every track leaving a 0402 pad exits perpendicularly for >=0.3 mm.
+    """Ensure every track leaving a 0402 pad exits perpendicularly for >= min_exit mm.
 
     For horizontal 0402 pads (rotation 0 or 180), the pad's long axis is
     horizontal.  The first track segment must run horizontally (perpendicular
-    to the pad's short/vertical edge) for at least 0.3 mm before any turn.
+    to the pad's short/vertical edge) for at least min_exit mm before any turn.
+
+    N13/N15 pads use min_exit=0.25mm; all others use min_exit=0.3mm.
 
     This prevents the solder-mask aperture of one pad from merging with the
     aperture of the adjacent pad on a different net (solder_mask_bridge DRC).
@@ -969,6 +971,15 @@ def fix_0402_track_exit(board: Any) -> int:
     for fp in board.GetFootprints():
         if not _is_0402_footprint(fp):
             continue
+        # Get the footprint reference to detect N13/N15
+        ref = ""
+        try:
+            ref = fp.GetReference()
+        except Exception:
+            ref = ""
+        is_n13n15 = ref.startswith("N13") or ref.startswith("N15") if ref else False
+        min_exit = 0.25 if is_n13n15 else 0.3
+
         for pad in fp.Pads():
             if pad.GetNetCode() == 0:
                 continue
@@ -1008,17 +1019,17 @@ def fix_0402_track_exit(board: Any) -> int:
                     continue
 
                 if horizontal:
-                    if abs(dy) < 0.01 and seg_len >= 0.3:
+                    if abs(dy) < 0.01 and seg_len >= min_exit:
                         continue
                     dir_x = 1.0 if dx >= 0 else -1.0
-                    exit_x = pad_end[0] + dir_x * 0.3
+                    exit_x = pad_end[0] + dir_x * min_exit
                     exit_y = pad_end[1]
                 else:
-                    if abs(dx) < 0.01 and seg_len >= 0.3:
+                    if abs(dx) < 0.01 and seg_len >= min_exit:
                         continue
                     dir_y = 1.0 if dy >= 0 else -1.0
                     exit_x = pad_end[0]
-                    exit_y = pad_end[1] + dir_y * 0.3
+                    exit_y = pad_end[1] + dir_y * min_exit
 
                 t.SetEnd(pcbnew.VECTOR2I(mm_to_nm(exit_x), mm_to_nm(exit_y)))
                 seg2 = pcbnew.PCB_TRACK(board)
@@ -1033,8 +1044,10 @@ def fix_0402_track_exit(board: Any) -> int:
                 board.Add(seg2)
                 fixed += 1
 
-    print(f"  [OK] Fixed {fixed} 0402 pad track exits (perpendicular exit >= 0.3mm).")
+    print(f"  [OK] Fixed {fixed} 0402 pad track exits (perpendicular exit >= {min_exit:.2f}mm).")
     return fixed
+
+
 def fix_edge_track_overshoots(board: Any) -> int:
     """Snap ALL track endpoints near the board edge to their castellated pad centres.
 
@@ -1184,7 +1197,8 @@ def fix_silk(board: Any) -> int:
 
 def fix_edge_clearance(board: Any) -> None:
     """Set CopperToEdgeClearance / BoardEdgeClearance to 0.0 mm,
-    and silkscreen clearances to 0.0 mm."""
+    silkscreen clearances to 0.0 mm,
+    and solder mask expansion/min width per JLCPCB high-density spec."""
     try:
         board.GetDesignSettings().m_CopperEdgeClearance = 0
     except Exception:
@@ -1201,8 +1215,19 @@ def fix_edge_clearance(board: Any) -> None:
         board.GetDesignSettings().m_SilkToSolderMaskClearance = 0
     except Exception:
         pass
+    # Solder mask settings: 0.02mm expansion (pad_to_mask_clearance),
+    # 0.08mm minimum mask width
+    try:
+        board.GetDesignSettings().m_SolderMaskExpansion = mm_to_nm(0.02)
+    except Exception:
+        pass
+    try:
+        board.GetDesignSettings().m_SolderMaskMinWidth = mm_to_nm(0.08)
+    except Exception:
+        pass
     print("  [OK] Copper-to-edge clearance set to 0.0 mm.")
     print("  [OK] Silkscreen clearances set to 0.0 mm.")
+    print("  [OK] Solder mask: expansion=0.02 mm, min_width=0.08 mm.")
 
 
 # ── Project (kicad_pro) DRC rule hardening ───────────────────────────
@@ -1234,7 +1259,7 @@ def _fix_drc_severities(pro_file: str) -> int:
         #   the exact pad centre, but that centre is ON the Edge.Cuts line, so
         #   the test would still flag the pad itself — this is by design.
         "copper_edge_clearance",
-        # solder_mask_bridge: resolved by 0.05mm global solder mask expansion + perpendicular 0402 exits
+        # solder_mask_bridge: resolved by 0.02mm global solder mask expansion, 0.08mm min width, + perpendicular 0402 exits
         "clearance",               # corner castellated PTH overlap by design
         "pth_inside_courtyard",
         "hole_clearance",
@@ -1284,7 +1309,7 @@ def _relax_design_rules(pro_file: str) -> None:
     rules["min_copper_edge_clearance"] = 0.0
     rules["min_silk_clearance"] = 0.0
     rules["min_silk_to_solder_mask_clearance"] = 0.0
-    rules["solder_mask_to_copper_clearance"] = 0.05   # prevents aperture bridges between adjacent-net tracks
+    rules["solder_mask_to_copper_clearance"] = 0.02   # JLCPCB high-density spec: prevents aperture bridges between adjacent-net tracks
     for netclass in data.get("net_settings", {}).get("classes", []):
         netclass["clearance"] = 0.15
         netclass["track_width"] = 0.2
@@ -1292,7 +1317,7 @@ def _relax_design_rules(pro_file: str) -> None:
         _json.dump(data, fh, indent=2, ensure_ascii=False)
         fh.write("\n")
     print("  [OK] Design rules: min clearance 0.15 mm, min track 0.15 mm, "
-          "copper-edge clearance 0.0 mm.")
+          "copper-edge clearance 0.0 mm, solder-mask-to-copper 0.02 mm.")
 
 
 # ── Main ────────────────────────────────────────────────────────────────
