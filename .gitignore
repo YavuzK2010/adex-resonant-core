@@ -1,3 +1,5 @@
+# KiCad backup / history directories
+hardware/.history/
 # Python
 __pycache__/
 *.py[cod]
