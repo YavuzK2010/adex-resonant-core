@@ -122,36 +122,36 @@ _CELL_LAYOUT: dict[str, tuple[float, float, float]] = {
     "U1": (0.0, 0.0, 0.0),       # TSSOP-8 LM393 at cluster centre
     "Q1": (-5.5, -4.0, 0.0),     # SOT-23  Q_exp   (left of IC, further out)
     "Q2": (5.5, -4.0, 0.0),      # SOT-23  M_reset (right of IC, further out)
-    # 0402s: top C1 between Q1/Q2, bottom R1-R6 in 2x3 grid kept within
-    # +4.5 mm vertical so they stay clear of inter-row bridge corridors.
-    "C1": (0.0, -5.0, 0.0),      # 0402    C_m   top centre (closer to IC)
-    "R1": (-4.0, 3.0, 0.0),      # 0402    R1    bottom-left
-    "R2": (-4.0, 4.3, 0.0),      # 0402    R2    bottom-left (1.3 mm Y-spacing from R3)
-    "R3": (-1.0, 3.0, 0.0),      # 0402    R3    bottom-centre-left
-    "R4": (-1.0, 5.0, 0.0),      # 0402    R4    bottom-centre-left (2.0 mm Y-spacing from R3 for >=0.3mm courtyard gap)
-    "R5": (3.0, 3.0, 0.0),       # 0402    R5    bottom-centre-right
-    "R6": (3.0, 4.5, 0.0),       # 0402    R6    bottom-right
+    # 0402s: top C1 between Q1/Q2, bottom R1-R6 spread widely.
+    # TSSOP-8 courtyard extends to X=±3.85, Y=±1.75.
+    # 0402 courtyard is X=±0.525, Y=±0.27.
+    # R1,R3,R5 row at Y=4.5 clears U1 courtyard (1.75+0.27+2.48 margin).
+    # R2,R4,R6 row at Y=7.0 gives 2.5mm Y-spacing between R rows.
+    # R1/R2 at X=-5.8, R3/R4 at X=-1.8, R5/R6 at X=3.0 for 4.0mm X-spacing.
+    "C1": (0.0, -5.0, 0.0),      # 0402    C_m   top centre
+    "R1": (-5.8, 4.5, 0.0),      # 0402    R1    far bottom-left
+    "R2": (-5.8, 7.0, 0.0),      # 0402    R2    far bottom-left, 2.5mm below R1
+    "R3": (-1.8, 4.5, 0.0),      # 0402    R3    bottom-centre-left
+    "R4": (-1.8, 7.0, 0.0),      # 0402    R4    bottom-centre-left, 2.5mm below R3
+    "R5": (3.0, 4.5, 0.0),       # 0402    R5    bottom-centre-right
+    "R6": (3.0, 7.0, 0.0),       # 0402    R6    bottom-right, 2.5mm below R5
 }
 
 # =====================================================================
-# Inter-Cluster Bridge Corridors (midway between rows)
+# Inter-Cluster Bridge Corridors (two Y-staggered rows in bottom strip)
 # =====================================================================
-# Rows at [11.0, 25.0, 39.0, 53.0] -> inter-row lanes at midpoints (18, 32),
-# bottom LC/bias group shifted to y = 63.0 mm for 7.0 mm routing clearance
-# to bottom Castellated pads (y = 70.0 mm):
-_BRIDGE_CORRIDOR_Y = [18.0, 32.0, 63.0]
-# 5 slots per corridor: outer edge-to-column and inter-column midpoints.
-# Keeps the vertical corridors between columns completely unobstructed.
-# 5 slots per corridor: aligned at column mid-points (19, 35, 51) and
-# inner-edge offsets (8.5, 61.5) so bridge components stay clear of
-# neuron clusters while leaving routing corridors open.
-_BRIDGE_SLOT_X = [8.5, 20.0, 35.0, 50.0, 61.5]
-BRIDGE_OFFSET = 3.0
-
+# D2 uses SOT-23 (3.86×3.4mm courtyard), L1 uses L_1008 (2.5×2.0mm).
+# Two Y corridors spaced 5mm apart prevent cross-corridor overlap.
+# BRIDGE_OFFSET=2.0 with 8mm pitch gives >0.8mm clearance everywhere.
 _BRIDGE_CORRIDORS: list[tuple[float, float, float]] = []
-for _cy in _BRIDGE_CORRIDOR_Y:
-    for _sx in _BRIDGE_SLOT_X:
+_BRIDGE_CELL_DATA = [
+    (63.0, [7.0, 15.0, 23.0, 31.0, 39.0, 47.0, 55.0, 63.0]),   # 8 cells, 8mm pitch
+    (67.5, [7.0, 15.0, 23.0, 31.0, 39.0, 47.0, 55.0]),           # 7 cells, 8mm pitch
+]
+for _cy, _sx_list in _BRIDGE_CELL_DATA:
+    for _sx in _sx_list:
         _BRIDGE_CORRIDORS.append((_sx, _cy, 0.0))
+BRIDGE_OFFSET = 2.0
 
 # Row-4 outputs -> physically-nearest CB pads (straight vertical fan-out
 # lanes, no diagonal barricades across the CB corridor).
@@ -1004,9 +1004,6 @@ def _fix_drc_severities(pro_file: str) -> int:
         #   the exact pad centre, but that centre is ON the Edge.Cuts line, so
         #   the test would still flag the pad itself — this is by design.
         "copper_edge_clearance",
-        # courtyards_overlap: dense SMD layout inherently causes courtyard overlaps;
-        #   critical pair N14_R4/N14_R3 is fixed with 2.0mm Y-spacing in _CELL_LAYOUT.
-        "courtyards_overlap",
         # solder_mask_bridge: resolved by 0.05mm global solder mask expansion + perpendicular 0402 exits
         "clearance",               # corner castellated PTH overlap by design
         "pth_inside_courtyard",
