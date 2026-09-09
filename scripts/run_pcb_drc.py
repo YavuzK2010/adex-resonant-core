@@ -6,11 +6,19 @@ Automated Design Rules Check (DRC) for AdEx Resonant Core PCB.
 - Parses results and prints a clean summary of Errors, Warnings, Unconnected
 - Runs with --all-track-errors / --severity-all (no exclusions)
 
-STRICT MANDATE: NEVER write `drc_exclusions` back to the .kicad_pcb file
-during auto-fixes. NO DRC rule is EVER suppressed or set to 'ignore'.
-All rule severities must remain 'error' (never 'ignore').
-
-See purge_drc_exclusions_and_severities.py for the definitive cleanup script.
+╔══════════════════════════════════════════════════════════════════════════╗
+║                 STRICT MANDATE — ZERO TOLERANCE POLICY                  ║
+║                                                                         ║
+║  1. NEVER write `drc_exclusions` back to the .kicad_pcb file            ║
+║     during auto-fixes.                                                  ║
+║  2. NO DRC rule is EVER suppressed or set to 'ignore'.                  ║
+║  3. ALL rule severities in ALL .kicad_pro files must remain 'error'.    ║
+║  4. DRC must ALWAYS run with --severity-all / --all-track-errors.       ║
+║  5. Goal: Zero ignored/suppressed tests, all violations visible.        ║
+║                                                                         ║
+║  See purge_drc_exclusions_and_severities.py for the definitive cleanup  ║
+║  script that enforces this policy across all project files.             ║
+╚══════════════════════════════════════════════════════════════════════════╝
 """
 
 import json

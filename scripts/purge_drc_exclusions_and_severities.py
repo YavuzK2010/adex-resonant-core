@@ -33,7 +33,11 @@ EXPORTS = os.path.join(HW, "exports")
 
 BOARD_FILE = os.path.join(HW, "adex_resonant_core.kicad_pcb")
 PRO_FILE = os.path.join(HW, "adex_resonant_core.kicad_pro")
+LAYOUTS_PRO_FILE = os.path.join(HW, "layouts", "adex_resonant_core.kicad_pro")
 REPORT_JSON = os.path.join(EXPORTS, "drc_report.json")
+
+# All .kicad_pro files that need severity enforcement
+ALL_PRO_FILES = [PRO_FILE, LAYOUTS_PRO_FILE]
 # ── 1. Strip drc_exclusions from the .kicad_pcb (S-expression) ──────────────
 
 def _strip_pcb_drc_exclusions(pcb_path: str) -> int:
@@ -99,7 +103,11 @@ def _reset_pro_severities(pro_file: str) -> int:
         for check_name, current_val in list(sev.items()):
             if current_val == "ignore":
                 sev[check_name] = "error"
-                print(f"  [RESET] {check_name}: 'ignore' -> 'error'")
+                print(f"  [FIX]   {check_name}: 'ignore' -> 'error'")
+                changes += 1
+            elif current_val != "error":
+                sev[check_name] = "error"
+                print(f"  [FIX]   {check_name}: '{current_val}' -> 'error'")
                 changes += 1
 
     if changes == 0:
@@ -151,6 +159,33 @@ def _scan_pcb_for_ignores(pcb_path: str) -> int:
 
     return count
 # ── 4. Run full unsuppressed DRC via kicad-cli ──────────────────────────────
+# ── 2x. Scan .kicad_pro for any remaining 'ignore' strings ────────────────
+
+def _scan_pro_for_ignores(pro_path: str) -> int:
+    """Scan the .kicad_pro file for any occurrence of the word 'ignore'."""
+    if not os.path.exists(pro_path):
+        return 0
+
+    with open(pro_path, "r", encoding="utf-8") as fh:
+        content = fh.read()
+
+    matches = list(re.finditer(r'\bignore\b', content, re.IGNORECASE))
+    count = len(matches)
+    if count > 0:
+        print(f"  [WARN] Found {count} 'ignore' occurrence(s) in .kicad_pro:")
+        for m in matches[:10]:
+            start = max(0, m.start() - 40)
+            end = min(len(content), m.end() + 40)
+            context = content[start:end].replace('\n', ' ')
+            print(f"    ...{context}...")
+        if count > 10:
+            print(f"    ... and {count - 10} more")
+    else:
+        print("  [OK]    No 'ignore' strings found in .kicad_pro")
+
+    return count
+
+# ── 3. Scan .kicad_pcb for any remaining 'ignore' strings ──────────────────
 
 def _run_drc() -> dict[str, int]:
     """
@@ -266,10 +301,14 @@ def main() -> int:
     n = _strip_pcb_drc_exclusions(BOARD_FILE)
     total_changes += n
 
-    # Step 2: Reset severities from "ignore" -> "error" in .kicad_pro
-    print("\n[2/5] Resetting rule severities (replace 'ignore' with 'error') ...")
-    n = _reset_pro_severities(PRO_FILE)
-    total_changes += n
+    # Step 2: Reset severities in ALL .kicad_pro files
+    print("\n[2/5] Resetting rule severities in ALL .kicad_pro files ...")
+    for pro_path in ALL_PRO_FILES:
+        print(f"\n  --- Processing: {pro_path} ---")
+        n = _reset_pro_severities(pro_path)
+        total_changes += n
+        n2 = _scan_pro_for_ignores(pro_path)
+        total_changes += n2
 
     # Step 3: Scan .kicad_pcb for any "ignore" strings
     print("\n[3/5] Scanning .kicad_pcb for any remaining 'ignore' ...")
