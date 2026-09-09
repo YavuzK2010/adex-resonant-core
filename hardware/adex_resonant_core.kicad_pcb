@@ -36,7 +36,7 @@
 		(45 "User.4" user)
 	)
 	(setup
-		(pad_to_mask_clearance 0)
+		(pad_to_mask_clearance -0.05)
 		(allow_soldermask_bridges_in_footprints no)
 		(tenting
 			(front yes)
@@ -43490,7 +43490,7 @@
 	)
 	(segment
 		(start 21.3 36)
-		(end 21.3 34.7)
+		(end 21.3 35.4)
 		(width 0.2)
 		(layer "F.Cu")
 		(net "N10_V_m")
@@ -43513,8 +43513,8 @@
 		(uuid "1f40165c-9fcb-47f3-ae08-f051228d60fc")
 	)
 	(segment
-		(start 21.3 34.7)
-		(end 21.6 34.7)
+		(start 21.3 35.4)
+		(end 21.6 35.4)
 		(width 0.2)
 		(layer "F.Cu")
 		(net "N10_V_m")
@@ -43561,7 +43561,7 @@
 		(uuid "92fe8286-7865-431d-bf22-c65c9a564367")
 	)
 	(segment
-		(start 21.6 34.7)
+		(start 21.6 35.4)
 		(end 21.6 34.3)
 		(width 0.2)
 		(layer "F.Cu")
