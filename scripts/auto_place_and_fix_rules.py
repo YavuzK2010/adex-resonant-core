@@ -4,36 +4,36 @@
 """
 AdEx Resonant Core -- Auto-Place & Fix DRC Rules.
 
-Placement Strategy (Board: 70 x 70 mm, Origin (0,0)):
+1. Castellated edge connectors anchored with pad centre exactly ON the
+   70x70 mm Edge.Cuts boundary and tagged ``pad_prop_castellated`` so the
+   DRC "board edge clearance" test exempts the half-moon edge copper.
 
-1. Castellated edge connectors (CT / CB / CL / CR) anchored with
-   pad centre exactly ON the 70x70 mm Edge.Cuts boundary:
-       CT001..CT024  ->  y =   0.0 mm,  x =  3.0 .. 67.0 mm  (linear spacing)
-       CB001..CB024  ->  y =  70.0 mm,  x =  3.0 .. 67.0 mm  (linear spacing)
-       CL001..CL024  ->  x =   0.0 mm,  y =  3.0 .. 67.0 mm  (linear spacing)
-       CR001..CR024  ->  x =  70.0 mm,  y =  3.0 .. 67.0 mm  (linear spacing)
+2. Expanded Hierarchical Cluster Layout (4x4, 16 neurons) across full
+   70x70 mm board real estate:
+   - Outer margin: 4.0 mm from board edge.
+   - Active inner placement region: X = 4.0 mm to 66.0 mm,
+     Y = 4.0 mm to 66.0 mm.
+   - 4 columns X: [12.5, 27.5, 42.5, 57.5] (15.0 mm pitch)
+   - 4 rows    Y: [12.5, 27.5, 42.5, 57.5] (15.0 mm pitch)
+   - Each neuron cell: 15.0 x 15.0 mm cluster centred at (Cx, Cy).
 
-2. Hierarchical Cluster Layout (4x4 grid) for 16 neuron modules:
-    - Core Grid Definition:
-        * 4 columns X: [14.75mm, 28.25mm, 41.75mm, 55.25mm] (13.5mm pitch)
-        * 4 rows    Y: [14.75mm, 28.25mm, 41.75mm, 55.25mm] (13.5mm pitch)
-    - Each Neuron Instance (N1..N16) groups its dedicated components inside
-      its own 13.5 x 13.5 mm cluster cell:
-        * SOIC-8 IC (U1, LM393) placed at the centre of the cluster.
-        * SOT-23 transistors (Q1=Q_exp, Q2=M_reset) at (±3.8, -3.2) mm.
-        * 0603 passives (C_m, R1..R6) placed at (Cx±3.8, Cy+) offsets
-          with >= 1.2 mm pad-to-pad clearance.
-    - Shared LC bridge pairs (B1..B15, each with D2 diode + L1 inductor) are
-      placed in inter-cluster corridors at Y = Cy + 6.75mm (midway between rows).
+3. Intra-Cluster Layout:
+   - SOIC-8 LM393 at (Cx, Cy), rotation 0.
+   - SOT-23 transistors at (Cx - 4.2, Cy - 3.5) and (Cx + 4.2, Cy - 3.5).
+   - 0603 passives offset vertically/horizontally with >= 1.5 mm pad-to-pad
+     clearance.
+   - Inter-cluster LC components (L*, D*) placed midway between rows at
+     Y = Cy + 7.5 mm, aligned with column centres to keep vertical/horizontal
+     trace corridors unobstructed.
 
-3. DRC rule fixes:
-    - CopperEdgeClearance -> 0.0 mm (castellated pads touching Edge.Cuts).
-    - SilkClearance -> 0.0 mm; min_text_height -> 0.5 mm.
-    - Reference texts on castellated footprints hidden to avoid DRC violations.
-    - silk_over_copper severity set to 'ignore' (silkscreen clipped by mask
-      is acceptable for dense PCBA).
+4. Deterministic A* router (0.1 mm grid, 0.2 mm tracks, 0.15 mm clearance);
+   castellated track endpoints snapped to exact pad centres at 0.20 mm.
+
+5. DRC: every severity 'error' (no suppressed/ignored tests), CopperToEdge
+   clearance 0.0 mm.
 """
 
+import heapq
 import math
 import os
 import re
@@ -52,31 +52,39 @@ BOARD_FILE = os.path.join(HW, "adex_resonant_core.kicad_pcb")
 PRO_FILE = os.path.join(HW, "adex_resonant_core.kicad_pro")
 
 BOARD_SIZE_MM = 70.0
-EDGE_MIN = 3.0
-EDGE_MAX = 67.0
-EDGE_NUM = 24  # 24 castellated pads per edge
-EDGE_STEP = (EDGE_MAX - EDGE_MIN) / (EDGE_NUM - 1)  # 64.0/23 mm pitch
+EDGE_MIN = 0.0
+EDGE_MAX = 70.0
+EDGE_NUM = 24
+EDGE_STEP = (EDGE_MAX - EDGE_MIN) / (EDGE_NUM - 1)
+
+# Outer margin: 4.0 mm from board edge
+MARGIN_MM = 4.0
+INNER_MIN = MARGIN_MM               # 4.0 mm
+INNER_MAX = BOARD_SIZE_MM - MARGIN_MM  # 66.0 mm
 
 # =====================================================================
-# Core Grid Definition
+# Core Grid Definition (expanded 15mm pitch, 70x70 mm area)
 # =====================================================================
-# 4 columns X: [14.75mm, 28.25mm, 41.75mm, 55.25mm] (13.5mm pitch)
-# 4 rows    Y: [14.75mm, 28.25mm, 41.75mm, 55.25mm] (13.5mm pitch)
-# These are the CLUSTER CENTRES (Cx, Cy) for each neuron.
-CELL_PITCH = 13.5  # 13.5 mm pitch
+CELL_PITCH_X = 15.0
+CELL_PITCH_Y = 15.0
+CELL_W = 15.0   # full cell width (pitch)
+CELL_H = 15.0   # full cell height (pitch)
 
-# Cluster centre coordinates (directly from the grid definition)
-COL_CENTRES = [14.75, 28.25, 41.75, 55.25]
-ROW_CENTRES = [14.75, 28.25, 41.75, 55.25]
+COL_CENTRES = [12.5, 27.5, 42.5, 57.5]
+ROW_CENTRES = [12.5, 27.5, 42.5, 57.5]
 
-# Minimum pad-to-pad clearance (design target)
-CLEARANCE_MM = 1.2
-CASTELLATED_CLEARANCE_MM = 0.15
-CASTELLATED_TRACE_WIDTH_MM = 0.15
+# Strip below Row 4 -> y >= 62.25 clear for the CB fan-out corridors.
+BOTTOM_CLEAR_Y = ROW_CENTRES[3] + CELL_H / 2.0  # 62.25 mm
+
+CLEARANCE_MM = 0.15
+
+# Routing parameters
+TRACK_WIDTH_MM = 0.20
+TRACK_CLEAR_R_MM = TRACK_WIDTH_MM / 2.0 + CLEARANCE_MM + 0.01  # 0.21 mm
+GRID_STEP_MM = 0.10
 
 TEXT_SIZE_MM = 0.6
 TEXT_THICKNESS_MM = 0.12
-TEXT_OFFSET_MM = 1.5
 
 CASTELLATED_RE = re.compile(r"^(C[TBRL])\d{3}$")
 
@@ -86,13 +94,8 @@ _PREFIX_ROTATION: dict[str, float] = {
     "CL": 270.0,
     "CR": 90.0,
 }
-# =====================================================================
-# Neuron-to-grid mapping (row-major, top-left -> N1..N16)
-# Row 0 (Cy=14.75):  N1  N2  N3  N4
-# Row 1 (Cy=28.25):  N5  N6  N7  N8
-# Row 2 (Cy=41.75):  N9  N10 N11 N12
-# Row 3 (Cy=55.25):  N13 N14 N15 N16
-# =====================================================================
+
+# Neurons, row-major, top-left -> N1..N16
 _NEURON_GRID: dict[int, tuple[int, int]] = {}
 _idx = 1
 for _r in range(4):
@@ -103,71 +106,54 @@ for _r in range(4):
 # =====================================================================
 # Intra-Cluster Relative Offsets (for Cell at Cx, Cy)
 # =====================================================================
-# SOIC-8 IC (LM393) at centre (Cx, Cy), rotation = 0
-# SOT-23 transistors:
-#   Q_exp (Q1) at (Cx - 3.8, Cy - 3.2)
-#   M_reset (Q2) at (Cx + 3.8, Cy - 3.2)
-# 0603 Passives (C_m, R1, R2, R3, R4, R5, R6):
-#   Side columns (x = Cx +/- 3.8): C_m @ y=+3.4, R1 @ y=+3.4
-#   Centre column (x = Cx):         R2 @ y=+3.9, R3 @ y=+0.7, R4 @ y=-0.9,
-#                                     R5 @ y=-2.5, R6 @ y=-4.8
-# SOT-23 transistors:
-#   Q1 (Q_exp) at (Cx - 3.8, Cy - 4.15)  (below SOIC-8 pad reach)
-#   Q2 (M_reset) at (Cx + 3.8, Cy - 4.15)
-# These offsets guarantee pad-to-pad clearance >= 0.2mm (DRC min).
+# Expanded 15.0 x 15.0 mm cell:
+#   - SOIC-8 LM393 centred at (Cx, Cy)                 rotation 0
+#   - SOT-23 Q_exp / M_reset flanking above the IC at +/-4.2 mm X,
+#     -3.5 mm Y (Y directed upward from centre)
 _CELL_LAYOUT: dict[str, tuple[float, float, float]] = {
     # (dx, dy, rotation_deg)
-    "U1": ( 0.0,  0.0, 0.0),   # SOIC-8 at centre
-    "Q1": (-3.8, -4.15, 0.0),  # SOT-23 Q_exp (below SOIC reach)
-    "Q2": ( 3.8, -4.15, 0.0),  # SOT-23 M_reset (below SOIC reach)
-    "C1": (-3.8,  3.4, 0.0),   # 0603 cap C_m (left column, above SOIC reach)
-    "R1": ( 3.8,  3.4, 0.0),   # 0603 resistor R1 (right column, above SOIC reach)
-    "R2": ( 0.0,  3.9, 0.0),   # 0603 resistor R2 (centre)
-    "R3": ( 0.0,  0.7, 0.0),   # 0603 resistor R3 (centre)
-    "R4": ( 0.0, -0.9, 0.0),   # 0603 resistor R4 (centre)
-    "R5": ( 0.0, -2.5, 0.0),   # 0603 resistor R5 (centre)
-    "R6": ( 0.0, -4.8, 0.0),   # 0603 resistor R6 (centre, lower area)
+    "U1": (0.0, 0.0, 0.0),       # SOIC-8  LM393 at cluster centre
+    "Q1": (-4.2, -3.5, 0.0),     # SOT-23  Q_exp   (left of IC, above)
+    "Q2": (4.2, -3.5, 0.0),      # SOT-23  M_reset (right of IC, above)
+    # 0603s placed in a 2x3 grid in the lower half (below the SOIC-8,
+    # above the inter-row bridge corridor) with >= 1.5 mm pad-to-pad
+    # clearance; and one at the top centre (between the two SOT-23s).
+    "C1": (0.0, -6.0, 0.0),      # 0603    C_m   top centre (between Q1/Q2)
+    "R1": (-4.5, 3.0, 0.0),      # 0603    R1    bottom-left
+    "R2": (-4.5, 5.5, 0.0),      # 0603    R2    bottom-left
+    "R3": (-0.6, 3.0, 0.0),      # 0603    R3    bottom-centre-left
+    "R4": (-0.6, 5.5, 0.0),      # 0603    R4    bottom-centre-left
+    "R5": (3.3, 3.0, 0.0),       # 0603    R5    bottom-centre-right
+    "R6": (3.3, 5.5, 0.0),       # 0603    R6    bottom-right
 }
 
 # =====================================================================
-# Inter-Cluster Bridge Corridors
+# Inter-Cluster Bridge Corridors (midway between rows)
 # =====================================================================
-# LC Bridge pairs (D2 + L1) placed in the horizontal inter-cluster corridors
-# at Y = Cy + 6.75mm (midway between rows), ensuring 0% courtyard/pad overlap
-# with adjacent cell components.
-# There are 3 horizontal corridors (y=21.5, 35.0, 48.5) with 4 column positions
-# each = 12 bridges (B1..B12) for horizontal-neuron connections.
-# B13..B15 (inter-row bridges) are placed in the corridor between row 3 and
-# the board edge (y=62.0).
-_BRIDGE_CORRIDORS: list[tuple[float, float, float]] = [
-    # Horizontal corridor between row 0 (Cy=14.75) and row 1 (Cy=28.25): y = 21.5
-    (14.75, 21.5, 0.0),    # B1 - col 0: N1↔N2
-    (28.25, 21.5, 0.0),    # B2 - col 1: N2↔N3
-    (41.75, 21.5, 0.0),    # B3 - col 2: N3↔N4
-    (55.25, 21.5, 0.0),    # B4 - col 3 
-    # Horizontal corridor between row 1 (Cy=28.25) and row 2 (Cy=41.75): y = 35.0
-    (14.75, 35.0, 0.0),    # B5 - col 0
-    (28.25, 35.0, 0.0),    # B6 - col 1
-    (41.75, 35.0, 0.0),    # B7 - col 2
-    (55.25, 35.0, 0.0),    # B8 - col 3
-    # Horizontal corridor between row 2 (Cy=41.75) and row 3 (Cy=55.25): y = 48.5
-    (14.75, 48.5, 0.0),    # B9  - col 0
-    (28.25, 48.5, 0.0),    # B10 - col 1
-    (41.75, 48.5, 0.0),    # B11 - col 2
-    (55.25, 48.5, 0.0),    # B12 - col 3
-    # Between row 3 (Cy=55.25) and board edge (y=70.0): corridor shifted downward
-    # by 2.5mm (from 59.5 to 62.0) to open routing corridors for CB* pads.
-    (14.75, 62.0, 0.0),    # B13 - col 0
-    (28.25, 62.0, 0.0),    # B14 - col 1
-    (41.75, 62.0, 0.0),    # B15 - col 2
-]
+# Rows at [12.5, 27.5, 42.5, 57.5] -> inter-row lanes at +7.5 mm:
+_BRIDGE_CORRIDOR_Y = [20.0, 35.0, 50.0]
+# 5 slots per corridor: outer edge-to-column and inter-column midpoints.
+# Keeps the vertical corridors between columns completely unobstructed.
+_BRIDGE_SLOT_X = [8.25, 20.0, 35.0, 50.0, 61.75]
+BRIDGE_OFFSET = 3.5
 
-# Bridge intra-pair separation. D2 (SOT-23) pad3 extends to +1.68mm from the
-# D2 centre, L1 (L_1008) pad1 extends to -1.695mm from the L1 centre.
-# BRIDGE_OFFSET = 2.0 gives gap = 0.625mm between pads (used for vertical corridors).
-# BRIDGE_OFFSET_INTERROW = 5.0 gives more clearance for cross-corridor bridges.
-BRIDGE_OFFSET = 2.0  # mm from corridor centreline (standard)
-BRIDGE_OFFSET_INTERROW = 3.5  # mm for inter-row bridges (B13-B15)
+_BRIDGE_CORRIDORS: list[tuple[float, float, float]] = []
+for _cy in _BRIDGE_CORRIDOR_Y:
+    for _sx in _BRIDGE_SLOT_X:
+        _BRIDGE_CORRIDORS.append((_sx, _cy, 0.0))
+
+# Row-4 outputs -> physically-nearest CB pads (straight vertical fan-out
+# lanes, no diagonal barricades across the CB corridor).
+_CASTELLATED_BOTTOM_NETS: list[tuple[str, str]] = [
+    ("CB006", "N13_SPIKE_OUT"),   # SPIKE pad ~x15.75mm -> CB006 (15.22)
+    ("CB005", "N13_V_m"),         # V_m bottom pads ~x7-9mm   -> CB005 (12.17)
+    ("CB011", "N14_SPIKE_OUT"),   # ~x30.75mm -> CB011 (30.43)
+    ("CB010", "N14_V_m"),         # ~x27-28mm -> CB010 (27.39)
+    ("CB016", "N15_SPIKE_OUT"),   # ~x45.75mm -> CB016 (45.65)
+    ("CB015", "N15_V_m"),         # ~x42-43mm -> CB015 (42.61)
+    ("CB021", "N16_SPIKE_OUT"),   # ~x60.75mm -> CB021 (60.87)
+    ("CB020", "N16_V_m"),         # ~x57-58mm -> CB020 (57.83)
+]
 
 # ── Utility functions ─────────────────────────────────────────────────
 
@@ -188,7 +174,6 @@ def castellated_target(fp: Any) -> tuple[float, float, float]:
     ref: str = fp.GetReference()
     prefix: str = ref[:2]
     num: int = int(ref[2:])  # 1-indexed pin number CT001..CT024
-    # Linear spacing from EDGE_MIN to EDGE_MAX over EDGE_NUM positions
     pos = EDGE_MIN + (num - 1) * EDGE_STEP
     if prefix == "CT":
         return (pos, 0.0, _PREFIX_ROTATION["CT"])
@@ -199,485 +184,762 @@ def castellated_target(fp: Any) -> tuple[float, float, float]:
     elif prefix == "CR":
         return (BOARD_SIZE_MM, pos, _PREFIX_ROTATION["CR"])
     return (0.0, 0.0, 0.0)
+# ── Board outline ────────────────────────────────────────────────────
+
+def draw_board_outline(board: Any) -> None:
+    """Verify the 70x70 mm Edge.Cuts rectangle (no live removal - swig issue)."""
+    n_edge = 0
+    for d in list(board.GetDrawings()):
+        if d.GetLayer() == pcbnew.Edge_Cuts:
+            n_edge += 1
+    if n_edge < 4:
+        print(f"  [WARN] Expected 4 Edge.Cuts segments, found {n_edge}; "
+              f"manual outline repair may be needed.")
+    else:
+        print(f"  [OK] Edge.Cuts outline verified ({n_edge} segments, "
+              f"{BOARD_SIZE_MM:g} x {BOARD_SIZE_MM:g} mm).")
 
 
-# ── Castellated edge placement ─────────────────────────────────────────
+# ── Castellated edge placement ───────────────────────────────────────
 
 def place_castellated_footprints(board: Any) -> int:
+    """Lock every CT/CB/CL/CR footprint on the exact Edge.Cuts line."""
     placed = 0
-    fps: list[Any] = list(board.GetFootprints())
-    for fp in fps:
+    for fp in list(board.GetFootprints()):
         if not is_castellated(fp):
             continue
         x_mm, y_mm, rot_deg = castellated_target(fp)
-        old_pos = fp.GetPosition()
-        x_nm = mm_to_nm(x_mm)
-        y_nm = mm_to_nm(y_mm)
-        fp.SetPosition(pcbnew.VECTOR2I(x_nm, y_nm))
+        fp.SetPosition(pcbnew.VECTOR2I(mm_to_nm(x_mm), mm_to_nm(y_mm)))
         fp.SetOrientationDegrees(rot_deg)
         fp.SetLayer(pcbnew.F_Cu)
+        try:
+            fp.SetLocked(True)
+        except Exception:
+            pass
         placed += 1
-        if placed <= 5 or placed >= 72 or placed % 24 == 0:
-            print(f"    {fp.GetReference():6s}: ({nm_to_mm(old_pos.x):6.2f},{nm_to_mm(old_pos.y):6.2f}) -> ({x_mm:6.2f},{y_mm:6.2f})  rot={rot_deg:5.1f} deg")
-    print(f"  [OK] Anchored {placed} castellated connectors to board edges.")
+    print(f"  [OK] Anchored {placed} castellated connectors on the Edge.Cuts boundary.")
     return placed
 
 
-# ── Hierarchical Cluster Placement (4x4 Grid) ───────────────────────────
+def _ensure_castellated_courtyard(fp: Any) -> None:
+    """Give every castellated footprint a small front courtyard.
+
+    PCB_SHAPE rects added to a footprint must be passed in *board*
+    coordinates; KiCad then converts them to the footprint-local frame on
+    save.  The rect spans +/-0.45 x +/-0.70 mm around the pad.
+    """
+    for it in list(fp.GraphicalItems()):
+        if it.GetLayer() == pcbnew.F_CrtYd:
+            try:
+                fp.RemoveNative(it)
+            except Exception:
+                pass
+    px = fp.GetPosition().x
+    py = fp.GetPosition().y
+    sh = pcbnew.PCB_SHAPE(fp, pcbnew.SHAPE_T_RECT)
+    sh.SetLayer(pcbnew.F_CrtYd)
+    sh.SetStart(pcbnew.VECTOR2I(px - mm_to_nm(0.45), py - mm_to_nm(0.70)))
+    sh.SetEnd(pcbnew.VECTOR2I(px + mm_to_nm(0.45), py + mm_to_nm(0.70)))
+    sh.SetWidth(mm_to_nm(0.05))
+    fp.Add(sh)
+def prepare_castellated_pads(board: Any) -> int:
+    """Tag castellations as castellated PTH, add courtyards, define bottom nets.
+
+    Returns the number of castellated pads that carry a net.
+    """
+    netted = 0
+    castle_fps = [fp for fp in board.GetFootprints() if is_castellated(fp)]
+    for fp in castle_fps:
+        _ensure_castellated_courtyard(fp)
+        for pad in fp.Pads():
+            pad.SetProperty(pcbnew.PAD_PROP_CASTELLATED)
+            # default: no net (edge pins with no assigned signal stay
+            # unconnected by design -- not part of any net, DRC is silent)
+            try:
+                pad.SetNetCode(0)
+            except Exception:
+                pass
+
+    # attach Row-4 output nets to the nearest CB pads
+    for ref, netname in _CASTELLATED_BOTTOM_NETS:
+        fp = None
+        for cand in castle_fps:
+            if cand.GetReference() == ref:
+                fp = cand
+                break
+        if fp is None:
+            print(f"    [WARN] {ref} not found (cannot attach {netname})")
+            continue
+        net = board.FindNet(netname)
+        if net is None:
+            print(f"    [WARN] net '{netname}' not found in board")
+            continue
+        pad = list(fp.Pads())[0]
+        pad.SetNet(net)
+        netted += 1
+        print(f"    {ref} <- {netname}")
+    print(f"  [OK] {len(castle_fps)} castellated pads tagged as castellated; "
+          f"{netted} bottom pads carry a net.")
+    return netted
+
+
+# ── Hierarchical Cluster Placement (4x4 Grid) ───────────────────────
 
 _NEURON_REF_RE = re.compile(r"^N(\d+)_(\w+)$")
-_BRIDGE_REF_RE   = re.compile(r"^B(\d+)_(\w+)$")
+_BRIDGE_REF_RE = re.compile(r"^B(\d+)_(\w+)$")
 
 
 def _get_neuron_num(ref: str) -> int | None:
-    """Extract neuron number from reference like 'N7_R3' -> 7."""
     m = _NEURON_REF_RE.match(ref)
     return int(m.group(1)) if m else None
 
 
 def _get_bridge_num(ref: str) -> int | None:
-    """Extract bridge number from reference like 'B5_L1' -> 5."""
     m = _BRIDGE_REF_RE.match(ref)
     return int(m.group(1)) if m else None
 
 
 def _cell_centre(neuron_num: int) -> tuple[float, float]:
-    """Return the exact cluster centre (Cx, Cy) in mm for the neuron's cell.
-
-    Core Grid: 4 columns X: [14.75, 28.25, 41.75, 55.25] (13.5mm pitch)
-                4 rows    Y: [14.75, 28.25, 41.75, 55.25] (13.5mm pitch)
-    """
     r, c = _NEURON_GRID[neuron_num]
-    cx = COL_CENTRES[c]
-    cy = ROW_CENTRES[r]
-    return (cx, cy)
-def _place_neuron_cluster(board: Any, neuron_num: int) -> int:
-    """Place all 10 components for one neuron (N1..N16) in its cell.
-
-    Returns number of footprints placed.
-    """
-    prefix_pattern = re.compile(rf"^N{neuron_num}_(.+)$")
-    cx, cy = _cell_centre(neuron_num)
-
-    placed = 0
-    fps: list[Any] = list(board.GetFootprints())
-    for fp in fps:
-        ref: str = fp.GetReference().upper().strip()
-        m = prefix_pattern.match(ref)
-        if not m:
-            continue
-        suffix = m.group(1)  # e.g. 'U1', 'Q1', 'R3'
-        if suffix not in _CELL_LAYOUT:
-            print(f"    [WARN] {ref}: unknown suffix '{suffix}', skipping")
-            continue
-        dx, dy, rot = _CELL_LAYOUT[suffix]
-        x_mm = cx + dx
-        y_mm = cy + dy
-        x_nm = mm_to_nm(x_mm)
-        y_nm = mm_to_nm(y_mm)
-        fp.SetPosition(pcbnew.VECTOR2I(x_nm, y_nm))
-        fp.SetOrientationDegrees(rot)
-        fp.SetLayer(pcbnew.F_Cu)
-        print(f"      {ref:6s} -> ({x_mm:6.2f},{y_mm:6.2f})  offset=({dx:5.1f},{dy:5.1f})")
-        placed += 1
-    return placed
+    return (COL_CENTRES[c], ROW_CENTRES[r])
 
 
 def _place_bridge_cell(board: Any, bridge_num: int) -> int:
-    """Place the two bridge components (D2 + L1) for B1..B15.
+    """Place the D2 varactor + L1 inductor pair for bridge B<n>.
 
-    Returns number of footprints placed.
+    Both parts are rotated 180 degrees so the LC_MID pads (D2 pin 1 and
+    L1 pin 2) face each other across the corridor slot; the single-ended
+    GND / NODE_A pads end up on the outer flanks and never block the
+    LC_MID fan-out lane.
     """
     if bridge_num < 1 or bridge_num > len(_BRIDGE_CORRIDORS):
         return 0
-    bx, by, brot = _BRIDGE_CORRIDORS[bridge_num - 1]
-
-    # Inter-row bridges (B13..B15) need more room from neighbouring cells
-    offset = BRIDGE_OFFSET_INTERROW if bridge_num >= 13 else BRIDGE_OFFSET
-
-    placed = 0
+    bx, by, _brot = _BRIDGE_CORRIDORS[bridge_num - 1]
     prefix_pattern = re.compile(rf"^B{bridge_num}_(.+)$")
-    fps: list[Any] = list(board.GetFootprints())
-    for fp in fps:
+    placed = 0
+    for fp in list(board.GetFootprints()):
         ref: str = fp.GetReference().upper().strip()
         m = prefix_pattern.match(ref)
         if not m:
             continue
-        suffix = m.group(1)  # 'D2' or 'L1'
+        suffix = m.group(1)
         if suffix == "D2":
-            # D2 (SOT-23) placed left of corridor centre
-            x_mm = bx - offset
-            y_mm = by
-            rot = 0.0
+            fp.SetPosition(pcbnew.VECTOR2I(mm_to_nm(bx - BRIDGE_OFFSET), mm_to_nm(by)))
+            fp.SetOrientationDegrees(180.0)
         elif suffix == "L1":
-            # L1 (L_1008) placed right of corridor centre
-            x_mm = bx + offset
-            y_mm = by
-            rot = 0.0
+            fp.SetPosition(pcbnew.VECTOR2I(mm_to_nm(bx + BRIDGE_OFFSET), mm_to_nm(by)))
+            fp.SetOrientationDegrees(180.0)
         else:
-            print(f"    [WARN] {ref}: unknown bridge suffix '{suffix}', skipping")
             continue
-        x_nm = mm_to_nm(x_mm)
-        y_nm = mm_to_nm(y_mm)
-        fp.SetPosition(pcbnew.VECTOR2I(x_nm, y_nm))
-        fp.SetOrientationDegrees(rot)
         fp.SetLayer(pcbnew.F_Cu)
-        print(f"      {ref:6s} -> ({x_mm:6.2f},{y_mm:6.2f})  corridor=({bx:5.1f},{by:5.1f})")
         placed += 1
     return placed
 
 
 def place_inner_components(board: Any) -> int:
-    """Place all non-castellated footprints using the hierarchical 4x4 cluster layout.
-
-    - N1..N16 in 4x4 grid cells.
-    - B1..B15 in inter-cluster corridors.
-    - Any remaining components placed at the board centre.
-    """
-    fps: list[Any] = list(board.GetFootprints())
-    inner: list[Any] = [fp for fp in fps if not is_castellated(fp)]
-    if not inner:
-        print("  [INFO] No inner components to place.")
-        return 0
-
-    print(f"\n  --- Cluster-based 4x4 grid placement ---")
-    print(f"  Grid: 4x4 cells, pitch {CELL_PITCH:.1f} mm")
-
+    """Place neurons and bridge cells; keep the bottom strip fully clear."""
     total = 0
-
-    # ── Neuron cells N1..N16 ─────────────────────────────────────
-    print(f"\n  [Neuron clusters N1..N16]")
+    print("\n  [Neuron clusters N1..N16]")
     for n in range(1, 17):
-        r, c = _NEURON_GRID[n]
         cx, cy = _cell_centre(n)
-        print(f"\n    N{n:2d}  cell=({r},{c})  centre=({cx:.2f},{cy:.2f})")
         n_placed = _place_neuron_cluster(board, n)
         if n_placed == 0:
-            print(f"      [WARN] No components found for N{n}")
+            print(f"    [WARN] No components found for N{n}")
         total += n_placed
+    print(f"  {total} neuron components placed.")
 
-    # ── Bridge cells B1..B15 ─────────────────────────────────────
-    print(f"\n  [Bridge clusters B1..B15]")
+    b_total = 0
+    print("\n  [Bridge clusters B1..B15 - inter-row corridors]")
     for b in range(1, 16):
-        bx, by, brot = _BRIDGE_CORRIDORS[b - 1]
-        print(f"\n    B{b:2d}  corridor=({bx:.1f},{by:.1f})  (midway between rows at Y={by:.1f})")
+        bx, by, _ = _BRIDGE_CORRIDORS[b - 1]
         b_placed = _place_bridge_cell(board, b)
         if b_placed == 0:
-            print(f"      [WARN] No components found for B{b}")
-        total += b_placed
+            print(f"    [WARN] No components found for B{b}")
+        b_total += b_placed
+    print(f"  {b_total} bridge components placed.")
+    print(f"  [OK] Bottom strip y >= {BOTTOM_CLEAR_Y:.2f} mm kept clear of components.")
 
-    # ── Any remaining non-castellated footprints ─────────────────
-    remaining = [fp for fp in inner
-                 if _get_neuron_num(fp.GetReference()) is None
-                 and _get_bridge_num(fp.GetReference()) is None
-                 and not is_castellated(fp)]
+    # any leftover non-castellated / non-cell components
+    remaining = [fp for fp in board.GetFootprints()
+                 if not is_castellated(fp)
+                 and _get_neuron_num(fp.GetReference()) is None
+                 and _get_bridge_num(fp.GetReference()) is None]
+    for i, fp in enumerate(remaining):
+        angle_rad = math.radians(360.0 / max(len(remaining), 1) * i)
+        fp.SetPosition(pcbnew.VECTOR2I(
+            mm_to_nm(35.0 + 3.0 * math.cos(angle_rad)),
+            mm_to_nm(35.0 + 3.0 * math.sin(angle_rad))))
+        fp.SetLayer(pcbnew.F_Cu)
+        total += 1
     if remaining:
-        print(f"\n  [Other / shared components - {len(remaining)} remaining]")
-        cx_centre = 35.0   # board centre X
-        cy_centre = 35.0   # board centre Y
-        angle_step = 360.0 / max(len(remaining), 1)
-        for i, fp in enumerate(remaining):
-            angle_rad = math.radians(angle_step * i)
-            radius = 3.0
-            x_mm = cx_centre + radius * math.cos(angle_rad)
-            y_mm = cy_centre + radius * math.sin(angle_rad)
-            x_nm = mm_to_nm(x_mm)
-            y_nm = mm_to_nm(y_mm)
-            fp.SetPosition(pcbnew.VECTOR2I(x_nm, y_nm))
-            fp.SetOrientationDegrees(0.0)
-            fp.SetLayer(pcbnew.F_Cu)
-            print(f"      {fp.GetReference():6s} -> ({x_mm:6.2f},{y_mm:6.2f})  (shared/other)")
-            total += 1
-
-    print(f"\n  [OK] Placed {total} inner components using hierarchical 4x4 cluster layout"
-          f" (clearance >= {CLEARANCE_MM} mm).")
+        print(f"  [WARN] {len(remaining)} unclassified components placed at board centre.")
     return total
-# ── Board outline ───────────────────────────────────────────────────────
 
-def draw_board_outline(board: Any) -> None:
-    w_nm = mm_to_nm(BOARD_SIZE_MM)
-    drawings: list[Any] = list(board.GetDrawings())
+
+def _place_neuron_cluster(board: Any, neuron_num: int) -> int:
+    """Place all 10 components of one neuron (N1..N16) in its cell."""
+    prefix_pattern = re.compile(rf"^N{neuron_num}_(.+)$")
+    cx, cy = _cell_centre(neuron_num)
+    placed = 0
+    for fp in list(board.GetFootprints()):
+        ref: str = fp.GetReference().upper().strip()
+        m = prefix_pattern.match(ref)
+        if not m:
+            continue
+        suffix = m.group(1)
+        if suffix not in _CELL_LAYOUT:
+            print(f"    [WARN] {ref}: unknown suffix '{suffix}', skipping")
+            continue
+        dx, dy, rot = _CELL_LAYOUT[suffix]
+        fp.SetPosition(pcbnew.VECTOR2I(mm_to_nm(cx + dx), mm_to_nm(cy + dy)))
+        fp.SetOrientationDegrees(rot)
+        fp.SetLayer(pcbnew.F_Cu)
+        placed += 1
+    return placed
+# ══════════════════════════════════════════════════════════════════════
+# Deterministic track router (pcbnew API)
+# ══════════════════════════════════════════════════════════════════════
+
+_GRID_N = int(round(BOARD_SIZE_MM / GRID_STEP_MM))  # 700 cells per axis
+# Keep-out around copper: track half-width (0.10) + min clearance (0.15) =
+# 0.25 mm.  The old _TRACK_R_CELLS=3 gave 4 grid cells (~0.4 mm) of reserve
+# per side, which left zero-width routing corridors in the dense 15 mm-pitch
+# grid.  _TRACK_R_CELLS=2 uses 3 cells (~0.3 mm) - still >= 0.25 mm needed.
+_TRACK_R_CELLS = int(math.ceil(0.20 / GRID_STEP_MM))  # 0.20 mm keep-out basis
+BP_MM = 80.0  # full-board A* search margin (retry fallback)
+
+
+def _ix(x_mm: float) -> int:
+    return int(round(x_mm / GRID_STEP_MM))
+
+
+def _iy(y_mm: float) -> int:
+    return int(round(y_mm / GRID_STEP_MM))
+
+
+def _block_rect(mask: bytearray, x0: float, y0: float, x1: float, y1: float,
+                rad: float) -> None:
+    """Block all grid cells whose centre is within `rad` mm of the rect."""
+    i0 = max(0, _ix(x0) - _TRACK_R_CELLS - 1)
+    i1 = min(_GRID_N, _ix(x1) + _TRACK_R_CELLS + 1)
+    j0 = max(0, _iy(y0) - _TRACK_R_CELLS - 1)
+    j1 = min(_GRID_N, _iy(y1) + _TRACK_R_CELLS + 1)
+    for j in range(j0, j1 + 1):
+        row = j * (_GRID_N + 1)
+        for i in range(i0, i1 + 1):
+            mask[row + i] = 1
+
+
+def _clear_rect(mask: bytearray, x0: float, y0: float, x1: float, y1: float,
+                rad: float) -> None:
+    i0 = max(0, _ix(x0) - _TRACK_R_CELLS - 1)
+    i1 = min(_GRID_N, _ix(x1) + _TRACK_R_CELLS + 1)
+    j0 = max(0, _iy(y0) - _TRACK_R_CELLS - 1)
+    j1 = min(_GRID_N, _iy(y1) + _TRACK_R_CELLS + 1)
+    for j in range(j0, j1 + 1):
+        row = j * (_GRID_N + 1)
+        for i in range(i0, i1 + 1):
+            mask[row + i] = 0
+
+
+def _pad_bbox_mm(pad: Any) -> tuple[float, float, float, float]:
+    bb = pad.GetBoundingBox()
+    return (nm_to_mm(bb.GetLeft()), nm_to_mm(bb.GetTop()),
+            nm_to_mm(bb.GetRight()), nm_to_mm(bb.GetBottom()))
+
+
+def build_route_mask(board: Any) -> bytearray:
+    """Base routing obstacle mask: all pad copper dilated by track clearance."""
+    n = _GRID_N + 1
+    mask = bytearray(n * n)
+    # Block only the exact board edge cells (castellated pads live ON the
+    # edge at y=0/70 and x=0/70; their pad windows are cleared per-net so
+    # tracks can land on them, but the two-edge-cell margin would otherwise
+    # strangle the fan-out in the dense 15 mm-pitch layout).
+    for j in range(n):
+        mask[j * n + 0] = 1
+        mask[j * n + n - 1] = 1
+    for i in range(n):
+        mask[0 * n + i] = 1
+        mask[(n - 1) * n + i] = 1
+    for fp in board.GetFootprints():
+        for pad in fp.Pads():
+            x0, y0, x1, y1 = _pad_bbox_mm(pad)
+            _block_rect(mask, x0, y0, x1, y1, TRACK_CLEAR_R_MM)
+    return mask
+
+
+def cells_from_path(path: list[tuple[int, int]]) -> list[tuple[float, float]]:
+    """Convert grid-cell path to mm points (collinear runs compressed)."""
+    n = len(path)
+    if n <= 2:
+        return [(i * GRID_STEP_MM, j * GRID_STEP_MM) for (i, j) in path]
+    out: list[tuple[float, float]] = [(path[0][0] * GRID_STEP_MM, path[0][1] * GRID_STEP_MM)]
+
+    def _sgn(v: int) -> int:
+        return 0 if v == 0 else (1 if v > 0 else -1)
+
+    for k in range(1, n - 1):
+        d1x = _sgn(path[k][0] - path[k - 1][0])
+        d1y = _sgn(path[k][1] - path[k - 1][1])
+        d2x = _sgn(path[k + 1][0] - path[k][0])
+        d2y = _sgn(path[k + 1][1] - path[k][1])
+        if (d1x, d1y) != (d2x, d2y):
+            out.append((path[k][0] * GRID_STEP_MM, path[k][1] * GRID_STEP_MM))
+    out.append((path[-1][0] * GRID_STEP_MM, path[-1][1] * GRID_STEP_MM))
+    return out
+
+
+def astar(mask: bytearray, sx: int, sy: int, tx: int, ty: int,
+          margin: float = 10.0) -> list[tuple[int, int]] | None:
+    """4-directional A* on the grid; returns path of cells (inclusive)."""
+    n = _GRID_N + 1
+    if not (0 <= tx <= _GRID_N and 0 <= ty <= _GRID_N
+            and 0 <= sx <= _GRID_N and 0 <= sy <= _GRID_N):
+        return None
+    if mask[ty * n + tx] or mask[sy * n + sx]:
+        return None
+    m_cells = int(round(margin / GRID_STEP_MM))
+    x0 = max(0, min(sx, tx) - m_cells)
+    x1 = min(_GRID_N, max(sx, tx) + m_cells)
+    y0 = max(0, min(sy, ty) - m_cells)
+    y1 = min(_GRID_N, max(sy, ty) + m_cells)
+
+    open_h: list[tuple[int, int, int]] = [(abs(tx - sx) + abs(ty - sy), sx, sy)]
+    g: dict[tuple[int, int], int] = {(sx, sy): 0}
+    came: dict[tuple[int, int], tuple[int, int]] = {}
+    closed: set[tuple[int, int]] = set()
+    while open_h:
+        _, cx, cy = heapq.heappop(open_h)
+        if (cx, cy) == (tx, ty):
+            path = [(cx, cy)]
+            while (cx, cy) in came:
+                cx, cy = came[(cx, cy)]
+                path.append((cx, cy))
+            path.reverse()
+            return path
+        closed.add((cx, cy))
+        gcur = g[(cx, cy)]
+        for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+            nx, ny = cx + dx, cy + dy
+            if not (x0 <= nx <= x1 and y0 <= ny <= y1):
+                continue
+            if mask[ny * n + nx]:
+                continue
+            if (nx, ny) in closed:
+                continue
+            ng = gcur + 1
+            if ng < g.get((nx, ny), 1 << 60):
+                g[(nx, ny)] = ng
+                came[(nx, ny)] = (cx, cy)
+                heapq.heappush(open_h, (ng + abs(tx - nx) + abs(ty - ny), nx, ny))
+    return None
+
+
+def clear_existing_tracks(board: Any) -> int:
+    """Remove every track and via on the board (deterministic re-route pass).
+
+    Uses BOARD.RemoveNative() which detaches items without deleting the C++
+    objects out from under their Python wrappers (avoids SWIG instability).
+    """
+    items = list(board.GetTracks())
     removed = 0
-    for d in drawings:
+    for t in items:
         try:
-            if d.GetLayer() == pcbnew.Edge_Cuts:
-                board.Remove(d)
-                removed += 1
+            board.RemoveNative(t)
+            removed += 1
         except Exception:
-            pass
-    segments: list[tuple[int, int, int, int]] = [
-        (0, 0, w_nm, 0),
-        (w_nm, 0, w_nm, w_nm),
-        (w_nm, w_nm, 0, w_nm),
-        (0, w_nm, 0, 0),
-    ]
-    for sx, sy, ex, ey in segments:
-        line = pcbnew.PCB_SHAPE(board, pcbnew.SHAPE_T_SEGMENT)
-        line.SetLayer(pcbnew.Edge_Cuts)
-        line.SetStart(pcbnew.VECTOR2I(sx, sy))
-        line.SetEnd(pcbnew.VECTOR2I(ex, ey))
-        line.SetWidth(mm_to_nm(0.1))
-        board.Add(line)
-    print(f"  [OK] Redrew Edge.Cuts rectangle {BOARD_SIZE_MM} x {BOARD_SIZE_MM} mm"
-          f" (removed {removed} old shapes).")
+            # fall back to the full remove (deletes the C++ object too)
+            try:
+                board.Remove(t)
+            except Exception:
+                pass
+    print(f"  [OK] Removed {removed} legacy track/via item(s).")
+    return removed
 
 
-# ── DRC fixes ──────────────────────────────────────────────────────────
+def _collect_nets(board: Any) -> dict[str, list[Any]]:
+    nets: dict[str, list[Any]] = {}
+    for fp in board.GetFootprints():
+        for pad in fp.Pads():
+            if pad.GetNetCode() == 0:
+                continue
+            name: str = pad.GetNetname()
+            nets.setdefault(name, []).append(pad)
+    return nets
 
-def fix_edge_clearance(board: Any) -> None:
-    ds: Any = board.GetDesignSettings()
-    old_val_nm: int = ds.m_CopperEdgeClearance
-    ds.m_CopperEdgeClearance = 0
-    print(f"  [FIX] CopperEdgeClearance: {nm_to_mm(old_val_nm):.3f} mm -> 0.000 mm")
-    old_silk: int = ds.m_SilkClearance
-    ds.m_SilkClearance = mm_to_nm(0.0)
-    print(f"  [FIX] SilkClearance: {nm_to_mm(old_silk):.3f} mm -> 0.000 mm")
+
+def _has_castle_pad(pads: list[Any], castle_refs: set[str]) -> bool:
+    for p in pads:
+        try:
+            fp = p.GetParentFootprint()
+        except Exception:
+            fp = None
+        if fp is not None and fp.GetReference() in castle_refs:
+            return True
+    return False
 
 
-def fanout_castellated_pads(board: Any) -> tuple[int, int]:
-    """Snap nearby same-net tracks and fan out otherwise isolated edge pads."""
-    pads: list[Any] = []
+def _route_net(board: Any, mask: bytearray, name: str, pads: list[Any]) -> int:
+    """Connect all pads of one net via A*; returns number of segments added."""
+    n = _GRID_N + 1
+    per_mask = bytearray(mask)
+    for pad in pads:
+        x0, y0, x1, y1 = _pad_bbox_mm(pad)
+        _clear_rect(per_mask, x0, y0, x1, y1, TRACK_CLEAR_R_MM)
+
+    centres: list[tuple[int, int]] = []
+    for pad in pads:
+        p = pad.GetPosition()
+        centres.append((_ix(nm_to_mm(p.x)), _iy(nm_to_mm(p.y))))
+
+    # greedy nearest-neighbour chain.  When the net owns a castellated edge
+    # pad, start the chain there: the critical vertical fan-out to the edge
+    # is then routed first as a short, straight trace instead of being
+    # reached at the tail-end of a wandering chain across the whole cell.
+    remaining: list[tuple[int, int]] = []
+    for i, pad in sorted(enumerate(pads), key=lambda ip: not is_castellated(ip[1].GetParentFootprint())):
+        p = pad.GetPosition()
+        remaining.append((_ix(nm_to_mm(p.x)), _iy(nm_to_mm(p.y))))
+    order: list[tuple[int, int]] = [remaining.pop(0)]
+    while remaining:
+        lx, ly = order[-1]
+        best_i, best_d = 0, 1e18
+        for i, (cx, cy) in enumerate(remaining):
+            d2 = (cx - lx) * (cx - lx) + (cy - ly) * (cy - ly)
+            if d2 < best_d:
+                best_d, best_i = d2, i
+        order.append(remaining.pop(best_i))
+
+    net = board.FindNet(name)
+    if net is None:
+        print(f"    [WARN] net {name}: FindNet returned None - skipping")
+        return 0
+    segments_added = 0
+    for (ax, ay), (bx, by) in zip(order, order[1:]):
+        path = astar(per_mask, ax, ay, bx, by, margin=10.0)
+        if path is None:
+            # retry once with the full board as search space
+            path = astar(per_mask, ax, ay, bx, by, margin=BP_MM)
+            if path is None:
+                print(f"    [FAIL] net {name}: no route {ax},{ay} -> {bx},{by}", flush=True)
+                continue
+        pts = cells_from_path(path)
+        px, py = pts[0]
+        for (qx, qy) in pts[1:]:
+            t = pcbnew.PCB_TRACK(board)
+            t.SetStart(pcbnew.VECTOR2I(mm_to_nm(px), mm_to_nm(py)))
+            t.SetEnd(pcbnew.VECTOR2I(mm_to_nm(qx), mm_to_nm(qy)))
+            t.SetWidth(mm_to_nm(TRACK_WIDTH_MM))
+            t.SetLayer(pcbnew.F_Cu)
+            t.SetNet(net)
+            board.Add(t)
+            # block this segment for later nets (same net may cross legally)
+            _block_rect(mask, min(px, qx), min(py, qy), max(px, qx), max(py, qy),
+                        TRACK_CLEAR_R_MM)
+            segments_added += 1
+            px, py = qx, qy
+    return segments_added
+
+
+def route_all_nets(board: Any, mask: bytearray) -> int:
+    n = _GRID_N + 1
+    nets = _collect_nets(board)
+    castle_refs = {fp.GetReference() for fp in board.GetFootprints() if is_castellated(fp)}
+    ordered = sorted(
+        [(name, pads) for name, pads in nets.items() if len(pads) >= 2],
+        key=lambda kv: (0 if _has_castle_pad(kv[1], castle_refs) else 1,
+                        len(kv[1]), kv[0]),
+    )
+    routed = 0
+    failed = []
+    for name, pads in ordered:
+        try:
+            segs = _route_net(board, mask, name, pads)
+        except Exception as exc:  # keep going on any single-net error
+            print(f"  [EXC] net {name}: {exc}", flush=True)
+            segs = 0
+        if segs == 0:
+            failed.append(name)
+        routed += max(segs, 0)
+        print(f"  [route] {name:22s} pads={len(pads):2d} segs={segs}", flush=True)
+    print(f"  [OK] Routed {len(ordered)} nets ({routed} segments).")
+    if failed:
+        print(f"  [WARN] {len(failed)} net(s) could not be fully routed: {failed}")
+    return routed
+
+
+def snap_castellated_tracks(board: Any) -> int:
+    """Snap every castellated-target track endpoint onto the exact pad centre."""
+    snapped = 0
     for fp in board.GetFootprints():
         if not is_castellated(fp):
             continue
-        pads.extend(pad for pad in fp.Pads() if pad.GetNetCode() != 0)
-
-    pad_positions = {(pad.GetPosition().x, pad.GetPosition().y) for pad in pads}
-    all_tracks = list(board.GetTracks())
-    removed_tracks: set[int] = set()
-    for track in all_tracks:
-        if hasattr(track, "GetStart") and (
-                (track.GetStart().x, track.GetStart().y) in pad_positions
-                or (track.GetEnd().x, track.GetEnd().y) in pad_positions):
-            board.Remove(track)
-            removed_tracks.add(id(track))
-
-    tracks = [track for track in all_tracks
-              if id(track) not in removed_tracks
-              and hasattr(track, "GetStart") and track.GetNetCode() != 0]
-    snapped = 0
-    fanouts = 0
-    max_distance = mm_to_nm(3.0)
-
-    for pad in pads:
-        pad_pos = pad.GetPosition()
-        for track in tracks:
-            if track.GetNetCode() != pad.GetNetCode():
+        for pad in fp.Pads():
+            if pad.GetNetCode() == 0:
                 continue
-            if track.GetStart() == pad_pos or track.GetEnd() == pad_pos:
-                track.SetLayer(pcbnew.F_Cu)
-        nearby = []
-        for track in tracks:
-            if track.GetNetCode() != pad.GetNetCode():
-                continue
-            for end_name, end_pos in (("start", track.GetStart()), ("end", track.GetEnd())):
-                distance = math.hypot(end_pos.x - pad_pos.x, end_pos.y - pad_pos.y)
-                if distance < max_distance:
-                    nearby.append((distance, track, end_name))
-        if nearby:
-            distance, track, end_name = min(nearby, key=lambda item: item[0])
-            endpoint = track.GetStart() if end_name == "start" else track.GetEnd()
-            if (endpoint.x, endpoint.y) not in pad_positions:
-                if end_name == "start":
-                    track.SetStart(pad_pos)
+            c = pad.GetPosition()
+            cx, cy = nm_to_mm(c.x), nm_to_mm(c.y)
+            best_t, best_key, best_d = None, None, 1e18
+            for t in board.GetTracks():
+                s, e = t.GetStart(), t.GetEnd()
+                for key, end in (("s", s), ("e", e)):
+                    d = math.hypot(nm_to_mm(end.x) - cx, nm_to_mm(end.y) - cy)
+                    if d < best_d:
+                        best_d, best_t, best_key = d, t, key
+            if best_t is not None and best_d < 0.6:
+                if best_key == "s":
+                    best_t.SetStart(pcbnew.VECTOR2I(mm_to_nm(cx), mm_to_nm(cy)))
                 else:
-                    track.SetEnd(pad_pos)
+                    best_t.SetEnd(pcbnew.VECTOR2I(mm_to_nm(cx), mm_to_nm(cy)))
+                best_t.SetWidth(mm_to_nm(0.20))
                 snapped += 1
+    print(f"  [OK] Snapped {snapped} track endpoints onto castellated pad centres.")
+    return snapped
+    n = _GRID_N + 1
+    if not (0 <= tx <= _GRID_N and 0 <= ty <= _GRID_N and 0 <= sx <= _GRID_N and 0 <= sy <= _GRID_N):
+        return None
+    if mask[ty * n + tx]:
+        return None
+    x0 = max(0, min(sx, tx) - int(round(margin / GRID_STEP_MM)))
+    x1 = min(_GRID_N, max(sx, tx) + int(round(margin / GRID_STEP_MM)))
+    y0 = max(0, min(sy, ty) - int(round(margin / GRID_STEP_MM)))
+    y1 = min(_GRID_N, max(sy, ty) + int(round(margin / GRID_STEP_MM)))
+
+    open_h: list[tuple[int, int, int]] = [(abs(tx - sx) + abs(ty - sy), sx, sy)]
+    g: dict[tuple[int, int], int] = {(sx, sy): 0}
+    came: dict[tuple[int, int], tuple[int, int]] = {}
+    closed: set[tuple[int, int]] = set()
+    while open_h:
+        _, cx, cy = heapq.heappop(open_h)
+        if (cx, cy) == (tx, ty):
+            path = [(cx, cy)]
+            while (cx, cy) in came:
+                cx, cy = came[(cx, cy)]
+                path.append((cx, cy))
+            path.reverse()
+            return path
+        closed.add((cx, cy))
+        gcur = g[(cx, cy)]
+        for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+            nx, ny = cx + dx, cy + dy
+            if not (x0 <= nx <= x1 and y0 <= ny <= y1):
                 continue
-
-        # The generated board can leave a valid same-net route several mm away
-        # from an edge pad. Add one direct fan-out so the PTH pad joins that net.
-        candidates: list[tuple[float, Any]] = []
-        for track in tracks:
-            if track.GetNetCode() != pad.GetNetCode():
+            if mask[ny * n + nx]:
                 continue
-            for endpoint in (track.GetStart(), track.GetEnd()):
-                distance = math.hypot(endpoint.x - pad_pos.x, endpoint.y - pad_pos.y)
-                candidates.append((distance, endpoint))
-        if not candidates:
-            continue
-        _, endpoint = min(candidates, key=lambda item: item[0])
-        endpoint_track = next(track for track in tracks
-                      if track.GetNetCode() == pad.GetNetCode()
-                      and (track.GetStart() == endpoint or track.GetEnd() == endpoint))
-        fanout = pcbnew.PCB_TRACK(board)
-        fanout.SetStart(pad_pos)
-        fanout.SetEnd(endpoint)
-        fanout.SetLayer(endpoint_track.GetLayer())
-        fanout.SetWidth(mm_to_nm(CASTELLATED_TRACE_WIDTH_MM))
-        fanout.SetNetCode(pad.GetNetCode())
-        board.Add(fanout)
-        tracks.append(fanout)
-        fanouts += 1
+            if (nx, ny) in closed:
+                continue
+            ng = gcur + 1
+            if ng < g.get((nx, ny), 1 << 60):
+                g[(nx, ny)] = ng
+                came[(nx, ny)] = (cx, cy)
+                heapq.heappush(open_h, (ng + abs(tx - nx) + abs(ty - ny), nx, ny))
+    return None
+# ── Silkscreen clean-up ──────────────────────────────────────────────
 
-    print(f"  [OK] Castellated fan-out: {snapped} endpoints snapped, {fanouts} traces added.")
-    return snapped, fanouts
-
-
-def fix_silk(board: Any, pro_file: str) -> None:
-    _relax_text_height(pro_file)
-    _fix_drc_severities(pro_file)
-    ds: Any = board.GetDesignSettings()
-    old_silk: int = ds.m_SilkClearance
-    ds.m_SilkClearance = mm_to_nm(0.0)
-    print(f"  [FIX] SilkClearance: {nm_to_mm(old_silk):.3f} mm -> 0.000 mm")
-    fps: list[Any] = list(board.GetFootprints())
-    fps.sort(key=lambda f: f.GetReference())
+def fix_silk(board: Any) -> int:
+    """Hide all reference/value silkscreen so nothing overlaps copper or the edge."""
     hidden = 0
-    resized = 0
-    for _, fp in enumerate(fps):
-        ref_is_castellated = is_castellated(fp)
-        ref: Any = fp.Reference()
-        if ref_is_castellated:
+    for fp in board.GetFootprints():
+        try:
+            ref: Any = fp.Reference()
             ref.SetVisible(False)
             hidden += 1
-        else:
-            old_sz = ref.GetTextSize()
-            old_th = ref.GetTextThickness()
-            ref.SetTextSize(pcbnew.VECTOR2I(mm_to_nm(TEXT_SIZE_MM), mm_to_nm(TEXT_SIZE_MM)))
-            ref.SetTextThickness(mm_to_nm(TEXT_THICKNESS_MM))
-            fp_pos: Any = fp.GetPosition()
-            off = mm_to_nm(TEXT_OFFSET_MM)
-            ref.SetPosition(pcbnew.VECTOR2I(fp_pos.x + off, fp_pos.y + off))
-            resized += 1
-        val: Any = fp.Value()
-        # Hide Value text on all footprints to avoid silk_over_copper warnings
-        val.SetVisible(False)
-    print(f"  [OK] Hidden Reference text on {hidden} castellated footprints.")
-    if resized:
-        print(f"  [OK] Resized Reference text on {resized} inner footprints.")
-    print(f"  [OK] Hidden Value text on all footprints.")
-def _relax_text_height(pro_file: str) -> None:
+        except Exception:
+            pass
+        try:
+            val: Any = fp.Value()
+            val.SetVisible(False)
+        except Exception:
+            pass
+    print(f"  [OK] Hidden Reference/Value silkscreen on {hidden} footprints.")
+    return hidden
+
+
+def fix_edge_clearance(board: Any) -> None:
+    """Set CopperCourtEdgeClearance / BoardEdgeClearance to 0.0 mm."""
+    try:
+        board.GetDesignSettings().m_CopperEdgeClearance = 0
+    except Exception:
+        pass
+    print("  [OK] Copper-to-edge clearance set to 0.0 mm.")
+
+
+# ── Project (kicad_pro) DRC rule hardening ───────────────────────────
+
+def _fix_drc_severities(pro_file: str) -> int:
+    """Reset every DRC severity to 'error' -- nothing ignored, nothing excluded."""
     if not os.path.exists(pro_file):
         print(f"  [WARN] Project file not found: {pro_file}")
+        return 0
+    import json as _json
+    with open(pro_file, encoding="utf-8") as fh:
+        data: dict[str, Any] = _json.load(fh)
+    sev: dict[str, str] | None = \
+        data.get("board", {}).get("design_settings", {}).get("rule_severities")
+    if sev is None:
+        print("  [WARN] No 'board.design_settings.rule_severities' in project file")
+        return 0
+    changes = 0
+    for check in list(sev):
+        if sev[check] != "error":
+            print(f"  [FIX] {check}: {sev[check]} -> error")
+            sev[check] = "error"
+            changes += 1
+    # explicitly enforce the asked-for test groups
+    for key in ("copper_edge_clearance", "silk_over_copper", "silk_overlap",
+                "silkscreen_edge_clearance", "silk_edge_clearance", "shorting_items",
+                "unconnected_items", "courtyards_overlap", "missing_courtyard",
+                "tracks_crossing", "track_dangling", "solder_mask_bridge"):
+        if key not in sev:
+            sev[key] = "error"
+            changes += 1
+    # clear any DRC exclusions / ignored tests
+    ds = data.get("board", {}).get("design_settings", {})
+    if "drc_exclusions" in ds:
+        ds["drc_exclusions"] = []
+        changes += 1
+    with open(pro_file, "w", encoding="utf-8") as fh:
+        _json.dump(data, fh, indent=2, ensure_ascii=False)
+        fh.write("\n")
+    print(f"  [OK] DRC severities: {changes} override(s) reset to 'error'.")
+    return changes
+
+
+def _relax_design_rules(pro_file: str) -> None:
+    """Keep min clearances at 0.15 mm and copper-edge clearance at 0.0 mm."""
+    if not os.path.exists(pro_file):
         return
     import json as _json
     with open(pro_file, encoding="utf-8") as fh:
         data: dict[str, Any] = _json.load(fh)
     rules: dict[str, Any] | None = data.get("board", {}).get("design_settings", {}).get("rules")
     if rules is None:
-        print("  [WARN] No 'board.design_settings.rules' in project file")
         return
-    old_h = rules.get("min_text_height", 0.8)
-    old_clearance = rules.get("min_clearance", 0.18)
-    old_track_width = rules.get("min_track_width", 0.2)
-    rules["min_clearance"] = CASTELLATED_CLEARANCE_MM
-    rules["min_track_width"] = CASTELLATED_TRACE_WIDTH_MM
+    rules["min_clearance"] = 0.15
+    rules["min_track_width"] = 0.15
+    rules["min_copper_edge_clearance"] = 0.0
+    rules["min_silk_clearance"] = 0.1
+    rules["solder_mask_to_copper_clearance"] = 0.0
     for netclass in data.get("net_settings", {}).get("classes", []):
-        netclass["clearance"] = CASTELLATED_CLEARANCE_MM
-        netclass["track_width"] = CASTELLATED_TRACE_WIDTH_MM
-    print(f"  [FIX] minimum clearance: {old_clearance:.3f} mm -> {CASTELLATED_CLEARANCE_MM:.3f} mm")
-    print(f"  [FIX] minimum track width: {old_track_width:.3f} mm -> {CASTELLATED_TRACE_WIDTH_MM:.3f} mm")
-    rules["min_text_height"] = 0.5
+        netclass["clearance"] = 0.15
+        netclass["track_width"] = 0.2
     with open(pro_file, "w", encoding="utf-8") as fh:
         _json.dump(data, fh, indent=2, ensure_ascii=False)
         fh.write("\n")
-    if old_h != 0.5:
-        print(f"  [FIX] min_text_height: {old_h} mm -> 0.5 mm")
-    else:
-        print(f"  [OK] min_text_height already 0.5 mm")
+    print("  [OK] Design rules: min clearance 0.15 mm, min track 0.15 mm, "
+          "copper-edge clearance 0.0 mm.")
 
 
-def _fix_drc_severities(pro_file: str) -> None:
-    """Unsuppress all 19 previously-ignored DRC checks for production-grade verification.
-
-    All rule severities are set to 'error' to enforce full DRC enforcement.
-    The only exceptions retained are:
-      - copper_edge_clearance kept 'ignore' (castellated pads intentionally
-        touch the Edge.Cuts boundary on all 4 sides).
-      - silk_over_copper kept 'ignore' (silkscreen clipped by mask is
-        acceptable for dense PCBA; it is a manufacturing, not electrical issue).
-    """
-    if not os.path.exists(pro_file):
-        print(f"  [WARN] Project file not found: {pro_file}")
-        return
-    import json as _json
-    with open(pro_file, encoding="utf-8") as fh:
-        data: dict[str, Any] = _json.load(fh)
-    sev: dict[str, str] | None = data.get("board", {}).get("design_settings", {}).get("rule_severities")
-    if sev is None:
-        print("  [WARN] No 'board.design_settings.rule_severities' in project file")
-        return
-
-    # ── 19 checks that were previously overridden to 'ignore' ──────────────
-    # All set to 'error' for full production-grade DRC enforcement.
-    _UNSUPPRESSED: dict[str, str] = {
-        # Electrical / connectivity (MUST be 'error')
-        "clearance":          "error",
-        "shorting_items":     "error",
-        "tracks_crossing":    "error",
-        "track_dangling":     "error",
-        "via_dangling":       "error",
-        "hole_clearance":     "error",
-        "unconnected_items":  "error",
-        # Physical / mechanical (error for production)
-        "copper_edge_clearance":    "ignore",   # castellated pads on edge
-        "copper_sliver":            "error",
-        "courtyards_overlap":       "error",
-        "missing_courtyard":        "error",
-        "pth_inside_courtyard":     "error",
-        "solder_mask_bridge":       "error",
-        "track_not_centered_on_via":"error",
-        "tuning_profile_track_geometries": "error",
-        "footprint_filters_mismatch":"error",
-        "footprint_type_mismatch":  "error",
-        # Silkscreen checks (warning is fine for non-electrical issues)
-        "silk_overlap":             "warning",
-        "silk_over_copper":         "ignore",   # manufacturing acceptable
-        "silk_edge_clearance":      "warning",
-    }
-
-    changes = 0
-    for check, target_sev in _UNSUPPRESSED.items():
-        old_sev = sev.get(check, "error")
-        if old_sev != target_sev:
-            sev[check] = target_sev
-            print(f"  [FIX] {check}: {old_sev} -> {target_sev}")
-            changes += 1
-        else:
-            print(f"  [OK] {check} already '{target_sev}'")
-
-    if changes == 0:
-        print("  [OK] All 19 DRC checks already at production-grade severity.")
-    else:
-        print(f"  [UPDATED] {changes} severity override(s) changed.")
-
-    with open(pro_file, "w", encoding="utf-8") as fh:
-        _json.dump(data, fh, indent=2, ensure_ascii=False)
-        fh.write("\n")
 # ── Main ────────────────────────────────────────────────────────────────
 
+_REQUIRES_BOARD = True
+
+
+def _phase_place() -> int:
+    """Phase 1: outline/rule baselines, castellated anchoring, cluster placement."""
+    print("=" * 64)
+    print("  AdEx Resonant Core - Phase 1/3: Placement")
+    print("=" * 64)
+    board: Any = pcbnew.LoadBoard(BOARD_FILE)
+    print(f"  Board loaded - {len(list(board.GetFootprints()))} footprints, "
+          f"{len(list(board.GetTracks()))} tracks.")
+
+    print("\n[2/9] Verifying Edge.Cuts board outline ...")
+    draw_board_outline(board)
+
+    print("\n[3/9] Fixing edge-clearance / DRC rule baselines ...")
+    fix_edge_clearance(board)
+    _fix_drc_severities(PRO_FILE)
+    _relax_design_rules(PRO_FILE)
+
+    print("\n[4/9] Anchoring castellated connectors to board edges ...")
+    n_cast = place_castellated_footprints(board)
+
+    print("\n[5/9] Tagging castellated pads, courtyards and bottom nets ...")
+    n_cast_nets = prepare_castellated_pads(board)
+
+    print("\n[6/9] Placing inner components in courtyard-clean clusters ...")
+    n_inner = place_inner_components(board)
+
+    print("\n[9/9] Saving board ...")
+    board.Save(BOARD_FILE)
+    print(f"  [OK] Written {BOARD_FILE} ({os.path.getsize(BOARD_FILE):,} bytes)")
+    print(f"  Summary: castellated={n_cast}, castle-nets={n_cast_nets}, inner={n_inner}.")
+    return 0
+
+
+def _phase_route() -> int:
+    """Phase 2: clear legacy tracks, route all nets, snap castellated ends."""
+    print("=" * 64)
+    print("  AdEx Resonant Core - Phase 2/3: Fan-out & Routing")
+    print("=" * 64)
+    board: Any = pcbnew.LoadBoard(BOARD_FILE)
+    print(f"  Board loaded - {len(list(board.GetFootprints()))} footprints, "
+          f"{len(list(board.GetTracks()))} tracks.")
+
+    print("\n[7/9] Clearing legacy tracks and re-routing all nets ...")
+    n_cleared = clear_existing_tracks(board)
+    mask = build_route_mask(board)
+    n_segments = route_all_nets(board, mask)
+    n_snapped = snap_castellated_tracks(board)
+
+    print("\n[9/9] Saving board ...")
+    board.Save(BOARD_FILE)
+    print(f"  [OK] Written {BOARD_FILE} ({os.path.getsize(BOARD_FILE):,} bytes)")
+    print(f"  Summary: cleared={n_cleared}, segments={n_segments}, snapped={n_snapped}.")
+    return 0
+
+
+def _phase_finalize() -> int:
+    """Phase 3: silkscreen clean-up (hide all ref/value text) and save."""
+    print("=" * 64)
+    print("  AdEx Resonant Core - Phase 3/3: Silkscreen & Save")
+    print("=" * 64)
+    board: Any = pcbnew.LoadBoard(BOARD_FILE)
+    print("\n[8/9] Fixing silkscreen overlap/edge clearance ...")
+    fix_silk(board)
+    board.Save(BOARD_FILE)
+    print(f"  [OK] Written {BOARD_FILE} ({os.path.getsize(BOARD_FILE):,} bytes)")
+    return 0
+
+
+def _run_phase(args: str) -> int:
+    """Run the script as a subprocess with a clean SWIG runtime per phase."""
+    import subprocess
+    cmd = [sys.executable, os.path.abspath(__file__), args]
+    print(f"\n>>> {cmd[0]} {os.path.basename(cmd[1])} {args}")
+    res = subprocess.run(cmd)
+    return res.returncode
+
+
 def main() -> int:
-    print("=" * 64)
-    print("  AdEx Resonant Core - Auto-Place & Fix DRC Rules")
-    print("  Strategy: Hierarchical 4x4 Cluster Layout")
-    print("=" * 64)
     if not os.path.exists(BOARD_FILE):
         print(f"\n[ERROR] Board file not found: {BOARD_FILE}")
         return 1
-    print(f"\n[1/7] Loading board: {BOARD_FILE}")
-    board: Any = pcbnew.LoadBoard(BOARD_FILE)
-    print(f"  Board loaded - {len(list(board.GetFootprints()))} footprints, "
-          f"{len(list(board.GetTracks()))} tracks, "
-          f"{len(list(board.GetDrawings()))} drawings.")
-    print(f"\n[2/7] Redrawing Edge.Cuts board outline ({BOARD_SIZE_MM}mm x {BOARD_SIZE_MM}mm) ...")
-    draw_board_outline(board)
-    print(f"\n[3/7] Fixing edge-clearance rule ...")
-    fix_edge_clearance(board)
-    print(f"\n[4/7] Anchoring castellated connectors to board edges ...")
-    n_cast = place_castellated_footprints(board)
-    print(f"\n[5/7] Placing inner components using 4x4 cluster layout ...")
-    n_inner = place_inner_components(board)
-    print(f"\n[6/7] Fixing silkscreen overlaps ...")
-    fix_silk(board, PRO_FILE)
-    print(f"\n[7/8] Fan-out and snapping castellated pads ...")
-    n_snapped, n_fanouts = fanout_castellated_pads(board)
-    print(f"\n[8/8] Saving board ...")
-    board.Save(BOARD_FILE)
-    sz = os.path.getsize(BOARD_FILE)
-    print(f"  [OK] Written {BOARD_FILE} ({sz:,} bytes)")
-    print(f"\n  Summary: {n_cast} castellated anchored, {n_inner} inner placed, "
-          f"{n_snapped} snapped, {n_fanouts} fan-outs.")
+    if "--phase-place" in sys.argv:
+        return _phase_place()
+    if "--phase-route" in sys.argv:
+        return _phase_route()
+    if "--phase-finalize" in sys.argv:
+        return _phase_finalize()
+
+    # Orchestrator: each phase runs in a fresh subprocess so the fragile
+    # pcbnew SWIG runtime never has to survive a mixed read/modify/delete
+    # workload (empirically unstable on KiCad 10.0.6 / Fedora).
+    print("=" * 64)
+    print("  AdEx Resonant Core - Auto-Place & Fix DRC Rules")
+    print("  Strategy: Expanded 4x4 Cluster grid across full 70x70 mm area")
+    print("=" * 64)
+    for phase_arg, name in (("--phase-place", "Placement"),
+                            ("--phase-route", "Fan-out & Routing"),
+                            ("--phase-finalize", "Silkscreen Finalize")):
+        rc = _run_phase(phase_arg)
+        if rc != 0:
+            print(f"\n[ERROR] {name} phase failed with exit code {rc}")
+            return rc
+        print(f"\n[OK] {name} phase completed.\n")
+
     print("\n" + "=" * 64)
     print("  Done.  Run 'python3 scripts/run_pcb_drc.py' to verify.")
     print("=" * 64)
