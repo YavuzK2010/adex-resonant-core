@@ -139,7 +139,13 @@
         "unconnected_items": "ignore",
         "unresolved_variable": "error",
         "via_dangling": "error",
-        "zones_intersect": "error"
+        "zones_intersect": "error",
+        "items_shorting": "error",
+        "no_connect_pin": "error",
+        "symmetric_courtyard": "error",
+        "thermal_clearance": "error",
+        "through_hole_pad_with_no_hole": "error",
+        "zone_has_no_net": "error"
       },
       "rules": {
         "max_error": 0.005,
