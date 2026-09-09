@@ -1407,7 +1407,7 @@ def fix_solder_mask_bridges_direct(board: Any) -> int:
                 if seg_len_sq > 0.001:
                     t_param = ((pcx - ax)*abx + (pcy - ay)*aby) / seg_len_sq
                     t_param = max(0.0, min(1.0, t_param))
-                    if 0.1 < t_param < 0.9:
+                    if 0.01 < t_param < 0.99:
                         cpx = ax + t_param * abx
                         cpy = ay + t_param * aby
                         dx = cpx - pcx
@@ -1699,8 +1699,15 @@ def _phase_route() -> int:
     board: Any = pcbnew.LoadBoard(BOARD_FILE)
     print(f"  Board loaded - {len(list(board.GetFootprints()))} footprints, "
           f"{len(list(board.GetTracks()))} tracks.")
+    # Apply solder mask constraints before any routing or DRC checks
 
-    print("\n[7/9] Clearing legacy tracks and re-routing all nets ...")
+    print("  [7b/9] Applying design constraints (solder mask expansion=0.00mm, min_width=0.05mm) ...")
+    fix_edge_clearance(board)
+    print("  [OK] Solder mask constraints applied.")
+
+
+    print("\n[8/9] Clearing legacy tracks and re-routing all nets ...")
+
     n_cleared = clear_existing_tracks(board)
     mask = build_route_mask(board)
     # Place V_m escape vias BEFORE routing so the A* router can route
@@ -1723,6 +1730,7 @@ def _phase_route() -> int:
     n_0402fixed = fix_0402_track_exit(board)
     n_sot23fixed = fix_sot23_track_exit(board)
     n_pushed = push_traces_away_from_adjacent_pads(board)
+    n_solder_direct = fix_solder_mask_bridges_direct(board)
     n_drcfix = 0
     # Iterative DRC-driven fix: run kicad-cli DRC and fix solder_mask_bridge violations
     EXPORTS_DIR = os.path.join(ROOT, "hardware", "exports")
@@ -1865,7 +1873,7 @@ def _phase_route() -> int:
     print(f"  Summary: cleared={n_cleared}, segments={n_segments}, "
           f"vm_vias={n_vm_vias}, bcu_segs={n_bcu}, "
           f"snapped={n_snapped}, 0402-exits={n_0402fixed}, "
-          f"sot23-exits={n_sot23fixed}, pushed={n_pushed}, drc-fix={n_drcfix}, edge-fix={n_edgefix}.")
+          f"sot23-exits={n_sot23fixed}, pushed={n_pushed}, solder-direct={n_solder_direct}, drc-fix={n_drcfix}, edge-fix={n_edgefix}.")
     return 0
 
 
