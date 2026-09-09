@@ -2,7 +2,7 @@
 """
 Automated Design Rules Check (DRC) for AdEx Resonant Core PCB.
 - Executes kicad-cli pcb drc on the board layout file
-- Uses --all-track-errors and --exit-code-violations (no exclusion writes)
+- Uses --severity-all and --exit-code-violations (no exclusion writes, unsuppressed)
 - Outputs JSON report to hardware/exports/
 
 ╔══════════════════════════════════════════════════════════════════════════╗
@@ -12,7 +12,7 @@ Automated Design Rules Check (DRC) for AdEx Resonant Core PCB.
 ║     during auto-fixes.                                                  ║
 ║  2. NO DRC rule is EVER suppressed or set to 'ignore'.                  ║
 ║  3. ALL rule severities in ALL .kicad_pro files must remain 'error'.    ║
-║  4. DRC must ALWAYS run with --all-track-errors and                     ║
+║  4. DRC must ALWAYS run with --severity-all and                           ║
 ║     --exit-code-violations (never writes exclusions back).             ║
 ║  5. Goal: Zero ignored/suppressed tests, all violations visible.        ║
 ║                                                                         ║
@@ -62,7 +62,7 @@ def run_drc() -> DrcSummary | None:
         "kicad-cli",
         "pcb",
         "drc",
-        "--all-track-errors",
+        "--severity-all",
         "--exit-code-violations",
         "--format", "json",
         "--output", REPORT_JSON,
