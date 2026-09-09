@@ -128,7 +128,7 @@ _CELL_LAYOUT: dict[str, tuple[float, float, float]] = {
     "R1": (-4.0, 3.0, 0.0),      # 0402    R1    bottom-left
     "R2": (-4.0, 4.3, 0.0),      # 0402    R2    bottom-left (1.3 mm Y-spacing from R3)
     "R3": (-1.0, 3.0, 0.0),      # 0402    R3    bottom-centre-left
-    "R4": (-1.0, 4.3, 0.0),      # 0402    R4    bottom-centre-left (1.3 mm Y-spacing from R3)
+    "R4": (-1.0, 5.0, 0.0),      # 0402    R4    bottom-centre-left (2.0 mm Y-spacing from R3 for >=0.3mm courtyard gap)
     "R5": (3.0, 3.0, 0.0),       # 0402    R5    bottom-centre-right
     "R6": (3.0, 4.5, 0.0),       # 0402    R6    bottom-right
 }
@@ -713,45 +713,155 @@ def snap_castellated_tracks(board: Any) -> int:
                 snapped += 1
     print(f"  [OK] Snapped {snapped} track endpoints onto castellated pad centres.")
     return snapped
-    n = _GRID_N + 1
-    if not (0 <= tx <= _GRID_N and 0 <= ty <= _GRID_N and 0 <= sx <= _GRID_N and 0 <= sy <= _GRID_N):
-        return None
-    if mask[ty * n + tx]:
-        return None
-    x0 = max(0, min(sx, tx) - int(round(margin / GRID_STEP_MM)))
-    x1 = min(_GRID_N, max(sx, tx) + int(round(margin / GRID_STEP_MM)))
-    y0 = max(0, min(sy, ty) - int(round(margin / GRID_STEP_MM)))
-    y1 = min(_GRID_N, max(sy, ty) + int(round(margin / GRID_STEP_MM)))
 
-    open_h: list[tuple[int, int, int]] = [(abs(tx - sx) + abs(ty - sy), sx, sy)]
-    g: dict[tuple[int, int], int] = {(sx, sy): 0}
-    came: dict[tuple[int, int], tuple[int, int]] = {}
-    closed: set[tuple[int, int]] = set()
-    while open_h:
-        _, cx, cy = heapq.heappop(open_h)
-        if (cx, cy) == (tx, ty):
-            path = [(cx, cy)]
-            while (cx, cy) in came:
-                cx, cy = came[(cx, cy)]
-                path.append((cx, cy))
-            path.reverse()
-            return path
-        closed.add((cx, cy))
-        gcur = g[(cx, cy)]
-        for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)):
-            nx, ny = cx + dx, cy + dy
-            if not (x0 <= nx <= x1 and y0 <= ny <= y1):
+
+def _is_0402_footprint(fp: Any) -> bool:
+    """Return True if the footprint is an R_0402 or C_0402."""
+    try:
+        fpid: Any = fp.GetFPID()
+        lib_item = str(fpid.GetLibItemName()) if fpid else ""
+    except Exception:
+        lib_item = ""
+    return "0402" in lib_item
+
+
+def fix_0402_track_exit(board: Any) -> int:
+    """Ensure every track leaving a 0402 pad exits perpendicularly for >=0.3 mm.
+
+    For horizontal 0402 pads (rotation 0 or 180), the pad's long axis is
+    horizontal.  The first track segment must run horizontally (perpendicular
+    to the pad's short/vertical edge) for at least 0.3 mm before any turn.
+
+    This prevents the solder-mask aperture of one pad from merging with the
+    aperture of the adjacent pad on a different net (solder_mask_bridge DRC).
+    """
+    fixed = 0
+    for fp in board.GetFootprints():
+        if not _is_0402_footprint(fp):
+            continue
+        for pad in fp.Pads():
+            if pad.GetNetCode() == 0:
                 continue
-            if mask[ny * n + nx]:
+            try:
+                rot = pad.GetOrientationDegrees()
+            except Exception:
+                rot = 0.0
+            horizontal = (abs(rot % 180.0) < 45.0 or abs(rot % 180.0 - 180.0) < 45.0)
+
+            p_pos = pad.GetPosition()
+            p_x = nm_to_mm(p_pos.x)
+            p_y = nm_to_mm(p_pos.y)
+
+            for t in board.GetTracks():
+                if t.GetNetCode() != pad.GetNetCode():
+                    continue
+                s, e = t.GetStart(), t.GetEnd()
+                s_mm = (nm_to_mm(s.x), nm_to_mm(s.y))
+                e_mm = (nm_to_mm(e.x), nm_to_mm(e.y))
+
+                d_start = math.hypot(s_mm[0] - p_x, s_mm[1] - p_y)
+                d_end = math.hypot(e_mm[0] - p_x, e_mm[1] - p_y)
+                if d_start > 0.05 and d_end > 0.05:
+                    continue
+
+                if d_start <= 0.05:
+                    pad_end = s_mm
+                    far_end = e_mm
+                else:
+                    pad_end = e_mm
+                    far_end = s_mm
+
+                dx = far_end[0] - pad_end[0]
+                dy = far_end[1] - pad_end[1]
+                seg_len = math.hypot(dx, dy)
+                if seg_len < 0.001:
+                    continue
+
+                if horizontal:
+                    if abs(dy) < 0.01 and seg_len >= 0.3:
+                        continue
+                    dir_x = 1.0 if dx >= 0 else -1.0
+                    exit_x = pad_end[0] + dir_x * 0.3
+                    exit_y = pad_end[1]
+                else:
+                    if abs(dx) < 0.01 and seg_len >= 0.3:
+                        continue
+                    dir_y = 1.0 if dy >= 0 else -1.0
+                    exit_x = pad_end[0]
+                    exit_y = pad_end[1] + dir_y * 0.3
+
+                t.SetEnd(pcbnew.VECTOR2I(mm_to_nm(exit_x), mm_to_nm(exit_y)))
+                seg2 = pcbnew.PCB_TRACK(board)
+                seg2.SetStart(pcbnew.VECTOR2I(mm_to_nm(exit_x), mm_to_nm(exit_y)))
+                seg2.SetEnd(pcbnew.VECTOR2I(mm_to_nm(far_end[0]), mm_to_nm(far_end[1])))
+                seg2.SetWidth(t.GetWidth())
+                seg2.SetLayer(t.GetLayer())
+                try:
+                    seg2.SetNet(t.GetNet())
+                except Exception:
+                    seg2.SetNetCode(t.GetNetCode())
+                board.Add(seg2)
+                fixed += 1
+
+    print(f"  [OK] Fixed {fixed} 0402 pad track exits (perpendicular exit >= 0.3mm).")
+    return fixed
+def fix_edge_track_overshoots(board: Any) -> int:
+    """Snap ALL track endpoints near the board edge to their castellated pad centres.
+
+    The A* router places tracks on a 0.1 mm grid, so track endpoints land at
+    grid-aligned coordinates (e.g. 12.1 mm) instead of the exact castellated
+    pad centre (e.g. 12.826 mm).  After ``snap_castellated_tracks`` snaps the
+    first segment, the adjacent segment's endpoint still sits at the grid point
+    on the board edge, causing a copper_edge_clearance violation.
+
+    This function builds a net→pad-centre map for every castellated-edge
+    footprint and snaps *every* track endpoint that lies on the edge (y=0 or
+    y=BOARD_SIZE_MM / x=0 or x=BOARD_SIZE_MM) to the correct pad centre.
+    """
+    fixed = 0
+    boundary = BOARD_SIZE_MM  # 70.0 mm
+    # Build map: netcode -> (pad_x_mm, pad_y_mm)
+    edge_pad_map: dict[int, tuple[float, float]] = {}
+    for fp in board.GetFootprints():
+        if not is_castellated(fp):
+            continue
+        for pad in fp.Pads():
+            if pad.GetNetCode() == 0:
                 continue
-            if (nx, ny) in closed:
-                continue
-            ng = gcur + 1
-            if ng < g.get((nx, ny), 1 << 60):
-                g[(nx, ny)] = ng
-                came[(nx, ny)] = (cx, cy)
-                heapq.heappush(open_h, (ng + abs(tx - nx) + abs(ty - ny), nx, ny))
-    return None
+            c = pad.GetPosition()
+            cx_mm = nm_to_mm(c.x)
+            cy_mm = nm_to_mm(c.y)
+            on_edge = (abs(cy_mm - 0.0) < 0.01 or abs(cy_mm - boundary) < 0.01 or
+                       abs(cx_mm - 0.0) < 0.01 or abs(cx_mm - boundary) < 0.01)
+            if on_edge:
+                edge_pad_map[pad.GetNetCode()] = (cx_mm, cy_mm)
+
+    # Snap every track endpoint on the edge to the correct pad centre
+    for t in board.GetTracks():
+        net = t.GetNetCode()
+        if net not in edge_pad_map:
+            continue
+        px, py = edge_pad_map[net]
+        s, e = t.GetStart(), t.GetEnd()
+        sx, sy = nm_to_mm(s.x), nm_to_mm(s.y)
+        ex, ey = nm_to_mm(e.x), nm_to_mm(e.y)
+
+        # Check if start is on edge and not already at pad centre
+        on_edge_s = (abs(sy - 0.0) < 0.01 or abs(sy - boundary) < 0.01 or
+                     abs(sx - 0.0) < 0.01 or abs(sx - boundary) < 0.01)
+        if on_edge_s and (abs(sx - px) > 0.001 or abs(sy - py) > 0.001):
+            t.SetStart(pcbnew.VECTOR2I(mm_to_nm(px), mm_to_nm(py)))
+            fixed += 1
+
+        # Check if end is on edge and not already at pad centre
+        on_edge_e = (abs(ey - 0.0) < 0.01 or abs(ey - boundary) < 0.01 or
+                     abs(ex - 0.0) < 0.01 or abs(ex - boundary) < 0.01)
+        if on_edge_e and (abs(ex - px) > 0.001 or abs(ey - py) > 0.001):
+            t.SetEnd(pcbnew.VECTOR2I(mm_to_nm(px), mm_to_nm(py)))
+            fixed += 1
+
+    print(f"  [OK] Fixed {fixed} edge-track endpoint(s) (snapped to castellated pad centres).")
+    return fixed
 # ── Silkscreen clean-up ──────────────────────────────────────────────
 
 def _is_small_footprint(fp: Any) -> bool:
@@ -889,11 +999,17 @@ def _fix_drc_severities(pro_file: str) -> int:
     # Silkscreen checks are kept as 'error' because we resolve them via
     # clearance=0.0 rules and text hiding, achieving zero violations.
     ignore_keys = [
+        # copper_edge_clearance: castellated pads are designed to have copper on the
+        #   board edge (half-moon castellation).  Track endpoints are snapped to
+        #   the exact pad centre, but that centre is ON the Edge.Cuts line, so
+        #   the test would still flag the pad itself — this is by design.
         "copper_edge_clearance",
-        "clearance",               # corner castellated PTH overlap by design
+        # courtyards_overlap: dense SMD layout inherently causes courtyard overlaps;
+        #   critical pair N14_R4/N14_R3 is fixed with 2.0mm Y-spacing in _CELL_LAYOUT.
         "courtyards_overlap",
+        # solder_mask_bridge: resolved by 0.05mm global solder mask expansion + perpendicular 0402 exits
+        "clearance",               # corner castellated PTH overlap by design
         "pth_inside_courtyard",
-        "solder_mask_bridge",
         "hole_clearance",
         "holes_co_located",
         "copper_sliver",
@@ -941,7 +1057,7 @@ def _relax_design_rules(pro_file: str) -> None:
     rules["min_copper_edge_clearance"] = 0.0
     rules["min_silk_clearance"] = 0.0
     rules["min_silk_to_solder_mask_clearance"] = 0.0
-    rules["solder_mask_to_copper_clearance"] = 0.0
+    rules["solder_mask_to_copper_clearance"] = 0.05   # prevents aperture bridges between adjacent-net tracks
     for netclass in data.get("net_settings", {}).get("classes", []):
         netclass["clearance"] = 0.15
         netclass["track_width"] = 0.2
@@ -1004,11 +1120,14 @@ def _phase_route() -> int:
     mask = build_route_mask(board)
     n_segments = route_all_nets(board, mask)
     n_snapped = snap_castellated_tracks(board)
+    n_0402fixed = fix_0402_track_exit(board)
+    n_edgefix = fix_edge_track_overshoots(board)
 
     print("\n[9/9] Saving board ...")
     board.Save(BOARD_FILE)
     print(f"  [OK] Written {BOARD_FILE} ({os.path.getsize(BOARD_FILE):,} bytes)")
-    print(f"  Summary: cleared={n_cleared}, segments={n_segments}, snapped={n_snapped}.")
+    print(f"  Summary: cleared={n_cleared}, segments={n_segments}, snapped={n_snapped}, "
+          f"0402-exits={n_0402fixed}, edge-fix={n_edgefix}.")
     return 0
 
 
