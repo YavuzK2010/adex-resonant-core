@@ -45,6 +45,19 @@ PRO_FILE = os.path.join(HW, "adex_resonant_core.kicad_pro")
 REPORT_JSON = os.path.join(EXPORTS, "drc_report.json")
 REPORT_TXT = os.path.join(EXPORTS, "drc_report.txt")
 
+# ── SINGLE-FILE INTEGRITY ENFORCEMENT ─────────────────────────────────────
+def scan_secondary_pcb_files() -> int:
+    """Scan HW for any .kicad_pcb files other than the canonical one and return count."""
+    secondary: list[str] = []
+    if os.path.isdir(HW):
+        for f in os.listdir(HW):
+            if f.endswith(".kicad_pcb") and f != "adex_resonant_core.kicad_pcb":
+                secondary.append(f)
+    for sf in sorted(secondary):
+        print(f"  [WARN] Secondary PCB file detected: {sf}")
+    return len(secondary)
+# ──────────────────────────────────────────────────────────────────────────
+
 
 def ensure_dirs() -> None:
     """Ensure the exports directory exists."""
@@ -203,10 +216,29 @@ def parse_stdout_report(stdout: str) -> DrcSummary:
     }
 
 
+def count_ignored_tests(pro_file: str) -> int:
+    """Count how many DRC rule severities are set to 'ignore' in the project file."""
+    if not os.path.exists(pro_file):
+        return -1
+    try:
+        import json as _json
+        with open(pro_file, encoding="utf-8") as fh:
+            data: dict[str, Any] = _json.load(fh)
+        sev = data.get("board", {}).get("design_settings", {}).get("rule_severities", {})
+        return sum(1 for v in sev.values() if v == "ignore")
+    except Exception:
+        return -1
+
+
 def main() -> int:
     print("=" * 60)
     print("  AdEx Resonant Core — PCB Design Rules Check (DRC)")
     print("=" * 60)
+
+    # ── Single-file integrity check ───────────────────────────────────────
+    secondary_count = scan_secondary_pcb_files()
+    print(f"  Target File: {BOARD_FILE}")
+    print(f"  Secondary Files Found: {secondary_count}")
 
     # Validate that the board file exists
     if not os.path.exists(BOARD_FILE):
@@ -218,9 +250,6 @@ def main() -> int:
 
     ensure_dirs()
 
-    print(f"\n  Board: {BOARD_FILE}")
-    print(f"  Project: {PRO_FILE}")
-
     print("\n[1] Running KiCad 10 PCB DRC...")
     result = run_drc()
 
@@ -228,14 +257,30 @@ def main() -> int:
         print("\n[ERROR] DRC run failed")
         return 1
 
+    # Count ignored tests from the .kicad_pro file
+    ignored_count = count_ignored_tests(PRO_FILE)
+
+    violations = result["errors"] + result["warnings"]
+    unconnected = result["unconnected"]
+
     print("\n" + "=" * 60)
-    if result["errors"] == 0 and result["warnings"] == 0 and result["unconnected"] == 0:
-        print("  RESULT: 0 violations — PCB passes DRC!")
+    print("  DRC FINAL REPORT")
+    print("=" * 60)
+    print(f"  Target File:             {BOARD_FILE}")
+    print(f"  Secondary Files Found:   {secondary_count}")
+    print(f"  Violations:              {violations}")
+    print(f"  Unconnected Items:       {unconnected}")
+    print(f"  Ignored Tests:           {ignored_count if ignored_count >= 0 else 'N/A'}")
+    print("=" * 60)
+
+    if violations == 0 and unconnected == 0 and (ignored_count == 0 or ignored_count < 0):
+        print("  RESULT: 0 Errors — PCB passes DRC!")
     else:
         print(
             f"  RESULT: {result['errors']} error(s), "
             f"{result['warnings']} warning(s), "
-            f"{result['unconnected']} unconnected"
+            f"{unconnected} unconnected, "
+            f"{ignored_count} ignored test(s)"
         )
     print("=" * 60)
 

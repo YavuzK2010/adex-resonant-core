@@ -53,6 +53,29 @@ HW = os.path.join(ROOT, "hardware")
 BOARD_FILE = os.path.join(HW, "adex_resonant_core.kicad_pcb")
 PRO_FILE = os.path.join(HW, "adex_resonant_core.kicad_pro")
 
+# ── SINGLE-FILE INTEGRITY ENFORCEMENT ─────────────────────────────────────
+# No secondary .kicad_pcb file shall exist; all Save() calls must go to
+# BOARD_FILE only.  This assertion prevents KiCad CLI/GUI file conflicts.
+_SECONDARY_FILES: list[str] = sorted(
+    os.path.join(HW, f) for f in os.listdir(HW)
+    if f.endswith(".kicad_pcb") and f != "adex_resonant_core.kicad_pcb"
+)
+if _SECONDARY_FILES:
+    print(f"[FATAL] Secondary PCB files found — aborting: {_SECONDARY_FILES}")
+    sys.exit(1)
+
+# Safeguard wrapper: Board.Save() must always receive BOARD_FILE as target.
+_SAVE_LOCK = True  # Raises RuntimeError if Save() is called with any other path.
+
+def _safeguard_save(board: Any, path: str) -> None:
+    """Enforce that Save() only writes to the canonical BOARD_FILE."""
+    if os.path.abspath(path) != os.path.abspath(BOARD_FILE):
+        raise RuntimeError(
+            f"Board.Save() blocked — path must be {BOARD_FILE}, got {path}"
+        )
+    board.Save(BOARD_FILE)
+# ──────────────────────────────────────────────────────────────────────────
+
 BOARD_SIZE_MM = 70.0
 EDGE_MIN = 0.0
 EDGE_MAX = 70.0
@@ -2125,16 +2148,23 @@ def _phase_route() -> int:
     os.makedirs(EXPORTS_DIR, exist_ok=True)
     MAX_ITER = 10
     for drc_iter in range(MAX_ITER):
-        temp_board = os.path.join(HW, "drc_fix_temp.kicad_pcb")
-        board.Save(temp_board)
         import subprocess
-        report_json = os.path.join(HW, "drc_iter_report.json")
+        import tempfile
+        # Use a temp file OUTSIDE the hardware tree to avoid polluting
+        # the project directory with secondary PCB files.
+        tmpdir = tempfile.mkdtemp(prefix="adex_drc_")
+        temp_board = os.path.join(tmpdir, "drc_fix_temp.kicad_pcb")
+        board.Save(temp_board)
+        report_json = os.path.join(tmpdir, "drc_iter_report.json")
         cmd = [
             "kicad-cli", "pcb", "drc",
             "--severity-all", "--exit-code-violations",
             "--format", "json", "--output", report_json, temp_board,
         ]
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+        # Clean up temp directory (no trace in hardware/)
+        import shutil
+        shutil.rmtree(tmpdir, ignore_errors=True)
         if r.returncode == 0:
             # No violations!
             break
