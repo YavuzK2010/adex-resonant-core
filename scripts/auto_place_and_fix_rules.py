@@ -13,20 +13,20 @@ AdEx Resonant Core -- Auto-Place & Fix DRC Rules.
    - Outer margin: 4.0 mm from board edge.
    - Active inner placement region: X = 4.0 mm to 66.0 mm,
      Y = 4.0 mm to 66.0 mm.
-   - 4 columns X: [11.0, 27.0, 43.0, 59.0] (16.0 mm pitch)
-   - 4 rows    Y: [11.0, 25.0, 39.0, 53.0] (14.0 mm pitch)
-   - Each neuron cell: 16.0 x 14.0 mm cluster centred at (Cx, Cy).
-   - Bottom LC/bridge group shifted to Y=63.0 mm, leaving 7.0 mm clear
-     routing corridor above bottom Castellated pads.
+    - 4 columns X: [11.0, 27.0, 43.0, 59.0] (16.0 mm pitch)
 
+    - 4 rows    Y: [10.0, 22.5, 35.0, 47.5] (12.5 mm pitch)
+    - Each neuron cell: 16.0 x 12.5 mm cluster centred at (Cx, Cy).
+    - Bottom LC/bridge group shifted to Y=58.0 mm, leaving 12.0 mm clear
+      routing corridor above bottom Castellated pads.
 3. Intra-Cluster Layout:
    - TSSOP-8 LM393 at (Cx, Cy), rotation 0.
    - SOT-23 transistors at (Cx - 4.0, Cy - 3.5) and (Cx + 4.0, Cy - 3.5).
    - 0402 passives offset vertically/horizontally with >= 1.8 mm pad-to-pad
      clearance.
    - Inter-cluster LC components (L*, D*) placed in inter-row corridors
-     (Y = 18, 32 mm) and bottom cluster shifted to Y = 63.0 mm for
-     7.0 mm CB fan-out corridor.
+     (Y = 18, 32 mm) and bottom cluster shifted to Y = 58.0 mm for
+     12.0 mm CB fan-out corridor.
 
 4. Deterministic A* router (0.1 mm grid, 0.2 mm tracks, 0.15 mm clearance);
    castellated track endpoints snapped to exact pad centres at 0.20 mm.
@@ -91,20 +91,20 @@ INNER_MAX = BOARD_SIZE_MM - MARGIN_MM  # 66.0 mm
 # Core Grid Definition (expanded 15mm pitch, 70x70 mm area)
 # =====================================================================
 CELL_PITCH_X = 16.0
-CELL_PITCH_Y = 14.0
+CELL_PITCH_Y = 12.5
 CELL_W = 16.0   # full cell width (pitch)
 CELL_H = 10.0   # effective component zone height inside cell (14mm pitch -> 4mm gap)
 
 COL_CENTRES = [11.0, 27.0, 43.0, 59.0]
-ROW_CENTRES = [11.0, 25.0, 39.0, 53.0]
+ROW_CENTRES = [10.0, 22.5, 35.0, 47.5]
 
 # Effective top/bottom of each cell's component zone (4mm gap between rows):
-_ROW_TOP = [c - CELL_H / 2.0 for c in ROW_CENTRES]     # [6, 20, 34, 48]
-_ROW_BOT = [c + CELL_H / 2.0 for c in ROW_CENTRES]      # [16, 30, 44, 58]
+_ROW_TOP = [c - CELL_H / 2.0 for c in ROW_CENTRES]     # [5, 17.5, 30, 42.5]
+_ROW_BOT = [c + CELL_H / 2.0 for c in ROW_CENTRES]      # [15, 27.5, 40, 52.5]
 
-# Bottom LC/bias group shifted to y = 63.0 mm, leaving 7.0 mm clear routing
+# Bottom LC/bias group shifted to y = 58.0 mm, leaving 12.0 mm clear routing
 # corridor above the bottom castellated pads (y = 70.0 mm).
-BOTTOM_LC_Y = 63.0
+BOTTOM_LC_Y = 58.0
 
 CLEARANCE_MM = 0.15
 
@@ -131,7 +131,7 @@ VIA_PAD_MM = 0.55
 ESCAPE_CORRIDOR_X = [19.0, 35.0, 51.0]   # inter-column overflow channels
 VM_ESCAPE_X = [11.0, 27.0, 43.0, 59.0]   # column-aligned V_m escape centers
 ESCAPE_CORRIDOR_HALF_W = 1.00             # half-width (mm), so total = 1.5 mm
-ESCAPE_CORRIDOR_Y_TOP = 58.0              # top of corridor (just below Row-4 passives)
+ESCAPE_CORRIDOR_Y_TOP = 53.0              # top of corridor (just below Row-4 passives)
 ESCAPE_CORRIDOR_Y_BOT = 69.5              # bottom (just above Castellations Y=70)
 
 TEXT_SIZE_MM = 0.6
@@ -189,8 +189,8 @@ _CELL_LAYOUT: dict[str, tuple[float, float, float]] = {
 # BRIDGE_OFFSET=2.0 with 8mm pitch gives >0.8mm clearance everywhere.
 _BRIDGE_CORRIDORS: list[tuple[float, float, float]] = []
 _BRIDGE_CELL_DATA = [
-    (63.0, [7.0, 15.0, 23.0, 31.0, 39.0, 47.0, 55.0, 63.0]),   # 8 cells, 8mm pitch
-    (67.5, [7.0, 15.0, 23.0, 31.0, 39.0, 47.0, 55.0]),           # 7 cells, 8mm pitch
+    (58.0, [7.0, 15.0, 23.0, 31.0, 39.0, 47.0, 55.0, 63.0]),   # 8 cells, 8mm pitch
+    (62.5, [7.0, 15.0, 23.0, 31.0, 39.0, 47.0, 55.0]),           # 7 cells, 8mm pitch
 ]
 for _cy, _sx_list in _BRIDGE_CELL_DATA:
     for _sx in _sx_list:
@@ -1155,6 +1155,78 @@ def remove_spike_out_top_layer_tracks(board: Any) -> int:
         print(f"  [OK] Removed {removed} SPIKE_OUT track(s) from F.Cu (migrated to B.Cu).")
     return removed
 
+
+def offset_spike_out_bottom_traces(board: Any) -> int:
+    """Offset N15/N16 SPIKE_OUT B.Cu traces by +0.35mm in X to clear N1_GND vias.
+
+    The A* router may route SPIKE_OUT B.Cu traces immediately adjacent to
+    N1_GND internal ground vias, triggering "Items shorting two nets" DRC
+    violations.  This post-processing step shifts the affected trace segments
+    laterally by +0.35 mm in X (away from the via barrel) to restore DRC
+    clearance.
+    """
+    offset = 0.35  # mm
+    affected_nets = ("N15_SPIKE_OUT", "N16_SPIKE_OUT")
+    shifted = 0
+
+    # Collect N1_GND via positions
+    gnd_via_positions: list[tuple[float, float]] = []
+    for t in board.GetTracks():
+        if not isinstance(t, pcbnew.PCB_VIA):
+            continue
+        try:
+            netname = t.GetNetname()
+        except Exception:
+            continue
+        if netname == "N1_GND":
+            p = t.GetPosition()
+            gnd_via_positions.append((nm_to_mm(p.x), nm_to_mm(p.y)))
+
+    if not gnd_via_positions:
+        print("  [OK] No N1_GND vias found -- nothing to offset.")
+        return 0
+
+    for t in list(board.GetTracks()):
+        if isinstance(t, pcbnew.PCB_VIA):
+            continue
+        try:
+            netname = t.GetNetname()
+        except Exception:
+            continue
+        if netname not in affected_nets:
+            continue
+        try:
+            if t.GetLayer() != pcbnew.B_Cu:
+                continue
+        except Exception:
+            continue
+        s = t.GetStart()
+        e = t.GetEnd()
+        sx_mm, sy_mm = nm_to_mm(s.x), nm_to_mm(s.y)
+        ex_mm, ey_mm = nm_to_mm(e.x), nm_to_mm(e.y)
+
+        # Check if track is near any N1_GND via (within 2.0mm lateral distance)
+        needs_shift = False
+        for vx, vy in gnd_via_positions:
+            dist_y = abs((sy_mm + ey_mm) / 2.0 - vy)
+            dist_x = abs((sx_mm + ex_mm) / 2.0 - vx)
+            if dist_y < 1.5 and dist_x < 0.6:
+                needs_shift = True
+                break
+
+        if needs_shift:
+            # Shift entire track segment +0.35mm in X
+            new_sx = s.x + int(offset * 1_000_000)
+            new_ex = e.x + int(offset * 1_000_000)
+            t.SetStart(pcbnew.VECTOR2I(new_sx, s.y))
+            t.SetEnd(pcbnew.VECTOR2I(new_ex, e.y))
+            shifted += 1
+
+    if shifted:
+        print(f"  [OK] Offset {shifted} SPIKE_OUT B.Cu track(s) by +{offset}mm in X.")
+    else:
+        print("  [OK] No SPIKE_OUT B.Cu tracks near N1_GND vias found.")
+    return shifted
 
 def fix_shorts_and_clearances(board: Any) -> int:
     """Targeted fix for remaining short and clearance violations.
@@ -2133,6 +2205,7 @@ def _phase_route() -> int:
     n_spike_vias = place_spike_out_micro_vias(board)
     n_spike_segs = route_spike_out_bottom_segments(board)
     n_spike_removed = remove_spike_out_top_layer_tracks(board)
+    n_spike_offset = offset_spike_out_bottom_traces(board)
     n_snap_center = snap_tracks_to_vias(board)
     n_dangling = remove_dangling_tracks(board)
     n_fixsc = fix_shorts_and_clearances(board)
@@ -2290,7 +2363,7 @@ def _phase_route() -> int:
     print(f"  [OK] Written {BOARD_FILE} ({os.path.getsize(BOARD_FILE):,} bytes)")
     print(f"  Summary: cleared={n_cleared}, segments={n_segments}, "
           f"vm_vias={n_vm_vias}, bcu_segs={n_bcu}, "
-          f"spike_vias={n_spike_vias}, spike_bcu={n_spike_segs}, spike_fremoved={n_spike_removed}, fix_sc={n_fixsc}, snap_center={n_snap_center}, dangling={n_dangling}, "
+          f"spike_vias={n_spike_vias}, spike_bcu={n_spike_segs}, spike_fremoved={n_spike_removed}, spike_offset={n_spike_offset}, fix_sc={n_fixsc}, snap_center={n_snap_center}, dangling={n_dangling}, "
           f"snapped={n_snapped}, 0402-exits={n_0402fixed}, "
           f"sot23-exits={n_sot23fixed}, pushed={n_pushed}, solder-direct={n_solder_direct}, drc-fix={n_drcfix}, edge-fix={n_edgefix}.")
     return 0
