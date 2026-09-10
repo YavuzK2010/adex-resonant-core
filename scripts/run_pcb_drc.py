@@ -76,6 +76,8 @@ def run_drc() -> DrcSummary | None:
         "pcb",
         "drc",
         "--severity-all",
+        "--refill-zones",
+        "--save-board",
         "--exit-code-violations",
         "--format", "json",
         "--output", REPORT_JSON,
