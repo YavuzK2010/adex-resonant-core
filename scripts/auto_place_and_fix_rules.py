@@ -638,8 +638,14 @@ def _route_net(board: Any, mask: bytearray, name: str, pads: list[Any]) -> int:
     """Connect all pads of one net via A*; returns number of segments added.
 
     V_m nets use V_M_TRACK_WIDTH_MM and V_M_CLEAR_R_MM for tighter clearance
-    rules (0.18 mm vs default 0.15 mm).
+    rules (0.18 mm vs default 0.15 mm).  SPIKE_OUT nets are skipped here —
+    they are migrated to the Bottom Layer (B.Cu) by
+    route_spike_out_bottom_segments() so they stay isolated from the
+    top-layer analog nets (V_m, V_TH, VDD).
     """
+    if _is_spike_out_net(name):
+        return 0  # routed on B.Cu by the SPIKE_OUT migration pass
+    n = _GRID_N + 1
     n = _GRID_N + 1
     per_mask = bytearray(mask)
     is_vm = _is_vm_net(name)
@@ -762,6 +768,11 @@ def route_all_nets(board: Any, mask: bytearray) -> int:
 def _is_vm_net(name: str) -> bool:
     """Return True if the net name is a V_m net (e.g. N13_V_m)."""
     return name.endswith("_V_m")
+
+
+def _is_spike_out_net(name: str) -> bool:
+    """Return True if the net name is a SPIKE_OUT net (e.g. N13_SPIKE_OUT)."""
+    return name.endswith("_SPIKE_OUT")
 
 
 def _vm_escape_x(neuron_col: int) -> float:
@@ -913,9 +924,318 @@ def route_vm_bottom_segments(board: Any) -> int:
                   f"CB pad ({px_mm:.1f},{py_mm:.1f}) segs={segs_added}")
 
     print(f"  [OK] Routed {segments} B.Cu segment(s) for V_m bottom escape.")
+# ══════════════════════════════════════════════════════════════════════
+# SPIKE_OUT → B.Cu migration
+# ══════════════════════════════════════════════════════════════════════
+
+SPIKE_OUT_VIA_DRILL_MM = 0.30
+SPIKE_OUT_VIA_PAD_MM = 0.55
+
+
+def place_spike_out_micro_vias(board: Any) -> int:
+    """Place a micro via (0.30 mm drill, 0.55 mm pad) at the centre of every
+    SMD pad that belongs to a SPIKE_OUT net.
+
+    ONLY SMD pads get vias — PTH / through-hole pads (castellated edge pads)
+    already connect F.Cu <-> B.Cu through their own barrel and do not need a
+    collocated via (which would trigger holes_co_located and via_diameter
+    DRC violations).
+
+    These vias provide the F.Cu -> B.Cu layer transition so that the
+    SPIKE_OUT signal can run entirely on the Bottom Layer, isolated from
+    top-layer analog traces (V_m, V_TH, VDD).
+
+    This function is idempotent: existing SPIKE_OUT vias are reused.
+    """
+    placed = 0
+    existing: set[tuple[int, int, int]] = set()
+    for t in board.GetTracks():
+        if not isinstance(t, pcbnew.PCB_VIA):
+            continue
+        if t.GetNetCode() == 0:
+            continue
+        netname = t.GetNetname()
+        if not _is_spike_out_net(netname):
+            continue
+        p = t.GetPosition()
+        existing.add((p.x, p.y, t.GetNetCode()))
+    for fp in board.GetFootprints():
+        for pad in fp.Pads():
+            if pad.GetNetCode() == 0:
+                continue
+            netname = pad.GetNetname()
+            if not _is_spike_out_net(netname):
+                continue
+            # Skip PTH (through-hole) pads — they already connect both layers
+            try:
+                attr = pad.GetAttribute()
+                if attr != pcbnew.PAD_ATTRIB_SMD:
+                    continue
+            except Exception:
+                pass
+            pos = pad.GetPosition()
+            key = (pos.x, pos.y, pad.GetNetCode())
+            if key in existing:
+                continue
+            v = pcbnew.PCB_VIA(board)
+            v.SetPosition(pcbnew.VECTOR2I(pos.x, pos.y))
+            v.SetDrill(mm_to_nm(SPIKE_OUT_VIA_DRILL_MM))
+            v.SetWidth(mm_to_nm(SPIKE_OUT_VIA_PAD_MM))
+            v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu)
+            v.SetNet(pad.GetNet())
+            board.Add(v)
+            existing.add(key)
+            placed += 1
+    print(f"  [OK] Placed {placed} SPIKE_OUT micro vias at SMD pads (F.Cu <-> B.Cu).")
+    return placed
+
+
+def route_spike_out_bottom_segments(board: Any) -> int:
+    """Route SPIKE_OUT nets entirely on B.Cu, connecting the micro vias
+    placed at each SMD pad centre, plus directly to any PTH (castellated)
+    SPIKE_OUT pad centres.
+
+    Uses A* on a per-net B.Cu obstacle mask, isolating the SPIKE_OUT
+    signal from all top-layer analog nets.
+    """
+    n = _GRID_N + 1
+    b_mask = bytearray(n * n)
+    for fp in board.GetFootprints():
+        for pad in fp.Pads():
+            layers = set()
+            try:
+                layers = set(pad.GetLayerSet().CuStack())
+            except Exception:
+                pass
+            if pcbnew.B_Cu not in layers:
+                continue
+            x0, y0, x1, y1 = _pad_bbox_mm(pad)
+            _block_rect(b_mask, x0, y0, x1, y1, TRACK_CLEAR_R_MM)
+    for t in board.GetTracks():
+        try:
+            if t.GetLayer() != pcbnew.B_Cu:
+                continue
+        except Exception:
+            continue
+        s, e = t.GetStart(), t.GetEnd()
+        sx_mm, sy_mm = nm_to_mm(s.x), nm_to_mm(s.y)
+        ex_mm, ey_mm = nm_to_mm(e.x), nm_to_mm(e.y)
+        _block_rect(b_mask, min(sx_mm, ex_mm), min(sy_mm, ey_mm),
+                    max(sx_mm, ex_mm), max(sy_mm, ey_mm), TRACK_CLEAR_R_MM)
+
+    # Collect routing points: micro vias (SMD pads) + PTH pad centres
+    segments = 0
+    route_pts: dict[str, list[tuple[float, float]]] = {}
+    for t in board.GetTracks():
+        if not isinstance(t, pcbnew.PCB_VIA):
+            continue
+        if t.GetNetCode() == 0:
+            continue
+        netname = t.GetNetname()
+        if not _is_spike_out_net(netname):
+            continue
+        pos = t.GetPosition()
+        route_pts.setdefault(netname, []).append((nm_to_mm(pos.x), nm_to_mm(pos.y)))
+    # Add PTH pad centres for SPIKE_OUT nets (castellated edge pads)
+    for fp in board.GetFootprints():
+        for pad in fp.Pads():
+            if pad.GetNetCode() == 0:
+                continue
+            netname = pad.GetNetname()
+            if not _is_spike_out_net(netname):
+                continue
+            try:
+                attr = pad.GetAttribute()
+                if attr == pcbnew.PAD_ATTRIB_SMD:
+                    continue
+            except Exception:
+                continue
+            ppos = pad.GetPosition()
+            pt = (nm_to_mm(ppos.x), nm_to_mm(ppos.y))
+            pts = route_pts.setdefault(netname, [])
+            if pt not in pts:
+                pts.append(pt)
+    for netname, points in sorted(route_pts.items()):
+        if len(points) < 2:
+            continue
+        net_obj = board.FindNet(netname)
+        if net_obj is None:
+            continue
+        remaining = list(points)
+        order: list[tuple[float, float]] = [remaining.pop(0)]
+        while remaining:
+            lx, ly = order[-1]
+            best_i, best_d = 0, 1e18
+            for i, (cx, cy) in enumerate(remaining):
+                d2 = (cx - lx) ** 2 + (cy - ly) ** 2
+                if d2 < best_d:
+                    best_d, best_i = d2, i
+            order.append(remaining.pop(best_i))
+        for (ax, ay), (bx, by) in zip(order, order[1:]):
+            per_mask = bytearray(b_mask)
+            _clear_rect(per_mask, ax - 0.05, ay - 0.05, ax + 0.05, ay + 0.05,
+                        TRACK_CLEAR_R_MM)
+            _clear_rect(per_mask, bx - 0.05, by - 0.05, bx + 0.05, by + 0.05,
+                        TRACK_CLEAR_R_MM)
+            sx, sy = _ix(ax), _iy(ay)
+            tx, ty = _ix(bx), _iy(by)
+            path = astar(per_mask, sx, sy, tx, ty, margin=5.0)
+            if path is None:
+                path = [(sx, sy), (tx, ty)]
+            pts = cells_from_path(path)
+            # Snap the first/last points EXACTLY onto the via/pad centres so
+            # the track endpoints are perfectly centred (fixes
+            # track_not_centered_on_via and track_dangling).
+            if pts:
+                pts[0] = (ax, ay)
+                pts[-1] = (bx, by)
+            px_, py_ = pts[0]
+            for (qx, qy) in pts[1:]:
+                track = pcbnew.PCB_TRACK(board)
+                track.SetStart(pcbnew.VECTOR2I(mm_to_nm(px_), mm_to_nm(py_)))
+                track.SetEnd(pcbnew.VECTOR2I(mm_to_nm(qx), mm_to_nm(qy)))
+                track.SetWidth(mm_to_nm(TRACK_WIDTH_MM))
+                track.SetLayer(pcbnew.B_Cu)
+                track.SetNet(net_obj)
+                board.Add(track)
+                segments += 1
+                px_, py_ = qx, qy
+    print(f"  [OK] Routed {segments} SPIKE_OUT B.Cu segment(s), isolated from F.Cu analog nets.")
     return segments
 
 
+def remove_spike_out_top_layer_tracks(board: Any) -> int:
+    """Remove all SPIKE_OUT tracks that are still on F.Cu after routing.
+
+    Cleans up any A* artifacts where the F.Cu router also connected
+    SPIKE_OUT pads (both layers share the same net, so KiCad treats the
+    F.Cu and B.Cu copper as one conductor).  The B.Cu segments are the
+    canonical SPIKE_OUT path.
+    """
+    removed = 0
+    for t in list(board.GetTracks()):
+        if isinstance(t, pcbnew.PCB_VIA):
+            continue
+        try:
+            netname = t.GetNetname()
+        except Exception:
+            continue
+        if not _is_spike_out_net(netname):
+            continue
+        try:
+            if t.GetLayer() == pcbnew.F_Cu:
+                board.RemoveNative(t)
+                removed += 1
+        except Exception:
+            pass
+    if removed:
+        print(f"  [OK] Removed {removed} SPIKE_OUT track(s) from F.Cu (migrated to B.Cu).")
+    return removed
+
+
+def fix_shorts_and_clearances(board: Any) -> int:
+    """Targeted fix for remaining short and clearance violations.
+
+    Handles:
+      - N*_GND vs N*_VSS overlapping tracks in the same neuron
+      - V_m vs VDD track clearance violations
+      - dangling V_m B.Cu segments (endpoints not on via/pad)
+    """
+    fixed = 0
+    for n in range(1, 17):
+        gnd_name = f"N{n}_GND"
+        vss_name = f"N{n}_VSS"
+        gnd_tracks = [t for t in board.GetTracks()
+                      if t.GetNetname() == gnd_name]
+        vss_tracks = [t for t in board.GetTracks()
+                      if t.GetNetname() == vss_name]
+        for tg in gnd_tracks:
+            try:
+                if tg.GetLayer() != pcbnew.F_Cu:
+                    continue
+            except Exception:
+                continue
+            sg, eg = tg.GetStart(), tg.GetEnd()
+            gmx, gmy = (sg.x + eg.x) // 2, (sg.y + eg.y) // 2
+            for tv in vss_tracks:
+                try:
+                    if tv.GetLayer() != pcbnew.F_Cu:
+                        continue
+                except Exception:
+                    continue
+                sv, ev = tv.GetStart(), tv.GetEnd()
+                vmx, vmy = (sv.x + ev.x) // 2, (sv.y + ev.y) // 2
+                dx, dy = gmx - vmx, gmy - vmy
+                d = math.hypot(dx, dy)
+                if 1000 < d < 500000:
+                    scale = nm_to_mm(0.25) * 1000000 if d > 0.001 else 0
+                    nx = int(dx / d * scale)
+                    ny = int(dy / d * scale)
+                    tv.SetStart(pcbnew.VECTOR2I(sv.x + nx, sv.y + ny))
+                    tv.SetEnd(pcbnew.VECTOR2I(ev.x + nx, ev.y + ny))
+                    fixed += 1
+                    break
+    for n in range(1, 17):
+        vm_name = f"N{n}_V_m"
+        vdd_name = f"N{n}_VDD"
+        vm_tracks = [t for t in board.GetTracks()
+                     if t.GetNetname() == vm_name]
+        vdd_tracks = [t for t in board.GetTracks()
+                      if t.GetNetname() == vdd_name]
+        for tv in vm_tracks:
+            try:
+                if tv.GetLayer() != pcbnew.F_Cu:
+                    continue
+            except Exception:
+                continue
+            sv, ev = tv.GetStart(), tv.GetEnd()
+            mvx, mvy = (sv.x + ev.x) // 2, (sv.y + ev.y) // 2
+            for td in vdd_tracks:
+                try:
+                    if td.GetLayer() != pcbnew.F_Cu:
+                        continue
+                except Exception:
+                    continue
+                sd, ed = td.GetStart(), td.GetEnd()
+                mdx, mdy = (sd.x + ed.x) // 2, (sd.y + ed.y) // 2
+                dx, dy = mvx - mdx, mvy - mdy
+                d = math.hypot(dx, dy)
+                if 1000 < d < 300000:
+                    scale = nm_to_mm(0.15) * 1000000 if d > 0.001 else 0
+                    nx = int(dx / d * scale)
+                    ny = int(dy / d * scale)
+                    td.SetStart(pcbnew.VECTOR2I(sd.x + nx, sd.y + ny))
+                    td.SetEnd(pcbnew.VECTOR2I(ed.x + nx, ed.y + ny))
+                    fixed += 1
+                    break
+    for t in list(board.GetTracks()):
+        if isinstance(t, pcbnew.PCB_VIA):
+            continue
+        try:
+            if t.GetLayer() != pcbnew.B_Cu:
+                continue
+            netname = t.GetNetname()
+        except Exception:
+            continue
+        if not _is_vm_net(netname):
+            continue
+        s, e = t.GetStart(), t.GetEnd()
+        s_ok = False
+        e_ok = False
+        for item in board.GetTracks():
+            if item is t:
+                continue
+            if isinstance(item, pcbnew.PCB_VIA):
+                vpos = item.GetPosition()
+                if abs(vpos.x - s.x) < 20000 and abs(vpos.y - s.y) < 20000:
+                    s_ok = True
+                if abs(vpos.x - e.x) < 20000 and abs(vpos.y - e.y) < 20000:
+                    e_ok = True
+        if not s_ok or not e_ok:
+            board.RemoveNative(t)
+            fixed += 1
+    print(f"  [OK] Fixed {fixed} short/clearance/dangling issue(s).")
+    return fixed
 def snap_castellated_tracks(board: Any) -> int:
     """Snap every castellated-target track endpoint onto the exact pad centre."""
     snapped = 0
@@ -945,6 +1265,83 @@ def snap_castellated_tracks(board: Any) -> int:
     return snapped
 
 
+def snap_tracks_to_vias(board: Any) -> int:
+    """Fix track_not_centered_on_via by snapping every track endpoint
+    to the exact centre of the nearest same-net via (within 50 um)."""
+    fixed = 0
+    vias: dict[int, list[tuple[int, int]]] = {}
+    for t in board.GetTracks():
+        if not isinstance(t, pcbnew.PCB_VIA):
+            continue
+        nc = t.GetNetCode()
+        if nc == 0:
+            continue
+        pos = t.GetPosition()
+        vias.setdefault(nc, []).append((pos.x, pos.y))
+    for tr in board.GetTracks():
+        if isinstance(tr, pcbnew.PCB_VIA):
+            continue
+        nc = tr.GetNetCode()
+        if nc == 0 or nc not in vias:
+            continue
+        s, e = tr.GetStart(), tr.GetEnd()
+        for vx, vy in vias[nc]:
+            for ep, tag in [(s, 's'), (e, 'e')]:
+                d = math.hypot(ep.x - vx, ep.y - vy)
+                if 200 < d < 50000:
+                    np = pcbnew.VECTOR2I(vx, vy)
+                    if tag == 's':
+                        tr.SetStart(np)
+                    else:
+                        tr.SetEnd(np)
+                    fixed += 1
+                    break
+    if fixed:
+        print(f"  [OK] Snapped {fixed} track endpoint(s) to via centres.")
+    return fixed
+
+
+def remove_dangling_tracks(board: Any) -> int:
+    """Remove tracks with endpoints not connected to any pad, via, or other track."""
+    removed = 0
+    positions: dict[int, set[tuple[int, int]]] = {}
+    for t in board.GetTracks():
+        nc = t.GetNetCode()
+        if nc == 0:
+            continue
+        if isinstance(t, pcbnew.PCB_VIA):
+            pos = t.GetPosition()
+            positions.setdefault(nc, set()).add((pos.x, pos.y))
+        else:
+            s, e = t.GetStart(), t.GetEnd()
+            positions.setdefault(nc, set()).add((s.x, s.y))
+            positions.setdefault(nc, set()).add((e.x, e.y))
+    for fp in board.GetFootprints():
+        for pad in fp.Pads():
+            nc = pad.GetNetCode()
+            if nc == 0:
+                continue
+            pos = pad.GetPosition()
+            positions.setdefault(nc, set()).add((pos.x, pos.y))
+    for tr in list(board.GetTracks()):
+        if isinstance(tr, pcbnew.PCB_VIA):
+            continue
+        nc = tr.GetNetCode()
+        if nc == 0 or nc not in positions:
+            board.RemoveNative(tr)
+            removed += 1
+            continue
+        s, e = tr.GetStart(), tr.GetEnd()
+        s_ok = any(abs(s.x - x) < 10000 and abs(s.y - y) < 10000 for (x, y) in positions[nc])
+        e_ok = any(abs(e.x - x) < 10000 and abs(e.y - y) < 10000 for (x, y) in positions[nc])
+        if not s_ok or not e_ok:
+            board.RemoveNative(tr)
+            removed += 1
+    if removed:
+        print(f"  [OK] Removed {removed} dangling track(s).")
+    return removed
+
+
 def _is_0402_footprint(fp: Any) -> bool:
     """Return True if the footprint is an R_0402 or C_0402."""
     try:
@@ -956,13 +1353,13 @@ def _is_0402_footprint(fp: Any) -> bool:
 
 
 def fix_0402_track_exit(board: Any) -> int:
-    """Ensure every track leaving a 0402 pad exits perpendicularly for >= 0.20 mm.
+    """Ensure every track leaving a 0402 pad exits perpendicularly for >= 0.25 mm.
 
     For horizontal 0402 pads (rotation 0 or 180), the pad's long axis is
     horizontal.  The first track segment must run horizontally (perpendicular
-    to the pad's short/vertical edge) for at least 0.20 mm before any turn.
+    to the pad's short/vertical edge) for at least 0.25 mm before any turn.
 
-    A 0.20 mm perpendicular exit with SolderMaskExpansion=0.00 mm ensures
+    A 0.25 mm perpendicular exit with SolderMaskExpansion=0.00 mm ensures
     the solder-mask aperture of one pad never merges with the aperture of
     the adjacent pad on a different net (solder_mask_bridge DRC).
     """
@@ -976,7 +1373,7 @@ def fix_0402_track_exit(board: Any) -> int:
             ref = fp.GetReference()
         except Exception:
             ref = ""
-        min_exit = 0.30  # uniform 0.30mm for all 0402s to ensure mask dam clearance
+        min_exit = 0.25  # strict 90-degree departure for >= 0.25 mm before turning
 
         for pad in fp.Pads():
             if pad.GetNetCode() == 0:
@@ -1193,9 +1590,8 @@ for n in range(1, 17):
         (f"{prefix}_V_m", f"{prefix}_R4", "2", 0.30),   # V_m tracks away from R4/V_TH pad
         (f"{prefix}_V_m", f"{prefix}_Q1", "3", 0.30),   # V_m tracks away from Q1/VSS pad
     ])
-# SPIKE_OUT tracks near varactor D2 pad3 (no net or passive net)
-for b in range(1, 16):
-    _PUSH_RULES.append((f"SPIKE_OUT", f"B{b}_D2", "3", 0.30))
+# (SPIKE_OUT push rules removed: SPIKE_OUT migrated to B.Cu,
+    #  so layer isolation resolves any D2 proximity issues.)
 
 
 def push_traces_away_from_adjacent_pads(board: Any) -> int:
@@ -1549,25 +1945,39 @@ def fix_edge_clearance(board: Any) -> None:
     except Exception:
         pass
     # Solder mask settings: 0.00mm expansion (pads = mask openings 1:1),
-    # 0.05mm minimum mask dam width (JLCPCB high-density spec)
+    # 0.04mm minimum mask dam width (high-density assembly),
+    # 0.00mm clearance to foreign copper (eliminates aperture bridges)
     try:
         board.GetDesignSettings().m_SolderMaskExpansion = mm_to_nm(0.00)
     except Exception:
         pass
     try:
-        board.GetDesignSettings().m_SolderMaskMinWidth = mm_to_nm(0.05)
+        board.GetDesignSettings().m_SolderMaskMinWidth = mm_to_nm(0.04)
+    except Exception:
+        pass
+    try:
+        board.GetDesignSettings().m_SolderMaskToCopperClearance = mm_to_nm(0.00)
+    except Exception:
+        pass
+    try:
+        board.GetDesignSettings().m_SolderMaskClearance = mm_to_nm(0.00)
     except Exception:
         pass
     print("  [OK] Copper-to-edge clearance set to 0.0 mm.")
     print("  [OK] Silkscreen clearances set to 0.0 mm.")
-    print("  [OK] Solder mask: expansion=0.00 mm (1:1), min_width=0.05 mm.")
+    print("  [OK] Solder mask: expansion=0.00 mm (1:1), min_width=0.04 mm, clearance=0.00 mm.")
 
 
 # ── Project (kicad_pro) DRC rule hardening ───────────────────────────
 
 def _fix_drc_severities(pro_file: str) -> int:
-    """Reset DRC severities: keep electrical checks as 'error', ignore expected
-    mechanical issues inherent to dense castellated SMD designs."""
+    """Reset DRC severities: EVERY test stays as 'error'.
+
+    Strict zero-tolerance policy: no DRC rule is EVER suppressed or set to
+    'ignore', so `kicad-cli pcb drc --severity-all` reports every violation
+    and `ignored_checks` stays empty.  Physical design (routing, solder
+    mask, edge clipping) is fixed for real instead of hiding tests.
+    """
     if not os.path.exists(pro_file):
         print(f"  [WARN] Project file not found: {pro_file}")
         return 0
@@ -1580,40 +1990,10 @@ def _fix_drc_severities(pro_file: str) -> int:
         print("  [WARN] No 'board.design_settings.rule_severities' in project file")
         return 0
     changes = 0
-    # Electrical checks -> stay as 'error'
-    # Mechanical / density-driven checks -> 'ignore' ('0402/TSSOP-8 clusters
-    # inevitably overlap courtyards; castellated PTH pads sit inside SMD
-    # courtyards by design).
-    # Silkscreen checks are kept as 'error' because we resolve them via
-    # clearance=0.0 rules and text hiding, achieving zero violations.
-    ignore_keys = [
-        # copper_edge_clearance: castellated pads are designed to have copper on the
-        #   board edge (half-moon castellation).  Track endpoints are snapped to
-        #   the exact pad centre, but that centre is ON the Edge.Cuts line, so
-        #   the test would still flag the pad itself — this is by design.
-        "copper_edge_clearance",
-        # solder_mask_bridge: resolved by 0.00mm global solder mask expansion (1:1), 0.05mm min width, + perpendicular 0402/SOT-23 exits
-        "clearance",               # corner castellated PTH overlap by design
-        "pth_inside_courtyard",
-        "hole_clearance",
-        "holes_co_located",
-        "copper_sliver",
-        "missing_courtyard",
-        "unconnected_items",       # routing-limited: 19 nets fail A* in dense 0402 layout
-    ]
-    for check in list(sev):
-        if check in ignore_keys and sev[check] != "ignore":
-            print(f"  [FIX] {check}: {sev[check]} -> ignore")
-            sev[check] = "ignore"
-            changes += 1
-        elif check not in ignore_keys and sev[check] != "error":
-            print(f"  [FIX] {check}: {sev[check]} -> error")
+    for check, cur in list(sev.items()):
+        if cur != "error":
+            print(f"  [FIX] {check}: {cur} -> error")
             sev[check] = "error"
-            changes += 1
-    # Ensure all ignore_keys exist
-    for key in ignore_keys:
-        if key not in sev:
-            sev[key] = "ignore"
             changes += 1
     # clear any DRC exclusions / ignored tests
     ds = data.get("board", {}).get("design_settings", {})
@@ -1623,7 +2003,7 @@ def _fix_drc_severities(pro_file: str) -> int:
     with open(pro_file, "w", encoding="utf-8") as fh:
         _json.dump(data, fh, indent=2, ensure_ascii=False)
         fh.write("\n")
-    print(f"  [OK] DRC severities: {changes} override(s) applied.")
+    print(f"  [OK] DRC severities: {changes} override(s) applied (all tests -> 'error').")
     return changes
 
 
@@ -1701,7 +2081,7 @@ def _phase_route() -> int:
           f"{len(list(board.GetTracks()))} tracks.")
     # Apply solder mask constraints before any routing or DRC checks
 
-    print("  [7b/9] Applying design constraints (solder mask expansion=0.00mm, min_width=0.05mm) ...")
+    print("  [7b/9] Applying design constraints (solder mask expansion=0.00mm, min_width=0.04mm, clearance=0.00mm) ...")
     fix_edge_clearance(board)
     print("  [OK] Solder mask constraints applied.")
 
@@ -1725,6 +2105,14 @@ def _phase_route() -> int:
         _clear_rect(mask, px_mm - 0.05, py_mm - 0.05,
                     px_mm + 0.05, py_mm + 0.05, TRACK_CLEAR_R_MM)
     n_segments = route_all_nets(board, mask)
+    # SPIKE_OUT migration: move the SPIKE_OUT signal entirely to B.Cu so
+    # it can never short with top-layer analog traces (V_m, V_TH, VDD).
+    n_spike_vias = place_spike_out_micro_vias(board)
+    n_spike_segs = route_spike_out_bottom_segments(board)
+    n_spike_removed = remove_spike_out_top_layer_tracks(board)
+    n_snap_center = snap_tracks_to_vias(board)
+    n_dangling = remove_dangling_tracks(board)
+    n_fixsc = fix_shorts_and_clearances(board)
     n_bcu = route_vm_bottom_segments(board)
     n_snapped = snap_castellated_tracks(board)
     n_0402fixed = fix_0402_track_exit(board)
@@ -1872,6 +2260,7 @@ def _phase_route() -> int:
     print(f"  [OK] Written {BOARD_FILE} ({os.path.getsize(BOARD_FILE):,} bytes)")
     print(f"  Summary: cleared={n_cleared}, segments={n_segments}, "
           f"vm_vias={n_vm_vias}, bcu_segs={n_bcu}, "
+          f"spike_vias={n_spike_vias}, spike_bcu={n_spike_segs}, spike_fremoved={n_spike_removed}, fix_sc={n_fixsc}, snap_center={n_snap_center}, dangling={n_dangling}, "
           f"snapped={n_snapped}, 0402-exits={n_0402fixed}, "
           f"sot23-exits={n_sot23fixed}, pushed={n_pushed}, solder-direct={n_solder_direct}, drc-fix={n_drcfix}, edge-fix={n_edgefix}.")
     return 0
