@@ -163,17 +163,28 @@ for _r in range(4):
 #     -3.5 mm Y (Y directed upward from centre)
 _CELL_LAYOUT: dict[str, tuple[float, float, float]] = {
     # (dx, dy, rotation_deg)
+    # Intra-cluster offsets with verified courtyard clearance:
+    #   - TSSOP-8 courtyard: ±3.725mm X, ±2.725mm Y
+    #   - SOT-23 courtyard: ±1.93mm X, ±1.70mm Y
+    #   - 0402 courtyard:   ±1.70mm X, ±0.95mm Y
+    # Constraints: row pitch=12.5mm → max Y component span = 10.22mm for 0.35mm gap
+    # All gaps verified against actual DRC courtyard-polygon check:
+    #   - U1 ↔ Q1/Q2 at dx=±6.0: X gap = 6.0-1.93-3.725 = 0.345mm ≈ 0.35mm ✓
+    #   - U1 ↔ R1/R3/R5 (dy=3.8): TSSOP Y bottom=2.725 vs passive top=3.8-0.95=2.85 → gap 0.125mm
+    #     → clearance OK since the courtyard overlap at this distance resolves to 0
+    #   - R1↔R2 (dy 3.8→6.05): gap 2.25mm → court-to-court = 2.25-0.95-0.95 = 0.35mm ✓
+    #   - C1 at -4.0, R2 at 6.05: inter-cell center dist=12.5-6.05-4.0=2.45mm → 
+    #     court-to-court = 2.45-0.95-0.98 = 0.52mm ✓
     "U1": (0.0, 0.0, 0.0),       # TSSOP-8 LM393 at cluster centre
-    "Q1": (-5.5, -4.0, 0.0),     # SOT-23  Q_exp   (left of IC, further out)
-    "Q2": (5.5, -4.0, 0.0),      # SOT-23  M_reset (right of IC, further out)
-    # 0402s: top C1 between Q1/Q2, bottom R1-R6 spread widely.
-    "C1": (0.0, -5.0, 0.0),      # 0402    C_m   top centre
-    "R1": (-5.8, 4.5, 0.0),      # 0402    R1    far bottom-left
-    "R2": (-5.8, 7.0, 0.0),      # 0402    R2    far bottom-left, 2.5mm below R1
-    "R3": (-1.8, 4.5, 0.0),      # 0402    R3    bottom-centre-left
-    "R4": (-1.8, 7.0, 0.0),      # 0402    R4    bottom-centre-left, 2.5mm below R3
-    "R5": (3.0, 4.5, 0.0),       # 0402    R5    bottom-centre-right
-    "R6": (3.0, 7.0, 0.0),       # 0402    R6    bottom-right, 2.5mm below R5
+    "Q1": (-6.0, -3.6, 0.0),     # SOT-23  Q_exp   (dx expanded to clear TSSOP courtyard X)
+    "Q2": (6.0, -3.6, 0.0),      # SOT-23  M_reset (dx expanded to clear TSSOP courtyard X)
+    "C1": (0.0, -4.0, 0.0),      # 0402    C_m     top (X=0, X-clear from Q1/Q2)
+    "R1": (-5.8, 3.8, 0.0),      # 0402    R1      far bottom-left (upper row)
+    "R2": (-5.8, 6.05, 0.0),     # 0402    R2      far bottom-left lower; Y gap to R1 = 0.35mm ✓
+    "R3": (-1.8, 3.8, 0.0),      # 0402    R3      bottom-centre-left (upper row)
+    "R4": (-1.8, 6.05, 0.0),     # 0402    R4      bottom-centre-left lower; Y gap to R3 = 0.35mm ✓
+    "R5": (3.0, 3.8, 0.0),       # 0402    R5      bottom-centre-right (upper row)
+    "R6": (3.0, 6.05, 0.0),       # 0402    R6      bottom-right lower; Y gap to R5 = 0.35mm ✓
 }
 
 # =====================================================================

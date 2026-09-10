@@ -28,6 +28,12 @@ def ripup(board):
                 removed_t += 1
         except Exception:
             pass
+    # Also remove any zone fills (old filled polygons) for clean slate
+    for zone in list(board.Zones()):
+        try:
+            board.Remove(zone)
+        except Exception:
+            pass
     print(f"  [RIPUP] Removed {removed_t} tracks, {removed_v} vias.")
 
 
