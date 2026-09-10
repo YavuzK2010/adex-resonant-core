@@ -167,11 +167,6 @@ _CELL_LAYOUT: dict[str, tuple[float, float, float]] = {
     "Q1": (-5.5, -4.0, 0.0),     # SOT-23  Q_exp   (left of IC, further out)
     "Q2": (5.5, -4.0, 0.0),      # SOT-23  M_reset (right of IC, further out)
     # 0402s: top C1 between Q1/Q2, bottom R1-R6 spread widely.
-    # TSSOP-8 courtyard extends to X=±3.85, Y=±1.75.
-    # 0402 courtyard is X=±0.525, Y=±0.27.
-    # R1,R3,R5 row at Y=4.5 clears U1 courtyard (1.75+0.27+2.48 margin).
-    # R2,R4,R6 row at Y=7.0 gives 2.5mm Y-spacing between R rows.
-    # R1/R2 at X=-5.8, R3/R4 at X=-1.8, R5/R6 at X=3.0 for 4.0mm X-spacing.
     "C1": (0.0, -5.0, 0.0),      # 0402    C_m   top centre
     "R1": (-5.8, 4.5, 0.0),      # 0402    R1    far bottom-left
     "R2": (-5.8, 7.0, 0.0),      # 0402    R2    far bottom-left, 2.5mm below R1
@@ -2165,6 +2160,119 @@ def _phase_place() -> int:
     print(f"  Summary: castellated={n_cast}, castle-nets={n_cast_nets}, inner={n_inner}.")
     return 0
 
+# ══════════════════════════════════════════════════════════════════════
+# Power plane vias & shorted-track ripup
+# ══════════════════════════════════════════════════════════════════════
+
+POWER_VIA_DRILL_MM = 0.30
+POWER_VIA_PAD_MM = 0.55
+
+
+def _is_power_net(name: str) -> bool:
+    """Return True if the net name is a power/ground net."""
+    return name.endswith("_GND") or name.endswith("_VDD") or name.endswith("_VSS")
+
+
+def place_power_plane_vias(board: Any) -> int:
+    """Place a through-hole via (0.30 mm drill, 0.55 mm pad) at the centre
+    of every SMD pad that belongs to a power/ground net.
+    GND → In1.Cu, VDD/VSS → In2.Cu.  Idempotent.
+    """
+    placed = 0
+    existing: set[tuple[int, int, int]] = set()
+    for t in board.GetTracks():
+        if not isinstance(t, pcbnew.PCB_VIA):
+            continue
+        if t.GetNetCode() == 0:
+            continue
+        if not _is_power_net(t.GetNetname()):
+            continue
+        p = t.GetPosition()
+        existing.add((p.x, p.y, t.GetNetCode()))
+    for fp in board.GetFootprints():
+        for pad in fp.Pads():
+            if pad.GetNetCode() == 0:
+                continue
+            netname = pad.GetNetname()
+            if not _is_power_net(netname):
+                continue
+            try:
+                if pad.GetAttribute() != pcbnew.PAD_ATTRIB_SMD:
+                    continue
+            except Exception:
+                pass
+            pos = pad.GetPosition()
+            key = (pos.x, pos.y, pad.GetNetCode())
+            if key in existing:
+                continue
+            v = pcbnew.PCB_VIA(board)
+            v.SetPosition(pcbnew.VECTOR2I(pos.x, pos.y))
+            v.SetDrill(mm_to_nm(POWER_VIA_DRILL_MM))
+            v.SetWidth(mm_to_nm(POWER_VIA_PAD_MM))
+            if netname.endswith("_GND"):
+                v.SetLayerPair(pcbnew.F_Cu, pcbnew.In1_Cu)
+            else:
+                v.SetLayerPair(pcbnew.F_Cu, pcbnew.In2_Cu)
+            v.SetNet(pad.GetNet())
+            board.Add(v)
+            existing.add(key)
+            placed += 1
+    print(f"  [OK] Placed {placed} power-plane vias (GND→In1.Cu, VDD/VSS→In2.Cu).")
+    return placed
+
+
+def ripup_shorted_surface_tracks(board: Any) -> int:
+    """Remove F.Cu tracks for power nets and SPIKE_OUT nets (which should
+    be on B.Cu), and V_m tracks that are within 0.20 mm of a foreign-net pad.
+    """
+    removed = 0
+    for t in list(board.GetTracks()):
+        if isinstance(t, pcbnew.PCB_VIA):
+            continue
+        try:
+            netname = t.GetNetname()
+            if t.GetNetCode() == 0:
+                continue
+            layer = t.GetLayer()
+        except Exception:
+            continue
+        do_remove = False
+        # 1) Power net tracks on F.Cu
+        if _is_power_net(netname) and layer == pcbnew.F_Cu:
+            do_remove = True
+        # 2) SPIKE_OUT tracks still on F.Cu
+        elif _is_spike_out_net(netname) and layer == pcbnew.F_Cu:
+            do_remove = True
+        # 3) V_m tracks that short with foreign-net pads
+        elif _is_vm_net(netname) and layer == pcbnew.F_Cu:
+            start, end = t.GetStart(), t.GetEnd()
+            mx, my = (start.x + end.x) // 2, (start.y + end.y) // 2
+            for fp in board.GetFootprints():
+                if do_remove:
+                    break
+                for pad in fp.Pads():
+                    if pad.GetNetCode() == t.GetNetCode():
+                        continue
+                    if pad.GetNetCode() == 0:
+                        continue
+                    p = pad.GetPosition()
+                    dx = nm_to_mm(mx - p.x)
+                    dy = nm_to_mm(my - p.y)
+                    if math.sqrt(dx*dx + dy*dy) < 0.20:
+                        do_remove = True
+                        break
+        if do_remove:
+            try:
+                board.RemoveNative(t)
+                removed += 1
+            except Exception:
+                try:
+                    board.Remove(t)
+                    removed += 1
+                except Exception:
+                    pass
+    print(f"  [OK] Removed {removed} shorted/surface power/SPIKE_OUT/V_m track(s).")
+    return removed
 
 def _phase_route() -> int:
     """Phase 2: clear legacy tracks, route all nets, snap castellated ends."""
@@ -2188,6 +2296,8 @@ def _phase_route() -> int:
     # Place V_m escape vias BEFORE routing so the A* router can route
     # F.Cu tracks through them as intermediate connection points.
     n_vm_vias = place_vm_escape_vias(board)
+    # Place power-plane vias for GND→In1.Cu, VDD/VSS→In2.Cu connections.
+    n_power_vias = place_power_plane_vias(board)
     # Clear the via pad positions in the routing mask so the A* can
     # reach the via centre (its pad copper is otherwise blocked).
     for t in board.GetTracks():
@@ -2205,6 +2315,7 @@ def _phase_route() -> int:
     n_spike_vias = place_spike_out_micro_vias(board)
     n_spike_segs = route_spike_out_bottom_segments(board)
     n_spike_removed = remove_spike_out_top_layer_tracks(board)
+    n_ripup = ripup_shorted_surface_tracks(board)
     n_spike_offset = offset_spike_out_bottom_traces(board)
     n_snap_center = snap_tracks_to_vias(board)
     n_dangling = remove_dangling_tracks(board)
@@ -2363,6 +2474,7 @@ def _phase_route() -> int:
     print(f"  [OK] Written {BOARD_FILE} ({os.path.getsize(BOARD_FILE):,} bytes)")
     print(f"  Summary: cleared={n_cleared}, segments={n_segments}, "
           f"vm_vias={n_vm_vias}, bcu_segs={n_bcu}, "
+          f"power_vias={n_power_vias}, ripup={n_ripup}, "
           f"spike_vias={n_spike_vias}, spike_bcu={n_spike_segs}, spike_fremoved={n_spike_removed}, spike_offset={n_spike_offset}, fix_sc={n_fixsc}, snap_center={n_snap_center}, dangling={n_dangling}, "
           f"snapped={n_snapped}, 0402-exits={n_0402fixed}, "
           f"sot23-exits={n_sot23fixed}, pushed={n_pushed}, solder-direct={n_solder_direct}, drc-fix={n_drcfix}, edge-fix={n_edgefix}.")
