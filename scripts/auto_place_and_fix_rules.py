@@ -2480,6 +2480,15 @@ def _phase_route() -> int:
         print(f"    [DRC iter {drc_iter+1}] fixed {iter_fixed} track endpoint(s)")
     n_edgefix = fix_edge_track_overshoots(board)
 
+    # ── Final pass: fix remaining unconnected nets (V_m & SPIKE_OUT B.Cu) ──
+    try:
+        from scripts.route_remaining_unconnected import route_remaining_unconnected_nets
+        n_remaining = route_remaining_unconnected_nets(board)
+        if n_remaining:
+            print(f"  [Fix] Routed {n_remaining} remaining B.Cu track(s) to castellated pads.")
+    except Exception:
+        pass  # module may not be available in all contexts
+    # ── End final pass ────────────────────────────────────────────────────
     print("\n[9/9] Saving board ...")
     board.Save(BOARD_FILE)
     print(f"  [OK] Written {BOARD_FILE} ({os.path.getsize(BOARD_FILE):,} bytes)")
