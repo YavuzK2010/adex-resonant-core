@@ -1,0 +1,2867 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-09-12T00:48:02",
+    "ignored_checks": [],
+    "included_severities": [
+        "error",
+        "warning",
+        "exclusion"
+    ],
+    "kicad_version": "10.0.6",
+    "schematic_parity": [
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N6_R6",
+                    "pos": {
+                        "x": 30.0,
+                        "y": 28.55
+                    },
+                    "uuid": "0a4e8dc3-79fe-48c2-9c51-bf10e253d1b3"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N8_R3",
+                    "pos": {
+                        "x": 57.2,
+                        "y": 26.3
+                    },
+                    "uuid": "0c16432d-601d-439c-b2bc-d5fd0565ddbe"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N4_R5",
+                    "pos": {
+                        "x": 62.0,
+                        "y": 13.8
+                    },
+                    "uuid": "0ecfab5a-d0a5-4b50-9dca-ea75690e3c84"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N15_R5",
+                    "pos": {
+                        "x": 46.0,
+                        "y": 51.3
+                    },
+                    "uuid": "107ae5a3-b1b9-43a6-b4fc-87d5c57b9167"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N4_R6",
+                    "pos": {
+                        "x": 62.0,
+                        "y": 16.05
+                    },
+                    "uuid": "13810245-567b-4542-b14e-bfe8607e4980"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N16_R4",
+                    "pos": {
+                        "x": 57.2,
+                        "y": 53.55
+                    },
+                    "uuid": "15514553-d209-48dc-b831-f7d7cbe4db82"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N4_Q2",
+                    "pos": {
+                        "x": 65.0,
+                        "y": 6.4
+                    },
+                    "uuid": "16e06e34-87ee-4a0a-bb20-fbd20f979297"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N10_C1",
+                    "pos": {
+                        "x": 27.0,
+                        "y": 31.0
+                    },
+                    "uuid": "17ccb5d0-165d-5c21-a5ba-1e689f06af8c"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N1_R3",
+                    "pos": {
+                        "x": 9.2,
+                        "y": 13.8
+                    },
+                    "uuid": "1897c4cb-227b-4de2-a55d-763d652166f8"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N8_Q1",
+                    "pos": {
+                        "x": 53.0,
+                        "y": 18.9
+                    },
+                    "uuid": "1a19c28c-07da-48ad-9981-e0a8dc154b44"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N9_R2",
+                    "pos": {
+                        "x": 5.2,
+                        "y": 41.05
+                    },
+                    "uuid": "1a88cc15-1b51-475e-863b-929d57cb19d7"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N6_R1",
+                    "pos": {
+                        "x": 21.2,
+                        "y": 26.3
+                    },
+                    "uuid": "1c98d614-b429-5cf5-9299-25ecad393703"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N4_U1",
+                    "pos": {
+                        "x": 59.0,
+                        "y": 10.0
+                    },
+                    "uuid": "1d0e8e00-0e78-4dd0-a6a6-a1dcd5aaa46c"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N14_C1",
+                    "pos": {
+                        "x": 27.0,
+                        "y": 43.5
+                    },
+                    "uuid": "2237937c-3cee-4fa1-a8ed-92feb4b65c62"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N16_Q1",
+                    "pos": {
+                        "x": 53.0,
+                        "y": 43.9
+                    },
+                    "uuid": "2357f24c-6ac7-4383-b3e0-2ac830bb09f0"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N14_R6",
+                    "pos": {
+                        "x": 30.0,
+                        "y": 53.55
+                    },
+                    "uuid": "242f5566-144d-4b5c-80bf-08fb4b50c450"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N13_Q1",
+                    "pos": {
+                        "x": 5.0,
+                        "y": 43.9
+                    },
+                    "uuid": "2460e501-ffa1-5944-bc5b-916fef5dd5eb"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N7_R6",
+                    "pos": {
+                        "x": 46.0,
+                        "y": 28.55
+                    },
+                    "uuid": "24c7c92e-b35b-4769-bd3d-ecd6e5ff6fc8"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N10_R3",
+                    "pos": {
+                        "x": 25.2,
+                        "y": 38.8
+                    },
+                    "uuid": "24e05075-fad0-4868-b6ad-8f58e09daf2c"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N10_R1",
+                    "pos": {
+                        "x": 21.2,
+                        "y": 38.8
+                    },
+                    "uuid": "2656426f-1b70-4c74-bb6f-17a092418a10"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N10_Q2",
+                    "pos": {
+                        "x": 33.0,
+                        "y": 31.4
+                    },
+                    "uuid": "27adf260-4c60-4224-a125-30c80e5fa25f"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N12_Q2",
+                    "pos": {
+                        "x": 65.0,
+                        "y": 31.4
+                    },
+                    "uuid": "28366f70-e6a4-453c-aa72-75dea419b540"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N9_U1",
+                    "pos": {
+                        "x": 11.0,
+                        "y": 35.0
+                    },
+                    "uuid": "29361eb9-7f72-40b2-9368-718c4dab428a"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N3_R2",
+                    "pos": {
+                        "x": 37.2,
+                        "y": 16.05
+                    },
+                    "uuid": "2c9b8be7-2ac5-45e6-803b-6fb627a9a718"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N7_R4",
+                    "pos": {
+                        "x": 41.2,
+                        "y": 28.55
+                    },
+                    "uuid": "302f6e5d-58a3-5a49-b147-0536e1d118c4"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N14_R4",
+                    "pos": {
+                        "x": 25.2,
+                        "y": 53.55
+                    },
+                    "uuid": "3057575b-134e-4d48-b668-543d3c5eda5b"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N6_Q1",
+                    "pos": {
+                        "x": 21.0,
+                        "y": 18.9
+                    },
+                    "uuid": "32f09acf-a318-4356-986f-2e9c0e578809"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N1_C1",
+                    "pos": {
+                        "x": 11.0,
+                        "y": 6.0
+                    },
+                    "uuid": "354eb6fb-b3c1-4915-b15a-30bf31ec9588"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N5_R3",
+                    "pos": {
+                        "x": 9.2,
+                        "y": 26.3
+                    },
+                    "uuid": "356a4a65-74f6-54cc-951d-b530428f681b"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N12_U1",
+                    "pos": {
+                        "x": 59.0,
+                        "y": 35.0
+                    },
+                    "uuid": "35b2efeb-decf-4cb1-8690-7bd8f4f7343d"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N5_Q1",
+                    "pos": {
+                        "x": 5.0,
+                        "y": 18.9
+                    },
+                    "uuid": "38e27f63-2717-48ed-9dd8-8740b3bd8a27"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N9_R5",
+                    "pos": {
+                        "x": 14.0,
+                        "y": 38.8
+                    },
+                    "uuid": "3928fc3c-766d-408e-b047-eb8159c3a0c1"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N7_Q2",
+                    "pos": {
+                        "x": 49.0,
+                        "y": 18.9
+                    },
+                    "uuid": "393606e7-485d-46fb-9e0f-054d40076bdd"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N9_R3",
+                    "pos": {
+                        "x": 9.2,
+                        "y": 38.8
+                    },
+                    "uuid": "39a7099f-1d9b-4335-a50c-649dda06e3f0"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N1_Q1",
+                    "pos": {
+                        "x": 5.0,
+                        "y": 6.4
+                    },
+                    "uuid": "3caf08b5-b691-46e5-9708-80ad3dd1f8a3"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N7_R3",
+                    "pos": {
+                        "x": 41.2,
+                        "y": 26.3
+                    },
+                    "uuid": "3eba93e5-c871-403a-97d8-c0bfdf9c6b62"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N5_R4",
+                    "pos": {
+                        "x": 9.2,
+                        "y": 28.55
+                    },
+                    "uuid": "3eed1410-605a-42b9-9947-872896493d0a"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B12_L1",
+                    "pos": {
+                        "x": 33.0,
+                        "y": 62.5
+                    },
+                    "uuid": "40077f76-179f-4185-8796-afbeb434ec5d"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N5_U1",
+                    "pos": {
+                        "x": 11.0,
+                        "y": 22.5
+                    },
+                    "uuid": "41b4d797-3696-499a-a22b-2d6642ccdb04"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N3_U1",
+                    "pos": {
+                        "x": 43.0,
+                        "y": 10.0
+                    },
+                    "uuid": "43430ed3-7aea-49c1-90be-802948719819"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N10_R5",
+                    "pos": {
+                        "x": 30.0,
+                        "y": 38.8
+                    },
+                    "uuid": "44af5393-af67-4329-94a6-858bd1d24c95"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B11_L1",
+                    "pos": {
+                        "x": 25.0,
+                        "y": 62.5
+                    },
+                    "uuid": "4729e36e-4570-491f-85ac-7c1fd95633ec"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N4_R1",
+                    "pos": {
+                        "x": 53.2,
+                        "y": 13.8
+                    },
+                    "uuid": "472bdb86-be60-4dcc-a6fc-28ccf9e169ae"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N7_C1",
+                    "pos": {
+                        "x": 43.0,
+                        "y": 18.5
+                    },
+                    "uuid": "477e4680-00b4-4651-acdf-4382bb3a654c"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N11_C1",
+                    "pos": {
+                        "x": 43.0,
+                        "y": 31.0
+                    },
+                    "uuid": "4823eb7d-6046-46c0-9502-52f7274d5a3a"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N1_R1",
+                    "pos": {
+                        "x": 5.2,
+                        "y": 13.8
+                    },
+                    "uuid": "48535503-2ea1-43de-9739-ba6455298eef"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N3_R1",
+                    "pos": {
+                        "x": 37.2,
+                        "y": 13.8
+                    },
+                    "uuid": "48b3032d-f48e-4488-bd7b-6db8310373e5"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N12_R2",
+                    "pos": {
+                        "x": 53.2,
+                        "y": 41.05
+                    },
+                    "uuid": "4a4ddc35-0485-4eb1-b1b6-98f05ec6c330"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N12_R4",
+                    "pos": {
+                        "x": 57.2,
+                        "y": 41.05
+                    },
+                    "uuid": "4cc4657b-ef24-5e1d-9841-ec6d11c4f751"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N9_R1",
+                    "pos": {
+                        "x": 5.2,
+                        "y": 38.8
+                    },
+                    "uuid": "4d1c0945-8b87-44ae-b424-edea69db0d5d"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N14_Q2",
+                    "pos": {
+                        "x": 33.0,
+                        "y": 43.9
+                    },
+                    "uuid": "4dab10b6-bf5b-4ed4-a3f2-ccaa08fa2394"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B4_D2",
+                    "pos": {
+                        "x": 29.0,
+                        "y": 58.0
+                    },
+                    "uuid": "4e4a2ded-8e1c-4b94-a5b4-a1a8483f25fe"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N13_Q2",
+                    "pos": {
+                        "x": 17.0,
+                        "y": 43.9
+                    },
+                    "uuid": "5056ee50-a7c5-40ee-8d39-2cf1869f9639"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N1_R5",
+                    "pos": {
+                        "x": 14.0,
+                        "y": 13.8
+                    },
+                    "uuid": "54e3b80b-4089-42d1-adfa-6b49e7a5b3f2"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N2_R2",
+                    "pos": {
+                        "x": 21.2,
+                        "y": 16.05
+                    },
+                    "uuid": "5923b157-64c1-43fe-8ea9-d7fa2704b147"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N1_R2",
+                    "pos": {
+                        "x": 5.2,
+                        "y": 16.05
+                    },
+                    "uuid": "5c5e723c-3b83-4825-9f8a-c563e86769d4"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N4_R3",
+                    "pos": {
+                        "x": 57.2,
+                        "y": 13.8
+                    },
+                    "uuid": "5ce923b5-9a7b-4903-a362-37bb9db93fed"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N11_R3",
+                    "pos": {
+                        "x": 41.2,
+                        "y": 38.8
+                    },
+                    "uuid": "5dbf8f4e-4ed3-4470-8fca-74b25c5b2000"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N8_R2",
+                    "pos": {
+                        "x": 53.2,
+                        "y": 28.55
+                    },
+                    "uuid": "5e109768-b043-47a3-850f-0e69bc252481"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N3_Q1",
+                    "pos": {
+                        "x": 37.0,
+                        "y": 6.4
+                    },
+                    "uuid": "5e50d95a-809d-4b25-8aad-e114eb1176a3"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N16_R6",
+                    "pos": {
+                        "x": 62.0,
+                        "y": 53.55
+                    },
+                    "uuid": "5f30ab04-0619-4ab6-a64b-4448acbb6f70"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N2_U1",
+                    "pos": {
+                        "x": 27.0,
+                        "y": 10.0
+                    },
+                    "uuid": "5f4fb368-b82e-4004-8fcc-875c39d79368"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N11_R1",
+                    "pos": {
+                        "x": 37.2,
+                        "y": 38.8
+                    },
+                    "uuid": "600e1433-b64b-4d2d-800c-2cd68c688070"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N2_R1",
+                    "pos": {
+                        "x": 21.2,
+                        "y": 13.8
+                    },
+                    "uuid": "602ff9c2-07f9-47a4-af18-335636d37779"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N6_R3",
+                    "pos": {
+                        "x": 25.2,
+                        "y": 26.3
+                    },
+                    "uuid": "60c71c3d-1213-4750-b455-4c418de415fa"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N8_Q2",
+                    "pos": {
+                        "x": 65.0,
+                        "y": 18.9
+                    },
+                    "uuid": "61a9f26c-5a31-4ebe-b463-3e67858317ca"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B7_D2",
+                    "pos": {
+                        "x": 53.0,
+                        "y": 58.0
+                    },
+                    "uuid": "62020488-4f8c-4b77-a7a5-3ef416fedcac"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N7_U1",
+                    "pos": {
+                        "x": 43.0,
+                        "y": 22.5
+                    },
+                    "uuid": "621dae2f-7d19-4a1a-b961-aca8d8993b6d"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N13_R2",
+                    "pos": {
+                        "x": 5.2,
+                        "y": 53.55
+                    },
+                    "uuid": "627bd220-ec6d-41d6-bbfa-f841ad63e659"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N8_U1",
+                    "pos": {
+                        "x": 59.0,
+                        "y": 22.5
+                    },
+                    "uuid": "634796da-c7cd-564a-98c6-a4da867ecb1f"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N6_R4",
+                    "pos": {
+                        "x": 25.2,
+                        "y": 28.55
+                    },
+                    "uuid": "646c3e0d-8910-4c82-948c-a430f076584c"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N2_Q1",
+                    "pos": {
+                        "x": 21.0,
+                        "y": 6.4
+                    },
+                    "uuid": "66a9b267-796f-4efc-8e0d-c026e8c8097d"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N1_R6",
+                    "pos": {
+                        "x": 14.0,
+                        "y": 16.05
+                    },
+                    "uuid": "6719f5d1-d824-46d9-a4e2-282284e15a85"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N2_R4",
+                    "pos": {
+                        "x": 25.2,
+                        "y": 16.05
+                    },
+                    "uuid": "672be486-dc14-4451-9602-de7d3b52e7b7"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N4_R4",
+                    "pos": {
+                        "x": 57.2,
+                        "y": 16.05
+                    },
+                    "uuid": "676d5047-27b9-4cf9-9cbb-8521a446e158"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N3_Q2",
+                    "pos": {
+                        "x": 49.0,
+                        "y": 6.4
+                    },
+                    "uuid": "67b2e9c0-8d99-4a8a-86e5-5adc932b0833"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N12_C1",
+                    "pos": {
+                        "x": 59.0,
+                        "y": 31.0
+                    },
+                    "uuid": "6b5a0f15-1e0f-44a3-a580-33235cb31e96"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N14_R3",
+                    "pos": {
+                        "x": 25.2,
+                        "y": 51.3
+                    },
+                    "uuid": "6d352aae-8726-4574-8bed-d147394b55f8"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N6_Q2",
+                    "pos": {
+                        "x": 33.0,
+                        "y": 18.9
+                    },
+                    "uuid": "6e3dc766-85ff-4bfc-95b6-2a464b1163ff"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N13_R3",
+                    "pos": {
+                        "x": 9.2,
+                        "y": 51.3
+                    },
+                    "uuid": "6f0af3ae-a5cc-4cd0-b596-018a7f8ed2a5"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N3_R4",
+                    "pos": {
+                        "x": 41.2,
+                        "y": 16.05
+                    },
+                    "uuid": "7176e51f-b785-45a1-8942-7124990c2a84"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N13_R4",
+                    "pos": {
+                        "x": 9.2,
+                        "y": 53.55
+                    },
+                    "uuid": "720c8cab-bcef-41c7-b246-91125d1cdeed"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N1_U1",
+                    "pos": {
+                        "x": 11.0,
+                        "y": 10.0
+                    },
+                    "uuid": "730c2cbb-4b11-4fef-b36b-5936d48a3362"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N1_Q2",
+                    "pos": {
+                        "x": 17.0,
+                        "y": 6.4
+                    },
+                    "uuid": "757c63ad-10e2-583e-83c9-5d4aed57af84"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N5_R2",
+                    "pos": {
+                        "x": 5.2,
+                        "y": 28.55
+                    },
+                    "uuid": "75a87432-1e26-453d-a304-59a25475d515"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N5_R1",
+                    "pos": {
+                        "x": 5.2,
+                        "y": 26.3
+                    },
+                    "uuid": "76dab452-631c-4d77-957a-6e5cfd734ab6"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N15_R1",
+                    "pos": {
+                        "x": 37.2,
+                        "y": 51.3
+                    },
+                    "uuid": "79022ebb-d2ec-4673-9d8e-a018d13476bc"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B14_D2",
+                    "pos": {
+                        "x": 45.0,
+                        "y": 62.5
+                    },
+                    "uuid": "7ce81a20-83b3-4eff-8cad-7baed6180ea2"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N6_U1",
+                    "pos": {
+                        "x": 27.0,
+                        "y": 22.5
+                    },
+                    "uuid": "7d47d40d-41ca-4640-a1c5-6392b6f31a16"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N10_Q1",
+                    "pos": {
+                        "x": 21.0,
+                        "y": 31.4
+                    },
+                    "uuid": "7d9fe1aa-f049-456c-a9c1-3c216830ccd1"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N10_U1",
+                    "pos": {
+                        "x": 27.0,
+                        "y": 35.0
+                    },
+                    "uuid": "81095512-1129-4848-8e4c-cd3fdaf9912b"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B5_L1",
+                    "pos": {
+                        "x": 41.0,
+                        "y": 58.0
+                    },
+                    "uuid": "83e2121b-aeac-49c1-9bbe-d7dab37391b8"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B3_L1",
+                    "pos": {
+                        "x": 25.0,
+                        "y": 58.0
+                    },
+                    "uuid": "8666e1b8-b534-4c8b-9141-91fa4c5541b1"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N7_R1",
+                    "pos": {
+                        "x": 37.2,
+                        "y": 26.3
+                    },
+                    "uuid": "86797eed-cb0c-455f-a504-d2e4013edf32"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N11_Q1",
+                    "pos": {
+                        "x": 37.0,
+                        "y": 31.4
+                    },
+                    "uuid": "86dabe46-a156-4c47-a9e5-4ec99aedbf45"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N3_R5",
+                    "pos": {
+                        "x": 46.0,
+                        "y": 13.8
+                    },
+                    "uuid": "87c9d960-6bd8-485b-9686-441f1dbb5156"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N16_U1",
+                    "pos": {
+                        "x": 59.0,
+                        "y": 47.5
+                    },
+                    "uuid": "89f621a6-96bc-4c09-93a4-34a0e959f225"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N4_R2",
+                    "pos": {
+                        "x": 53.2,
+                        "y": 16.05
+                    },
+                    "uuid": "8a96114e-66f2-4278-8afd-edc896348a30"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N2_R6",
+                    "pos": {
+                        "x": 30.0,
+                        "y": 16.05
+                    },
+                    "uuid": "8dc9735e-d735-44b4-9f35-807b31e9e67b"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N3_C1",
+                    "pos": {
+                        "x": 43.0,
+                        "y": 6.0
+                    },
+                    "uuid": "8ece70d0-708e-4df3-9f07-c50ce942da04"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N13_R1",
+                    "pos": {
+                        "x": 5.2,
+                        "y": 51.3
+                    },
+                    "uuid": "909ba13f-db00-4e07-a39e-3cf59d06da45"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N15_Q1",
+                    "pos": {
+                        "x": 37.0,
+                        "y": 43.9
+                    },
+                    "uuid": "91b69452-969b-452e-b76f-bd0bc6dc1734"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N13_C1",
+                    "pos": {
+                        "x": 11.0,
+                        "y": 43.5
+                    },
+                    "uuid": "9858984e-2f1c-4401-8584-201cbb5a41e4"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N11_Q2",
+                    "pos": {
+                        "x": 49.0,
+                        "y": 31.4
+                    },
+                    "uuid": "9910c3f6-ec1d-4acd-ba96-5184fa946cc2"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N3_R6",
+                    "pos": {
+                        "x": 46.0,
+                        "y": 16.05
+                    },
+                    "uuid": "9cd12dbf-5d9c-55d2-92a5-76adfd15e7e6"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N6_R2",
+                    "pos": {
+                        "x": 21.2,
+                        "y": 28.55
+                    },
+                    "uuid": "9d2c1fc3-7f7d-4a7c-8131-bfb36d14b1e1"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N9_Q1",
+                    "pos": {
+                        "x": 5.0,
+                        "y": 31.4
+                    },
+                    "uuid": "9d7b4f0e-dd1c-4587-81d7-1fea7170342f"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N14_Q1",
+                    "pos": {
+                        "x": 21.0,
+                        "y": 43.9
+                    },
+                    "uuid": "9f82ea0f-92cd-42e2-a42c-982d2ed09f41"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N14_R2",
+                    "pos": {
+                        "x": 21.2,
+                        "y": 53.55
+                    },
+                    "uuid": "a0d5b312-a917-5530-a5dc-bc61b7f29063"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N2_C1",
+                    "pos": {
+                        "x": 27.0,
+                        "y": 6.0
+                    },
+                    "uuid": "a32f955a-6893-59b4-b74b-130c4379e281"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N16_R5",
+                    "pos": {
+                        "x": 62.0,
+                        "y": 51.3
+                    },
+                    "uuid": "a3a0a144-c77d-405e-9375-f2151fc2caad"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B1_D2",
+                    "pos": {
+                        "x": 5.0,
+                        "y": 58.0
+                    },
+                    "uuid": "a3dab170-35c8-430c-a05d-7f52583dcb61"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N16_C1",
+                    "pos": {
+                        "x": 59.0,
+                        "y": 43.5
+                    },
+                    "uuid": "a4602dba-1193-4538-b4e6-dca926e8ebaf"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N13_R5",
+                    "pos": {
+                        "x": 14.0,
+                        "y": 51.3
+                    },
+                    "uuid": "a6e987cf-173e-4b26-a84d-d247c43d748c"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N12_Q1",
+                    "pos": {
+                        "x": 53.0,
+                        "y": 31.4
+                    },
+                    "uuid": "a83d2f6c-469a-4a36-8e77-c6756958aeb8"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N1_R4",
+                    "pos": {
+                        "x": 9.2,
+                        "y": 16.05
+                    },
+                    "uuid": "ab0270e8-c569-4a4d-9895-97be41c6975d"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N16_R3",
+                    "pos": {
+                        "x": 57.2,
+                        "y": 51.3
+                    },
+                    "uuid": "ad0d1f47-2ea3-5291-8414-2182774da577"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B9_D2",
+                    "pos": {
+                        "x": 5.0,
+                        "y": 62.5
+                    },
+                    "uuid": "ad394ddc-7319-430d-8005-2dd930cd84cb"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N9_R6",
+                    "pos": {
+                        "x": 14.0,
+                        "y": 41.05
+                    },
+                    "uuid": "afd679a1-d29e-4831-95ce-0b19b0d200bb"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N2_R3",
+                    "pos": {
+                        "x": 25.2,
+                        "y": 13.8
+                    },
+                    "uuid": "afed49f9-e8e0-4356-a70a-789d272f96ef"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N9_C1",
+                    "pos": {
+                        "x": 11.0,
+                        "y": 31.0
+                    },
+                    "uuid": "b0ce9372-c7b1-40b0-82ad-8f49080f8c97"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N11_R4",
+                    "pos": {
+                        "x": 41.2,
+                        "y": 41.05
+                    },
+                    "uuid": "b0d8bccf-db27-4f7f-9563-e69c05ac094d"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B1_L1",
+                    "pos": {
+                        "x": 9.0,
+                        "y": 58.0
+                    },
+                    "uuid": "b1000001-0001-4001-b001-000000000001"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N8_C1",
+                    "pos": {
+                        "x": 59.0,
+                        "y": 18.5
+                    },
+                    "uuid": "b1c33069-4be4-4b55-819b-147d517d1485"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B2_L1",
+                    "pos": {
+                        "x": 17.0,
+                        "y": 58.0
+                    },
+                    "uuid": "b2000002-0002-4002-b002-000000000002"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B3_D2",
+                    "pos": {
+                        "x": 21.0,
+                        "y": 58.0
+                    },
+                    "uuid": "b3000003-0003-4003-b003-000000000003"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N9_Q2",
+                    "pos": {
+                        "x": 17.0,
+                        "y": 31.4
+                    },
+                    "uuid": "b359af28-1daa-45c2-8389-008a823f5f03"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B4_L1",
+                    "pos": {
+                        "x": 33.0,
+                        "y": 58.0
+                    },
+                    "uuid": "b4000004-0004-4004-b004-000000000004"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B5_D2",
+                    "pos": {
+                        "x": 37.0,
+                        "y": 58.0
+                    },
+                    "uuid": "b5000005-0005-4005-b005-000000000005"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N15_C1",
+                    "pos": {
+                        "x": 43.0,
+                        "y": 43.5
+                    },
+                    "uuid": "b55735a4-5513-4ada-ab21-4d598243f8d6"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N12_R3",
+                    "pos": {
+                        "x": 57.2,
+                        "y": 38.8
+                    },
+                    "uuid": "b5daae04-5d24-4bf5-9709-f76103cdb48e"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B6_D2",
+                    "pos": {
+                        "x": 45.0,
+                        "y": 58.0
+                    },
+                    "uuid": "b6000006-0006-4006-b006-000000000006"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B7_L1",
+                    "pos": {
+                        "x": 57.0,
+                        "y": 58.0
+                    },
+                    "uuid": "b7000007-0007-4007-b007-000000000007"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B8_D2",
+                    "pos": {
+                        "x": 61.0,
+                        "y": 58.0
+                    },
+                    "uuid": "b8000008-0008-4008-b008-000000000008"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B9_L1",
+                    "pos": {
+                        "x": 9.0,
+                        "y": 62.5
+                    },
+                    "uuid": "b9000009-0009-4009-b009-000000000009"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N6_C1",
+                    "pos": {
+                        "x": 27.0,
+                        "y": 18.5
+                    },
+                    "uuid": "b9a3a2e1-ef37-4f33-89fb-fe0223b4d42b"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N12_R6",
+                    "pos": {
+                        "x": 62.0,
+                        "y": 41.05
+                    },
+                    "uuid": "b9cf7d3f-c25d-4da4-b920-91ddbf94f0c5"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B10_D2",
+                    "pos": {
+                        "x": 13.0,
+                        "y": 62.5
+                    },
+                    "uuid": "ba000010-0010-4010-b010-000000000010"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B11_D2",
+                    "pos": {
+                        "x": 21.0,
+                        "y": 62.5
+                    },
+                    "uuid": "bb000011-0011-4011-b011-000000000011"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B12_D2",
+                    "pos": {
+                        "x": 29.0,
+                        "y": 62.5
+                    },
+                    "uuid": "bc000012-0012-4012-b012-000000000012"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B15_L1",
+                    "pos": {
+                        "x": 57.0,
+                        "y": 62.5
+                    },
+                    "uuid": "bcbe9fa2-30c9-41f0-aae2-83702fe53fbe"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B13_L1",
+                    "pos": {
+                        "x": 41.0,
+                        "y": 62.5
+                    },
+                    "uuid": "bd000013-0013-4013-b013-000000000013"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B14_L1",
+                    "pos": {
+                        "x": 49.0,
+                        "y": 62.5
+                    },
+                    "uuid": "be000014-0014-4014-b014-000000000014"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N15_U1",
+                    "pos": {
+                        "x": 43.0,
+                        "y": 47.5
+                    },
+                    "uuid": "bef556f9-e96f-4a54-974e-df642eca7806"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B15_D2",
+                    "pos": {
+                        "x": 53.0,
+                        "y": 62.5
+                    },
+                    "uuid": "bf000015-0015-4015-b015-000000000015"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N13_U1",
+                    "pos": {
+                        "x": 11.0,
+                        "y": 47.5
+                    },
+                    "uuid": "c0584ef7-a9e4-4e0f-823a-c10d6dcf1e70"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N8_R4",
+                    "pos": {
+                        "x": 57.2,
+                        "y": 28.55
+                    },
+                    "uuid": "c065844b-854a-41d1-8d4a-0d336157ec0a"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N11_U1",
+                    "pos": {
+                        "x": 43.0,
+                        "y": 35.0
+                    },
+                    "uuid": "c2351326-b2c7-595d-9a1b-5ef5f6637e84"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N6_R5",
+                    "pos": {
+                        "x": 30.0,
+                        "y": 26.3
+                    },
+                    "uuid": "c24153b3-40c9-4543-9869-9f317bd7b794"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N8_R1",
+                    "pos": {
+                        "x": 53.2,
+                        "y": 26.3
+                    },
+                    "uuid": "c571908f-2401-4364-80eb-bf7c3f9749dd"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N2_R5",
+                    "pos": {
+                        "x": 30.0,
+                        "y": 13.8
+                    },
+                    "uuid": "c703eaba-7e9e-44e4-8fca-47d3fdf02655"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N5_Q2",
+                    "pos": {
+                        "x": 17.0,
+                        "y": 18.9
+                    },
+                    "uuid": "c74be054-2248-4b5d-920c-2e34441f0b12"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B8_L1",
+                    "pos": {
+                        "x": 65.0,
+                        "y": 58.0
+                    },
+                    "uuid": "c7ed8b8d-b36c-4dbe-8a02-a2047d9c630b"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N7_R2",
+                    "pos": {
+                        "x": 37.2,
+                        "y": 28.55
+                    },
+                    "uuid": "cc6590ca-e7b7-4a8f-8a4d-573759e09e14"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N15_R2",
+                    "pos": {
+                        "x": 37.2,
+                        "y": 53.55
+                    },
+                    "uuid": "cd793efc-525d-4386-b68b-8f1df6faffaf"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N13_R6",
+                    "pos": {
+                        "x": 14.0,
+                        "y": 53.55
+                    },
+                    "uuid": "cee104db-2560-4934-8a4d-7b8145f3ed55"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N10_R6",
+                    "pos": {
+                        "x": 30.0,
+                        "y": 41.05
+                    },
+                    "uuid": "d0aec6c2-d2b6-4c66-9a74-98dfdc1c0932"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N15_R4",
+                    "pos": {
+                        "x": 41.2,
+                        "y": 53.55
+                    },
+                    "uuid": "d0f525c2-023f-4834-8355-03d2d6e0879e"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N14_R1",
+                    "pos": {
+                        "x": 21.2,
+                        "y": 51.3
+                    },
+                    "uuid": "d201efe6-8843-4683-9fee-4c80b3166bd0"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N5_C1",
+                    "pos": {
+                        "x": 11.0,
+                        "y": 18.5
+                    },
+                    "uuid": "d466d7ba-e785-4bee-b6f5-0cbff627ccec"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B10_L1",
+                    "pos": {
+                        "x": 17.0,
+                        "y": 62.5
+                    },
+                    "uuid": "d48b11e2-ef90-49b8-930d-8ac76f6837c4"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N2_Q2",
+                    "pos": {
+                        "x": 33.0,
+                        "y": 6.4
+                    },
+                    "uuid": "d69fbf34-2a01-4f3a-8020-70542d986567"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N11_R5",
+                    "pos": {
+                        "x": 46.0,
+                        "y": 38.8
+                    },
+                    "uuid": "da45f5cb-fbe4-4b41-a9c1-4d2af7e29c85"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N9_R4",
+                    "pos": {
+                        "x": 9.2,
+                        "y": 41.05
+                    },
+                    "uuid": "dd605314-32d6-529e-8f2b-4461a219b8a1"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N5_R6",
+                    "pos": {
+                        "x": 14.0,
+                        "y": 28.55
+                    },
+                    "uuid": "e29e3a17-94b8-4a4c-902e-6de7891b1876"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N11_R2",
+                    "pos": {
+                        "x": 37.2,
+                        "y": 41.05
+                    },
+                    "uuid": "e331760e-6837-47cb-b69a-0f918f39e563"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N15_R3",
+                    "pos": {
+                        "x": 41.2,
+                        "y": 51.3
+                    },
+                    "uuid": "e58808c2-dab2-48a6-bb3b-b74b151cd1bc"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N16_R2",
+                    "pos": {
+                        "x": 53.2,
+                        "y": 53.55
+                    },
+                    "uuid": "e69305ee-5c38-4303-a874-55f9cdb8adb5"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N3_R3",
+                    "pos": {
+                        "x": 41.2,
+                        "y": 13.8
+                    },
+                    "uuid": "e8b1edbd-cbd2-4ada-8d53-7116dba573a7"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N12_R1",
+                    "pos": {
+                        "x": 53.2,
+                        "y": 38.8
+                    },
+                    "uuid": "e9ea2c66-2962-4f20-bf66-766d69c9c42c"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N8_R5",
+                    "pos": {
+                        "x": 62.0,
+                        "y": 26.3
+                    },
+                    "uuid": "e9fd84db-2274-4e4d-91a3-ec45906007f5"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N11_R6",
+                    "pos": {
+                        "x": 46.0,
+                        "y": 41.05
+                    },
+                    "uuid": "ea3a7b45-72e2-44bc-a40f-f5ffe5dc05f6"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B2_D2",
+                    "pos": {
+                        "x": 13.0,
+                        "y": 58.0
+                    },
+                    "uuid": "eb841a1e-336d-4dc8-906d-6f12c4a5778c"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N5_R5",
+                    "pos": {
+                        "x": 14.0,
+                        "y": 26.3
+                    },
+                    "uuid": "ebcc29e8-5c2d-464d-8f6a-94deb59ba6ce"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N7_Q1",
+                    "pos": {
+                        "x": 37.0,
+                        "y": 18.9
+                    },
+                    "uuid": "ecc87bd7-1840-48df-8042-1719f2f7d47d"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N15_R6",
+                    "pos": {
+                        "x": 46.0,
+                        "y": 53.55
+                    },
+                    "uuid": "ecdce1b7-6489-41ef-99c1-7df18458e3c5"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N15_Q2",
+                    "pos": {
+                        "x": 49.0,
+                        "y": 43.9
+                    },
+                    "uuid": "f0b5277d-4813-504c-8230-b639daf62148"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N8_R6",
+                    "pos": {
+                        "x": 62.0,
+                        "y": 28.55
+                    },
+                    "uuid": "f0bbffda-b1a8-4154-ae79-de35bb101602"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N16_Q2",
+                    "pos": {
+                        "x": 65.0,
+                        "y": 43.9
+                    },
+                    "uuid": "f5aa7e3e-79e3-4334-b8c4-3d2e4bad1cf2"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N10_R2",
+                    "pos": {
+                        "x": 21.2,
+                        "y": 41.05
+                    },
+                    "uuid": "f60f8fc4-bf6f-4150-abf2-919203ece3ae"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N12_R5",
+                    "pos": {
+                        "x": 62.0,
+                        "y": 38.8
+                    },
+                    "uuid": "f6b02160-35a6-41c7-a07a-e916d2922616"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N4_C1",
+                    "pos": {
+                        "x": 59.0,
+                        "y": 6.0
+                    },
+                    "uuid": "f7f13cf0-0808-583c-a97d-52fcc1a85612"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N7_R5",
+                    "pos": {
+                        "x": 46.0,
+                        "y": 26.3
+                    },
+                    "uuid": "f8f4f41c-1c48-4cda-8ed7-aef4734aeae3"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N14_R5",
+                    "pos": {
+                        "x": 30.0,
+                        "y": 51.3
+                    },
+                    "uuid": "f8f78648-b109-48d9-b9ff-c054a79982de"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N4_Q1",
+                    "pos": {
+                        "x": 53.0,
+                        "y": 6.4
+                    },
+                    "uuid": "f960e24e-b995-4651-9d8b-a12ab173307d"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B13_D2",
+                    "pos": {
+                        "x": 37.0,
+                        "y": 62.5
+                    },
+                    "uuid": "fb631068-bf4b-424d-9f82-96de8942c102"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N16_R1",
+                    "pos": {
+                        "x": 53.2,
+                        "y": 51.3
+                    },
+                    "uuid": "fc2dae43-ddf2-4f6a-b545-e217df13ede5"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N14_U1",
+                    "pos": {
+                        "x": 27.0,
+                        "y": 47.5
+                    },
+                    "uuid": "fc665c94-f05a-45b9-ab45-129bb5585bb8"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint B6_L1",
+                    "pos": {
+                        "x": 49.0,
+                        "y": 58.0
+                    },
+                    "uuid": "fd843ff3-9038-429d-b191-69a919d519e1"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        },
+        {
+            "description": "Extra footprint",
+            "items": [
+                {
+                    "description": "Footprint N10_R4",
+                    "pos": {
+                        "x": 25.2,
+                        "y": 41.05
+                    },
+                    "uuid": "ff70fd4e-d1bd-4897-a8b2-e4ca205851a5"
+                }
+            ],
+            "severity": "error",
+            "type": "extra_footprint"
+        }
+    ],
+    "source": "adex_resonant_core.kicad_pcb",
+    "unconnected_items": [],
+    "violations": []
+}
