@@ -8,7 +8,7 @@ integrated equivalent is used when PySpice cannot load Ngspice's shared
 library; this keeps the analysis runnable in lightweight CI environments.
 
 Outputs:
-  simulations/exports/phase_locking_response.png
+    simulations/exports/local_test_verification.png
   simulations/exports/phase_locking_metrics.csv
   simulations/exports/phase_locking_traces.csv
 """
@@ -30,6 +30,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from scipy.signal import welch
 
 try:
     from PySpice.Spice.Netlist import Circuit
@@ -84,7 +85,12 @@ class SimulationParameters:
     theta_hz: float = 6.0
     gamma_hz: float = 55.0
     drive_current: float = 400e-12
-    coupling_scale: float = 0.002
+    coupling_scale: float = 2e-13
+
+
+def dynamic_varactor_capacitance(voltage_difference: np.ndarray | float, bridge: BridgeParameters) -> np.ndarray | float:
+    """Return a voltage-dependent varactor capacitance for the bridge."""
+    return bridge.gamma_capacitance / np.sqrt(1.0 + np.abs(voltage_difference) / 0.7)
 
 
 def grid_edges(side: int) -> list[tuple[int, int]]:
@@ -148,7 +154,7 @@ def build_pyspice_circuit(
         )
         add_raw(
             f"BB{edge_index} {current} {n_right} i={{"
-            f"({{v({n_left})-v({n_right})}})*{sim.coupling_scale}/1k}}"
+            f"({{v({n_left})-v({n_right})}})*{sim.coupling_scale}}}"
         )
     add_raw(f".tran {sim.dt} {sim.duration}")
     return circuit
@@ -175,13 +181,19 @@ def run_numerical(
     v = potentials[0].copy()
     currents = np.zeros(bridge_currents.shape[1], dtype=float)
     capacitor_voltage = np.zeros_like(currents)
+    previous_voltage_difference = np.zeros_like(currents)
+    drive_dispersion = np.linspace(0.85, 1.05, 16)
     edges = grid_edges(sim.grid_side)
     theta_phase = 2.0 * np.pi * sim.theta_hz * time
     gamma_phase = 2.0 * np.pi * sim.gamma_hz * time
 
     for step in range(count):
         potentials[step] = v
-        bridge_currents[step] = currents
+        voltage_difference = np.array([v[left] - v[right] for left, right in edges])
+        if step:
+            voltage_derivative = (voltage_difference - previous_voltage_difference) / sim.dt
+            bridge_currents[step] = dynamic_varactor_capacitance(voltage_difference, bridge) * voltage_difference * voltage_derivative
+        previous_voltage_difference = voltage_difference.copy()
         bridge_voltages[step] = capacitor_voltage
         phase_drive = sim.drive_current * (
             1.0 + 0.14 * np.sin(theta_phase[step]) + 0.08 * np.sin(gamma_phase[step])
@@ -194,7 +206,7 @@ def run_numerical(
             [adex_derivative(
                 value,
                 adaptations[index],
-                phase_drive * (1.0 + 0.025 * np.sin(index * 0.9)) + coupling[index],
+                phase_drive * drive_dispersion[index] + coupling[index],
                 adex,
             )
              for index, value in enumerate(v)]
@@ -204,10 +216,10 @@ def run_numerical(
         for edge_index, (left, right) in enumerate(edges):
             denominator = 1.0 + sim.dt * bridge.loss_resistance / bridge.inductance
             denominator += sim.dt * sim.dt / (bridge.inductance * bridge.gamma_capacitance)
-            currents[edge_index] = np.clip((
+            currents[edge_index] = (
                 currents[edge_index]
                 + sim.dt * (v[left] - v[right] - capacitor_voltage[edge_index]) / bridge.inductance
-            ) / denominator, -5e-9, 5e-9)
+            ) / denominator
             capacitor_voltage[edge_index] += sim.dt * currents[edge_index] / bridge.gamma_capacitance
         spiked = v >= adex.v_peak
         v[spiked] = adex.v_reset
@@ -231,7 +243,7 @@ def spike_phases(time: np.ndarray, potentials: np.ndarray, adex: AdExParameters)
 
 
 def compute_metrics(time: np.ndarray, potentials: np.ndarray, phases: np.ndarray, currents: np.ndarray) -> pd.DataFrame:
-    """Compute pairwise PLV and normalized cross-correlation for two clusters."""
+    """Compute synchronization, current, and FFT-derived spectral metrics."""
     cluster_a = np.arange(0, 8)
     cluster_b = np.arange(8, 16)
     phase_difference = phases[:, cluster_a].mean(axis=1) - phases[:, cluster_b].mean(axis=1)
@@ -239,9 +251,22 @@ def compute_metrics(time: np.ndarray, potentials: np.ndarray, phases: np.ndarray
     a = potentials[:, cluster_a].mean(axis=1) - potentials[:, cluster_a].mean()
     b = potentials[:, cluster_b].mean(axis=1) - potentials[:, cluster_b].mean()
     correlation = float(np.corrcoef(a, b)[0, 1])
+    sample_rate = 1.0 / np.mean(np.diff(time))
+    membrane_signal = potentials.mean(axis=1) - potentials.mean()
+    frequencies, power = welch(
+        membrane_signal,
+        fs=sample_rate,
+        nperseg=min(len(membrane_signal), 50000),
+        detrend="constant",
+    )
+
+    def peak_frequency(low_hz: float, high_hz: float) -> float:
+        band = (frequencies >= low_hz) & (frequencies <= high_hz)
+        return float(frequencies[band][np.argmax(power[band])])
+
     return pd.DataFrame({
-        "metric": ["phase_locking_value", "cluster_cross_correlation", "gamma_bridge_resonance_hz", "bridge_rms_current_nA"],
-        "value": [plv, correlation, 1.0 / (2.0 * np.pi * np.sqrt(10e-3 * 0.84e-3)), float(np.sqrt(np.mean(currents ** 2)) * 1e9)],
+        "metric": ["phase_locking_value", "cluster_cross_correlation", "theta_peak_frequency_hz", "gamma_peak_frequency_hz", "bridge_rms_current_nA"],
+        "value": [plv, correlation, peak_frequency(4.0, 8.0), peak_frequency(30.0, 80.0), float(np.sqrt(np.mean(currents ** 2)) * 1e9)],
     })
 
 
@@ -316,8 +341,8 @@ def main() -> None:
     print(f"PySpice/Ngspice netlist path: {'available' if spice_ok else 'fallback-equivalent'}")
     print()
     print("=== AdEx Resonant Core — Execution Report ===")
-    print(f"  Calculated Peak Theta Frequency (Hz)  : {bridge.theta_resonance_hz:.4f}")
-    print(f"  Calculated Peak Gamma Frequency (Hz)  : {bridge.gamma_resonance_hz:.4f}")
+    print(f"  FFT Peak Theta Frequency (Hz)         : {metrics.loc[2, 'value']:.4f}")
+    print(f"  FFT Peak Gamma Frequency (Hz)         : {metrics.loc[3, 'value']:.4f}")
     print(f"  Mean Phase-Locking Value (PLV)        : {metrics.loc[0, 'value']:.6f}")
     print(f"  Varactor Bridge Current RMS (mA)      : {bridge_rms * 1e3:.6f}")
     print(f"  Cluster Cross-Correlation              : {metrics.loc[1, 'value']:.6f}")

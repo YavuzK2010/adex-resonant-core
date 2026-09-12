@@ -5,7 +5,7 @@
   <img alt="PySpice / Ngspice" src="https://img.shields.io/badge/Simulation-PySpice%201.5%20%2F%20Ngspice-8A2BE2">
   <img alt="Python 3.14" src="https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white">
   <img alt="DRC Clean" src="https://img.shields.io/badge/DRC-0%20Errors-success">
-  <img alt="Open Hardware" src="https://img.shields.io/badge/License-Open%20Hardware-important">
+    <img alt="License" src="https://img.shields.io/badge/License-CERN--OHL--P%20v2-important">
   <img alt="BOM" src="https://img.shields.io/badge/Components-326-blue">
 </p>
 
@@ -15,7 +15,7 @@
 
 The **AdEx Resonant Core** is an open-source, 16-neuron **Adaptive Exponential Integrate-and-Fire (AdEx)** neuromorphic System-on-Module (SoM) implemented as a **70.0 mm × 70.0 mm, 4-layer PCB** with **96 castellated edge pads** for carrier-board integration. Each of the 16 cells is coupled to its four nearest neighbours through a **varactor-tuned LC resonant bridge**, enabling ultra-low-power phase-locking across the biologically relevant **Theta (4–8 Hz)** and **Gamma (30–80 Hz)** frequency bands.
 
-The design combines a discrete-analog neuron circuit (2N3904 differential pair, LM393 comparator, BSS138 reset MOSFET) with passive 100 µH inductors and BB833 varactor diodes to form a tunable resonant coupling matrix. A PySpice/Ngspice numerical simulation of the full 4×4 grid demonstrates a **Phase-Locking Value (PLV) of 0.999111**, a **Theta resonance of 6.02 Hz**, a **Gamma resonance of 54.91 Hz**, and a **bridge RMS current of just 1.9 nA**, validating the architecture's ability to achieve coherent oscillation with sub-nanoampere coupling power.
+The design combines a discrete-analog neuron circuit (2N3904 differential pair, LM393 comparator, BSS138 reset MOSFET) with passive 100 µH inductors and BB833 varactor diodes to form a tunable resonant coupling matrix. The full 4×4 numerical model uses 15–20% heterogeneous background drive and reports membrane-spectrum peaks from Welch PSD analysis rather than analytic resonance estimates.
 
 
 ## System Architecture
@@ -142,11 +142,11 @@ A full 16-neuron numerical integration of the AdEx dynamics + varactor LC bridge
 
 | Metric | Value |
 |---|---|
-| **Theta Resonance** (L=10 mH, C_theta=70 mF equiv.) | **6.02 Hz** |
-| **Gamma Resonance** (L=10 mH, C_gamma=0.84 mF equiv.) | **54.91 Hz** |
-| **Phase-Locking Value (PLV)** | **0.999111** |
-| **Cluster Cross-Correlation** | **0.9999999944** |
-| **Varactor Bridge RMS Current** | **1.9 nA** |
+| **Theta Peak** (Welch PSD of mean V_m) | **4.00 Hz** |
+| **Gamma Peak** (Welch PSD of mean V_m) | **30.00 Hz** |
+| **Phase-Locking Value (PLV)** | **0.026383** |
+| **Cluster Cross-Correlation** | **0.005771** |
+| **Varactor Bridge RMS Current** | **2,177,189 nA** |
 | **Simulation Duration** | 500 ms |
 | **Time Step** | 10 us |
 
@@ -163,7 +163,7 @@ The following verification plot is generated automatically on every simulation r
 - **Phase-Locking Value (PLV):** For each time step, a complex phase vector `exp(j*phi_i(t))` is computed from the spike phase of neuron i. The PLV is the magnitude of the average of all pairwise phase differences at the final time point, where 1.0 indicates perfect phase-locking.
 - **Cluster Cross-Correlation:** The mean pairwise Pearson correlation coefficient across all 16 V_m traces over the full simulation window.
 - **Bridge RMS Current:** I_rms = sqrt(mean(I_bridge^2(t))) across all 24 LC bridge branches, reported in nA.
-- **Theta / Gamma Resonance:** Calculated analytically from f_res = 1/(2*pi*sqrt(L*C)) using the equivalent model parameters.
+- **Theta / Gamma Peak:** The mean membrane-potential trace is analyzed with SciPy Welch PSD; the maximum bin in each biological frequency band is reported.
 ## Local Verification Guide
 
 ### Prerequisites
@@ -176,8 +176,8 @@ The following verification plot is generated automatically on every simulation r
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/adex-resonant-brain.git
-cd adex-resonant-brain
+git clone https://github.com/YavuzK2010/adex-resonant-core.git
+cd adex-resonant-core
 
 # Create and activate virtual environment
 python3 -m venv .venv
@@ -263,7 +263,7 @@ adex-resonant-brain/
 │   └── exports/                       # Latest simulation outputs
 │       ├── local_test_verification.png
 │       ├── phase_locking_metrics.csv
-│       ├── phase_locking_response.png
+│       ├── local_test_verification.png
 │       └── phase_locking_traces.csv
 │
 ├── scripts/                           # Automation & verification

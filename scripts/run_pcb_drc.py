@@ -16,8 +16,6 @@ Automated Design Rules Check (DRC) for AdEx Resonant Core PCB.
 ║     --exit-code-violations (never writes exclusions back).             ║
 ║  5. Goal: Zero ignored/suppressed tests, all violations visible.        ║
 ║                                                                         ║
-║  See purge_drc_ignores.py for the definitive cleanup script that        ║
-║  enforces this policy across all project files.                         ║
 ╚══════════════════════════════════════════════════════════════════════════╝
 """
 

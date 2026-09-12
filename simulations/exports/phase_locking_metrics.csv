@@ -1,5 +1,6 @@
 metric,value
-phase_locking_value,0.9991106865328717
-cluster_cross_correlation,0.9999999944320798
-gamma_bridge_resonance_hz,54.913672413404655
-bridge_rms_current_nA,1.8671226936054923
+phase_locking_value,0.026383170934238986
+cluster_cross_correlation,0.0057713930936016565
+theta_peak_frequency_hz,6.0
+gamma_peak_frequency_hz,42.0
+bridge_rms_current_nA,2177189.348170855
