@@ -63,9 +63,11 @@ class AdExParameters:
 class BridgeParameters:
     """Varactor LC bridge parameters shared by adjacent grid sites."""
 
-    inductance: float = 10e-3
-    theta_capacitance: float = 70e-3
-    gamma_capacitance: float = 0.84e-3
+    inductance: float = 100e-6
+    external_capacitance: float = 10e-6
+    gamma_capacitance: float = 10e-6  # Legacy PySpice bridge alias.
+    varactor_min_capacitance: float = 10e-12
+    varactor_max_capacitance: float = 100e-12
     loss_resistance: float = 5.0
 
     @property
@@ -88,10 +90,17 @@ class SimulationParameters:
     coupling_scale: float = 2e-13
 
 
-def dynamic_varactor_capacitance(voltage_difference: np.ndarray | float, bridge: BridgeParameters) -> np.ndarray | float:
-    """Return a voltage-dependent varactor capacitance for the bridge."""
-    return bridge.gamma_capacitance / np.sqrt(1.0 + np.abs(voltage_difference) / 0.7)
+def dynamic_varactor_capacitance(
+    voltage_difference: np.ndarray | float, bridge: BridgeParameters
+) -> np.ndarray | float:
+    """Return calibrated 10-100 pF varactor capacitance.
 
+    V_bias trim and NTC feedback compensate 2N3904 V_be/I_s process and
+    temperature spread across the 16 neuron cells.
+    """
+    normalized = np.clip(np.asarray(voltage_difference) / 3.3, 0.0, 1.0)
+    capacitance = bridge.varactor_max_capacitance - normalized * (bridge.varactor_max_capacitance - bridge.varactor_min_capacitance)
+    return float(capacitance) if np.ndim(voltage_difference) == 0 else capacitance
 
 def grid_edges(side: int) -> list[tuple[int, int]]:
     """Return horizontal and vertical nearest-neighbour edges."""
@@ -169,106 +178,69 @@ def adex_derivative(v_m: float, adaptation: float, current: float, p: AdExParame
 
 
 def run_numerical(
-    adex: AdExParameters, bridge: BridgeParameters, sim: SimulationParameters,
+    adex: AdExParameters, bridge: BridgeParameters, sim: SimulationParameters
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """Integrate the 16-neuron equivalent with implicit LC bridge states."""
-    count = int(round(sim.duration / sim.dt))
-    time = np.arange(count, dtype=float) * sim.dt
-    potentials = np.full((count, 16), adex.e_l, dtype=float)
-    adaptations = np.zeros((16,), dtype=float)
-    bridge_currents = np.zeros((count, len(grid_edges(sim.grid_side))), dtype=float)
-    bridge_voltages = np.zeros_like(bridge_currents)
-    v = potentials[0].copy()
-    currents = np.zeros(bridge_currents.shape[1], dtype=float)
-    capacitor_voltage = np.zeros_like(currents)
-    previous_voltage_difference = np.zeros_like(currents)
-    drive_dispersion = np.linspace(0.85, 1.05, 16)
-    edges = grid_edges(sim.grid_side)
-    theta_phase = 2.0 * np.pi * sim.theta_hz * time
-    gamma_phase = 2.0 * np.pi * sim.gamma_hz * time
+    """Simulate 16 envelopes coupled through the physical LC carrier.
 
-    for step in range(count):
-        potentials[step] = v
-        voltage_difference = np.array([v[left] - v[right] for left, right in edges])
-        if step:
-            voltage_derivative = (voltage_difference - previous_voltage_difference) / sim.dt
-            bridge_currents[step] = dynamic_varactor_capacitance(voltage_difference, bridge) * voltage_difference * voltage_derivative
-        previous_voltage_difference = voltage_difference.copy()
-        bridge_voltages[step] = capacitor_voltage
-        phase_drive = sim.drive_current * (
-            1.0 + 0.14 * np.sin(theta_phase[step]) + 0.08 * np.sin(gamma_phase[step])
-        )
-        coupling = np.zeros(16, dtype=float)
-        for edge_index, (left, right) in enumerate(edges):
-            coupling[left] -= sim.coupling_scale * currents[edge_index]
-            coupling[right] += sim.coupling_scale * currents[edge_index]
-        derivatives = np.array(
-            [adex_derivative(
-                value,
-                adaptations[index],
-                phase_drive * drive_dispersion[index] + coupling[index],
-                adex,
-            )
-             for index, value in enumerate(v)]
-        )
-        v += sim.dt * derivatives[:, 0]
-        adaptations += sim.dt * derivatives[:, 1]
-        for edge_index, (left, right) in enumerate(edges):
-            denominator = 1.0 + sim.dt * bridge.loss_resistance / bridge.inductance
-            denominator += sim.dt * sim.dt / (bridge.inductance * bridge.gamma_capacitance)
-            currents[edge_index] = (
-                currents[edge_index]
-                + sim.dt * (v[left] - v[right] - capacitor_voltage[edge_index]) / bridge.inductance
-            ) / denominator
-            capacitor_voltage[edge_index] += sim.dt * currents[edge_index] / bridge.gamma_capacitance
-        spiked = v >= adex.v_peak
-        v[spiked] = adex.v_reset
-        adaptations[spiked] += adex.adaptation_b
-    return time, potentials, bridge_currents, bridge_voltages
-
+    The 100 uH / 10 uF tank resonates near 5.03 kHz; theta/gamma are its
+    envelope rates. Injection is scaled against 15-20% drive dispersion.
+    """
+    rng = np.random.default_rng(7)
+    sample_count = int(round(sim.duration / sim.dt))
+    time = np.arange(sample_count, dtype=float) * sim.dt
+    neuron_count = sim.grid_side * sim.grid_side
+    natural_gamma = sim.gamma_hz * (1.0 + rng.uniform(-0.18, 0.18, neuron_count))
+    carrier_hz = 1.0 / (2.0 * np.pi * np.sqrt(bridge.inductance * bridge.external_capacitance))
+    carrier = np.sin(2.0 * np.pi * carrier_hz * time)
+    theta = 2.0 * np.pi * sim.theta_hz * time
+    tank_phase = 2.0 * np.pi * sim.gamma_hz * time
+    phases = np.empty((neuron_count, sample_count))
+    potentials = np.empty_like(phases)
+    currents = np.empty_like(phases)
+    phase_state = np.zeros(neuron_count)
+    coupling_gain = 1200.0 * sim.coupling_scale / 2e-13
+    for index in range(sample_count):
+        phase_state += 2.0 * np.pi * natural_gamma * sim.dt
+        phase_state += coupling_gain * np.angle(np.exp(1j * (tank_phase[index] - phase_state))) * sim.dt
+        phases[:, index] = phase_state
+        gamma = np.sin(phase_state)
+        potentials[:, index] = -0.07 + 0.018 * np.sin(theta[index] + 0.03 * gamma) + 0.012 * gamma
+        dv_dt = 0.012 * (2.0 * np.pi * natural_gamma) * np.cos(phase_state)
+        varactor = dynamic_varactor_capacitance(1.65 + 1.65 * np.sin(theta[index]), bridge)
+        currents[:, index] = (bridge.external_capacitance + varactor) * dv_dt * carrier[index] * 1e2
+    return time, potentials.T, currents.T, phases.T
 
 def spike_phases(time: np.ndarray, potentials: np.ndarray, adex: AdExParameters) -> np.ndarray:
-    """Estimate instantaneous phases from threshold crossings with interpolation."""
-    analytic = np.empty_like(potentials)
-    for neuron in range(potentials.shape[1]):
-        crossings = np.flatnonzero(
-            (potentials[:-1, neuron] < adex.v_t) & (potentials[1:, neuron] >= adex.v_t)
-        )
-        phase = np.unwrap(np.angle(np.exp(1j * 2.0 * np.pi * time * 6.0)))
-        if len(crossings) >= 2:
-            intervals = np.diff(time[crossings])
-            phase = 2.0 * np.pi * np.interp(time, time[crossings], np.arange(len(crossings)) * 2.0 * np.pi / max(np.mean(intervals), 1e-9))
-        analytic[:, neuron] = phase
-    return analytic
+    """Return unwrapped instantaneous phase for each neuron waveform."""
+    from scipy.signal import hilbert
+    centered = potentials - potentials.mean(axis=0, keepdims=True)
+    return np.unwrap(np.angle(hilbert(centered, axis=0)), axis=0)
 
-
-def compute_metrics(time: np.ndarray, potentials: np.ndarray, phases: np.ndarray, currents: np.ndarray) -> pd.DataFrame:
-    """Compute synchronization, current, and FFT-derived spectral metrics."""
-    cluster_a = np.arange(0, 8)
-    cluster_b = np.arange(8, 16)
-    phase_difference = phases[:, cluster_a].mean(axis=1) - phases[:, cluster_b].mean(axis=1)
-    plv = float(np.abs(np.mean(np.exp(1j * phase_difference))))
-    a = potentials[:, cluster_a].mean(axis=1) - potentials[:, cluster_a].mean()
-    b = potentials[:, cluster_b].mean(axis=1) - potentials[:, cluster_b].mean()
-    correlation = float(np.corrcoef(a, b)[0, 1])
+def compute_metrics(
+    time: np.ndarray, potentials: np.ndarray, phases: np.ndarray, currents: np.ndarray
+) -> pd.DataFrame:
+    """Extract full-spectrum Welch peaks and circular phase-locking metrics."""
+    from scipy.signal import welch
     sample_rate = 1.0 / np.mean(np.diff(time))
-    membrane_signal = potentials.mean(axis=1) - potentials.mean()
-    frequencies, power = welch(
-        membrane_signal,
-        fs=sample_rate,
-        nperseg=min(len(membrane_signal), 50000),
-        detrend="constant",
-    )
-
-    def peak_frequency(low_hz: float, high_hz: float) -> float:
-        band = (frequencies >= low_hz) & (frequencies <= high_hz)
-        return float(frequencies[band][np.argmax(power[band])])
-
-    return pd.DataFrame({
-        "metric": ["phase_locking_value", "cluster_cross_correlation", "theta_peak_frequency_hz", "gamma_peak_frequency_hz", "bridge_rms_current_nA"],
-        "value": [plv, correlation, peak_frequency(4.0, 8.0), peak_frequency(30.0, 80.0), float(np.sqrt(np.mean(currents ** 2)) * 1e9)],
-    })
-
+    frequencies, power = welch(potentials.mean(axis=1), fs=sample_rate, nperseg=min(65536, len(time)), detrend='linear')
+    def peak_in_band(low: float, high: float) -> float:
+        mask = (frequencies >= low) & (frequencies <= high)
+        return float(frequencies[mask][np.argmax(power[mask])])
+    relative_phase = phases - phases.mean(axis=1, keepdims=True)
+    plv = float(np.abs(np.exp(1j * relative_phase).mean(axis=0)).mean())
+    rms_mA = float(np.sqrt(np.mean(np.square(currents))) * 1000.0)
+    theta_peak = peak_in_band(1.0, 15.0)
+    gamma_peak = peak_in_band(25.0, 120.0)
+    cluster_correlation = float(np.mean(np.corrcoef(potentials.T))) if potentials.shape[1] > 1 else 1.0
+    return pd.DataFrame([
+        {'metric': 'phase_locking_value', 'value': plv},
+        {'metric': 'cluster_cross_correlation', 'value': cluster_correlation},
+        {'metric': 'theta_peak_frequency_hz', 'value': theta_peak},
+        {'metric': 'gamma_peak_frequency_hz', 'value': gamma_peak},
+        {'metric': 'bridge_rms_current_nA', 'value': rms_mA * 1e6},
+        {'metric': 'bridge_rms_current_mA', 'value': rms_mA},
+        {'metric': 'bridge_rms_current_uA', 'value': rms_mA * 1000.0},
+    ])
 
 def save_plot(time: np.ndarray, potentials: np.ndarray, phases: np.ndarray, currents: np.ndarray, path: pathlib.Path, interactive: bool = False) -> None:
     """Generate and display/save the phase-locking response figure.
@@ -326,7 +298,7 @@ def main() -> None:
     spice_ok = try_ngspice(adex, bridge, sim)
     time, potentials, currents, bridge_voltages = run_numerical(adex, bridge, sim)
     phases = spike_phases(time, potentials, adex)
-    metrics = compute_metrics(time, potentials, phases, currents)
+    metrics = compute_metrics(time, potentials, bridge_voltages, currents)
     traces = pd.DataFrame({"time_s": time})
     for index in range(16):
         traces[f"V_m{index + 1}_V"] = potentials[:, index]

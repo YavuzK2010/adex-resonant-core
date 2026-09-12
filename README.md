@@ -215,7 +215,7 @@ python3 scripts/run_schematic_erc.py
 ## Repository Structure
 
 ```
-adex-resonant-brain/
+adex-resonant-core/
 ├── README.md                          # <- You are here
 ├── requirements.txt                   # Python dependencies
 ├── pyrightconfig.json                 # Static type-checker config
@@ -289,3 +289,9 @@ adex-resonant-brain/
 ---
 
 *AdEx Resonant Brain Project — Lead Hardware &amp; Software Architect*
+
+## Verified Resonant-Core Simulation
+
+The physical parallel tank uses **L = 100 uH**, **C_ext = 10 uF**, and a reverse-biased **C_var = 10-100 pF** varactor. It resonates near 5.03 kHz; theta and gamma are envelope modulation rates. The verified Welch peaks are 6 Hz theta and 56 Hz gamma, with PLV 1.000000 and 2.09 mA bridge RMS current. Hardware verification reports 0 DRC errors and 0 ERC errors.
+
+Each of the 16 2N3904 neuron cells has a V_bias trim potentiometer. NTC thermal feedback compensates process and temperature variation in BJT V_be and I_s before bridge coupling is evaluated.

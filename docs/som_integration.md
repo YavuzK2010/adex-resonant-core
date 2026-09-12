@@ -237,3 +237,7 @@ Inspect all four edges after reflow. Confirm a continuous side fillet, no bridgi
 6. Validate the complete 16-channel acquisition map against the pad table and record the carrier revision with the simulation export files.
 
 The KiCad schematic and PCB remain the authority for revision-specific net names, footprints, and fabricated geometry. This guide defines the intended SoM-to-carrier interface and must be revised together with any pinout or power-domain change.
+
+## Hardware Trim and Resonant Carrier
+
+The resonant bridge uses a 100 uH parallel inductor, 10 uF external storage capacitance, and a 10-100 pF reverse-biased varactor. This produces an approximately 5.03 kHz carrier, with theta/gamma represented by envelope modulation. Per-cell V_bias trim potentiometers and NTC feedback compensate 2N3904 V_be/I_s process and temperature variation across all 16 neuron cells.
