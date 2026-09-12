@@ -1,6 +1,385 @@
 (kicad_sch (version 20240116) (generator "adex-resonant-brain")
   (uuid "11111111-1111-1111-1111-111111111111")
   (paper "A4")
+  (lib_symbols
+(symbol "custom_power:GND" (power global)
+    (pin_numbers (hide yes))
+    (pin_names (offset 0) (hide yes))
+    (in_bom yes) (on_board yes)
+    (property "Reference" "#PWR" (at 0 2.54 0) (show_name no)
+      (effects (font (size 1.27 1.27))))
+    (property "Value" "GND" (at 0 5.08 0) (show_name no)
+      (effects (font (size 1.27 1.27))))
+    (property "Footprint" "" (at 0 0 0) (hide yes))
+    (symbol "GND_0_1"
+      (pin power_in line (at 0 0 90) (length 0) (name "GND" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))))
+(symbol "Device:L"
+		(pin_numbers
+			(hide yes)
+		)
+		(pin_names
+			(offset 1.016)
+			(hide yes)
+		)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "L"
+			(at -1.27 0 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "L"
+			(at 1.905 0 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Inductor"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "ki_keywords" "inductor choke coil reactor magnetic"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "ki_fp_filters" "Choke_* *Coil* Inductor_* L_*"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(symbol "L_0_1"
+			(arc
+				(start 0 2.54)
+				(mid 0.6323 1.905)
+				(end 0 1.27)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(arc
+				(start 0 1.27)
+				(mid 0.6323 0.635)
+				(end 0 0)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(arc
+				(start 0 0)
+				(mid 0.6323 -0.635)
+				(end 0 -1.27)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(arc
+				(start 0 -1.27)
+				(mid 0.6323 -1.905)
+				(end 0 -2.54)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+		)
+		(symbol "L_1_1"
+			(pin passive line
+				(at 0 3.81 270)
+				(length 1.27)
+				(name "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 0 -3.81 90)
+				(length 1.27)
+				(name "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+		(embedded_fonts no)
+	)
+(symbol "Device:D"
+		(pin_numbers
+			(hide yes)
+		)
+		(pin_names
+			(offset 1.016)
+			(hide yes)
+		)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "D"
+			(at 0 2.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "D"
+			(at 0 -2.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Diode"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" "D"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "ki_keywords" "diode"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "ki_fp_filters" "TO-???* *_Diode_* *SingleDiode* D_*"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(symbol "D_0_1"
+			(polyline
+				(pts
+					(xy -1.27 1.27) (xy -1.27 -1.27)
+				)
+				(stroke
+					(width 0.254)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(polyline
+				(pts
+					(xy 1.27 1.27) (xy 1.27 -1.27) (xy -1.27 0) (xy 1.27 1.27)
+				)
+				(stroke
+					(width 0.254)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(polyline
+				(pts
+					(xy 1.27 0) (xy -1.27 0)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+		)
+		(symbol "D_1_1"
+			(pin passive line
+				(at -3.81 0 0)
+				(length 2.54)
+				(name "K"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 3.81 0 180)
+				(length 2.54)
+				(name "A"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+		(embedded_fonts no)
+	)
+  )
   (title_block
     (title "LC Bridge Cell — Resonant LC Tank with Varactor Tuning")
     (date "2026-09-06")
@@ -36,6 +415,55 @@
       (at 50 50 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
+    (instances
+      (project ""
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b1000001-0001-4001-b001-000000000001"
+          (reference "B1_#PWR001") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b2000002-0002-4002-b002-000000000002"
+          (reference "B2_#PWR001") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b3000003-0003-4003-b003-000000000003"
+          (reference "B3_#PWR001") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b4000004-0004-4004-b004-000000000004"
+          (reference "B4_#PWR001") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b5000005-0005-4005-b005-000000000005"
+          (reference "B5_#PWR001") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b6000006-0006-4006-b006-000000000006"
+          (reference "B6_#PWR001") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b7000007-0007-4007-b007-000000000007"
+          (reference "B7_#PWR001") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b8000008-0008-4008-b008-000000000008"
+          (reference "B8_#PWR001") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b9000009-0009-4009-b009-000000000009"
+          (reference "B9_#PWR001") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/ba000010-0010-4010-b010-000000000010"
+          (reference "B10_#PWR001") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/bb000011-0011-4011-b011-000000000011"
+          (reference "B11_#PWR001") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/bc000012-0012-4012-b012-000000000012"
+          (reference "B12_#PWR001") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/bd000013-0013-4013-b013-000000000013"
+          (reference "B13_#PWR001") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/be000014-0014-4014-b014-000000000014"
+          (reference "B14_#PWR001") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/bf000015-0015-4015-b015-000000000015"
+          (reference "B15_#PWR001") (unit 1)
+        )
+      )
+    )
   )
   (symbol
     (lib_id "Device:L")
@@ -65,6 +493,55 @@
     (property "ki_description" "High-Q inductor 100 uH"
       (at 300 200 0)
       (effects (font (size 1.27 1.27)))
+    )
+    (instances
+      (project ""
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b1000001-0001-4001-b001-000000000001"
+          (reference "B1_L1") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b2000002-0002-4002-b002-000000000002"
+          (reference "B2_L1") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b3000003-0003-4003-b003-000000000003"
+          (reference "B3_L1") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b4000004-0004-4004-b004-000000000004"
+          (reference "B4_L1") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b5000005-0005-4005-b005-000000000005"
+          (reference "B5_L1") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b6000006-0006-4006-b006-000000000006"
+          (reference "B6_L1") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b7000007-0007-4007-b007-000000000007"
+          (reference "B7_L1") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b8000008-0008-4008-b008-000000000008"
+          (reference "B8_L1") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b9000009-0009-4009-b009-000000000009"
+          (reference "B9_L1") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/ba000010-0010-4010-b010-000000000010"
+          (reference "B10_L1") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/bb000011-0011-4011-b011-000000000011"
+          (reference "B11_L1") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/bc000012-0012-4012-b012-000000000012"
+          (reference "B12_L1") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/bd000013-0013-4013-b013-000000000013"
+          (reference "B13_L1") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/be000014-0014-4014-b014-000000000014"
+          (reference "B14_L1") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/bf000015-0015-4015-b015-000000000015"
+          (reference "B15_L1") (unit 1)
+        )
+      )
     )
   )
 
@@ -101,6 +578,55 @@
     (property "ki_description" "Varactor diode BB833 SOT-23 tuning element"
       (at 200 250 0)
       (effects (font (size 1.27 1.27)))
+    )
+    (instances
+      (project ""
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b1000001-0001-4001-b001-000000000001"
+          (reference "B1_D2") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b2000002-0002-4002-b002-000000000002"
+          (reference "B2_D2") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b3000003-0003-4003-b003-000000000003"
+          (reference "B3_D2") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b4000004-0004-4004-b004-000000000004"
+          (reference "B4_D2") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b5000005-0005-4005-b005-000000000005"
+          (reference "B5_D2") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b6000006-0006-4006-b006-000000000006"
+          (reference "B6_D2") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b7000007-0007-4007-b007-000000000007"
+          (reference "B7_D2") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b8000008-0008-4008-b008-000000000008"
+          (reference "B8_D2") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/b9000009-0009-4009-b009-000000000009"
+          (reference "B9_D2") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/ba000010-0010-4010-b010-000000000010"
+          (reference "B10_D2") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/bb000011-0011-4011-b011-000000000011"
+          (reference "B11_D2") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/bc000012-0012-4012-b012-000000000012"
+          (reference "B12_D2") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/bd000013-0013-4013-b013-000000000013"
+          (reference "B13_D2") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/be000014-0014-4014-b014-000000000014"
+          (reference "B14_D2") (unit 1)
+        )
+        (path "/fbb9c354-eca0-5572-8ad2-3ba0ccc093be/bf000015-0015-4015-b015-000000000015"
+          (reference "B15_D2") (unit 1)
+        )
+      )
     )
   )
 )

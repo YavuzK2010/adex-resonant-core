@@ -89,10 +89,6 @@ def main() -> int:
         for reference, metadata in paths.items()
     }
     linked = path_sync.apply_instance_paths(board, paths, path_uuids)
-    for footprint in board.GetFootprints():
-        instance_uuid = path_uuids.get(footprint.GetReference().upper())
-        if instance_uuid:
-            footprint.SetUuid(pcbnew.KIID(instance_uuid))
     board.BuildConnectivity()
     board.Save(BOARD_FILE)
     del board

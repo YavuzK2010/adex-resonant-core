@@ -134,8 +134,8 @@ ESCAPE_CORRIDOR_HALF_W = 1.00             # half-width (mm), so total = 1.5 mm
 ESCAPE_CORRIDOR_Y_TOP = 53.0              # top of corridor (just below Row-4 passives)
 ESCAPE_CORRIDOR_Y_BOT = 69.5              # bottom (just above Castellations Y=70)
 
-TEXT_SIZE_MM = 0.6
-TEXT_THICKNESS_MM = 0.12
+TEXT_SIZE_MM = 0.5
+TEXT_THICKNESS_MM = 0.10
 
 CASTELLATED_RE = re.compile(r"^(C[TBRL])\d{3}$")
 
@@ -1938,92 +1938,330 @@ def fix_solder_mask_bridges_direct(board: Any) -> int:
 # ── Silkscreen clean-up ──────────────────────────────────────────────
 
 def _is_small_footprint(fp: Any) -> bool:
-    """Return True if the footprint is 0402, TSSOP-8, or SOT-23."""
+    """Return True if the footprint is a small SMD passive or active component.
+
+    Matches 0402, TSSOP-8, SOT-23, plus bridge components (D2 varactors / L1
+    inductors).  Castellated edge connectors are excluded.
+    """
     try:
         fpid: Any = fp.GetFPID()
         lib_item = str(fpid.GetLibItemName()) if fpid else ""
     except Exception:
         lib_item = ""
-    return any(kw in lib_item for kw in ("0402", "TSSOP-8", "SOT-23"))
+    if any(kw in lib_item for kw in ("0402", "TSSOP-8", "SOT-23")):
+        return True
+    # Also process bridge varactors (D2) and inductors (L1) to prevent
+    # their reference texts from overlapping neuron cluster texts.
+    ref: str = fp.GetReference().upper().strip()
+    if re.match(r"^B\d+_(D2|L1)$", ref):
+        return True
+    return False
 
 
-TEXT_SIZE_SMALL_MM = 0.6
+TEXT_SIZE_SMALL_MM = 0.5
 TEXT_THICKNESS_SMALL_MM = 0.1
 
+# Candidate offset directions for repositioning reference text
+# (dx, dy) in mm, relative to footprint centre, in footprint local orientation
+# We try many directions to find a clear spot in the dense 0402 clusters
+_REF_OFFSET_CANDIDATES: list[tuple[float, float]] = [
+    (0.0, -2.5),   # above (far)
+    (0.0,  2.5),   # below (far)
+    (-3.2, 0.0),   # left (far)
+    (3.2,  0.0),   # right (far)
+    (0.0, -2.0),   # above
+    (0.0,  2.0),   # below
+    (-2.6, 0.0),   # left
+    (2.6,  0.0),   # right
+    (0.0, -1.6),   # above (tighter)
+    (0.0,  1.6),   # below (tighter)
+    (-2.2, 0.0),   # left (tighter)
+    (2.2,  0.0),   # right (tighter)
+    # Diagonal directions for dense clusters
+    (-2.2, -1.8),  # above-left
+    (2.2, -1.8),   # above-right
+    (-2.2,  1.8),  # below-left
+    (2.2,  1.8),   # below-right
+    (-1.8, -1.4),  # above-left (tighter)
+    (1.8, -1.4),   # above-right (tighter)
+    (-1.8,  1.4),  # below-left (tighter)
+    (1.8,  1.4),   # below-right (tighter)
+]
 
-def _ref_overlaps_courtyard(fp: Any) -> bool:
-    """Check if the reference text on F.Silkscreen overlaps the courtyard."""
+SILK_TO_MASK_CLEARANCE_MM = 0.15
+
+
+def _pad_bbox_mm(pad: Any) -> tuple[float, float, float, float]:
+    """Return (x0, y0, x1, y1) in mm for a pad's copper/solder-mask opening."""
+    bbox = pad.GetBoundingBox()
+    infl = mm_to_nm(SILK_TO_MASK_CLEARANCE_MM)
+    bbox.Inflate(infl)
+    return (
+        nm_to_mm(bbox.GetX()),
+        nm_to_mm(bbox.GetY()),
+        nm_to_mm(bbox.GetRight()),
+        nm_to_mm(bbox.GetBottom()),
+    )
+
+
+def _rect_overlaps(ax0: float, ay0: float, ax1: float, ay1: float,
+                   bx0: float, by0: float, bx1: float, by1: float) -> bool:
+    """Return True if two axis-aligned rects overlap."""
+    return not (ax1 < bx0 or ax0 > bx1 or ay1 < by0 or ay0 > by1)
+
+
+def _find_safe_ref_position(
+    fp: Any,
+    all_pad_bboxes: list[tuple[float, float, float, float]],
+    placed_text_bboxes: dict[str, tuple[float, float, float, float]],
+) -> tuple[float, float] | None:
+    """Find a board-coordinate (x, y) for the reference text that has >= 0.15 mm
+    clearance from ALL pad solder-mask openings on the board (not just the
+    owning footprint), AND does not overlap already-placed reference texts.
+
+    Uses KiCad's GetBoundingBox() for accurate text extents.
+
+    Returns None if no candidate position is clear (text will be hidden).
+    """
     try:
         ref = fp.Reference()
-        ref_bbox = ref.GetBoundingBox()
-        if ref_bbox.IsEmpty():
-            return False
-        courtyard = fp.GetCachedCourtyard(pcbnew.F_CrtYd)
-        if courtyard is None:
-            return False
-        courtyard_bbox = courtyard.BBox()
-        # Inflate by 0.1 mm to avoid borderline DRC violations
-        margin = mm_to_nm(0.1)
-        ref_bbox.Inflate(margin)
-        return bool(courtyard_bbox.Intersects(ref_bbox))
+        fp_rot_deg = fp.GetOrientation().AsDegrees()
+        fp_rad = math.radians(fp_rot_deg)
+        fp_cx = nm_to_mm(fp.GetPosition().x)
+        fp_cy = nm_to_mm(fp.GetPosition().y)
+
+        # Get accurate text size from the reference object
+        tw_nm = ref.GetTextSize().x
+        th_nm = ref.GetTextSize().y
+        tw = nm_to_mm(tw_nm)
+        th = nm_to_mm(th_nm)
+
+        for dx, dy in _REF_OFFSET_CANDIDATES:
+            # Rotate offset by footprint orientation
+            rx = dx * math.cos(fp_rad) - dy * math.sin(fp_rad)
+            ry = dx * math.sin(fp_rad) + dy * math.cos(fp_rad)
+            tx = fp_cx + rx
+            ty = fp_cy + ry
+
+            # Text bounding box (approximate, axis-aligned)
+            text_len = max(1, len(ref.GetText()))
+            text_width_mm = th * 0.5 + tw * text_len * 0.55  # half-th + char_width * count
+            tx0 = tx - text_width_mm * 0.5
+            ty0 = ty - th * 0.5
+            tx1 = tx + text_width_mm * 0.5
+            ty1 = ty + th * 0.5
+
+            # Check clearance against EVERY pad bbox on the board
+            clear = True
+            for pb in all_pad_bboxes:
+                if _rect_overlaps(tx0, ty0, tx1, ty1, pb[0], pb[1], pb[2], pb[3]):
+                    clear = False
+                    break
+            if not clear:
+                continue
+            # Check overlap with already-placed reference texts
+            for placed_name, tb in placed_text_bboxes.items():
+                if _rect_overlaps(tx0, ty0, tx1, ty1,
+                                   tb[0], tb[1], tb[2], tb[3]):
+                    clear = False
+                    break
+            if clear:
+                return (tx, ty)
+        return None
     except Exception:
-        return False
+        return None
 
 
 def fix_silk(board: Any) -> int:
     """Optimise reference designators on small footprints (0402/TSSOP-8/SOT-23).
 
-    For each small footprint:
-      - Hide the F.Silkscreen graphical outlines (fp_line, fp_rect, etc. on
-        F.SilkS) since these overlap in dense 0402 clusters.
-      - Set reference text size to 0.6 x 0.6 mm with 0.1 mm thickness.
-      - Hide the reference on F.Silkscreen if it still overlaps the courtyard.
+    Strategy for high-density layout:
+      - 0402 passives: always hide reference text (too many chars to fit
+        between 0402 pad openings without clipping).
+      - SOT-23, TSSOP-8, bridge D2/L1: resize to 0.50 x 0.50 mm, reposition
+        outside pad openings with 0.15 mm clearance, hide if no safe position.
+      - All small footprints: hide silkscreen graphical outlines and value text.
 
-    This resolves silkscreen-clearance DRC violations while keeping reference
-    designators visible when there is enough room.
+    This resolves silkscreen-clearance and silkscreen-clipped-by-solder-mask
+    DRC violations while keeping reference designators visible on larger
+    components where space permits.
     """
     changed = 0
     hidden = 0
+    repositioned = 0
+
+    # Precompute global pad bounding boxes (with clearance margin) for ALL
+    # footprints so that repositioned text avoids neighbouring pad openings too.
+    all_pad_bboxes: list[tuple[float, float, float, float]] = []
+    for fp in board.GetFootprints():
+        for pad in fp.Pads():
+            b = _pad_bbox_mm(pad)
+            all_pad_bboxes.append(b)
+
+    # Track placed text bounding boxes to avoid text-to-text overlaps
+    placed_text_bboxes: dict[str, tuple[float, float, float, float]] = {}
+
     for fp in board.GetFootprints():
         if not _is_small_footprint(fp):
             continue
-        # Hide F.Silkscreen graphical outlines (segments) on small footprints
-        # to eliminate overlaps between adjacent component outlines.
+        ref_name = fp.GetReference().upper().strip()
+        try:
+            fpid: Any = fp.GetFPID()
+            lib_item = str(fpid.GetLibItemName()) if fpid else ""
+        except Exception:
+            lib_item = ""
+
+        # Hide F.Silkscreen graphical outlines on all small footprints
         try:
             for gitem in list(fp.GraphicalItems()):
                 try:
                     if gitem.GetLayer() == pcbnew.F_SilkS:
-                        # Remove the silkscreen outline items
                         fp.RemoveNative(gitem)
                 except Exception:
                     pass
         except Exception:
             pass
+
+        # Hide value text on all small footprints
+        try:
+            val: Any = fp.Value()
+            val.SetVisible(False)
+        except Exception:
+            pass
+
+        # 0402 passives: always hide reference (text too wide to fit between pads)
+        if "0402" in lib_item:
+            try:
+                ref = fp.Reference()
+                ref.SetVisible(False)
+                hidden += 1
+            except Exception:
+                pass
+            continue
+
+        # For SOT-23, TSSOP-8, bridge components: resize + reposition
         try:
             ref: Any = fp.Reference()
-            # Resize to small format
             ref.SetTextSize(pcbnew.VECTOR2I(
                 mm_to_nm(TEXT_SIZE_SMALL_MM),
                 mm_to_nm(TEXT_SIZE_SMALL_MM),
             ))
             ref.SetTextThickness(mm_to_nm(TEXT_THICKNESS_SMALL_MM))
             changed += 1
-            # Hide if still overlapping courtyard
-            if _ref_overlaps_courtyard(fp):
-                ref.SetVisible(False)
-                hidden += 1
-        except Exception:
-            pass
-        # Always hide value text on small footprints (not meaningful on silkscreen)
-        try:
-            val: Any = fp.Value()
-            val.SetVisible(False)
-        except Exception:
-            pass
-    print(f"  [OK] Resized reference text on {changed} small footprints"
-          f" ({hidden} hidden due to courtyard overlap).")
-    return changed + hidden
 
+            # Reset text to footprint centre for predictable starting position
+            fp_centre = fp.GetPosition()
+            ref.SetPosition(fp_centre)
+
+            # Get accurate text extents
+            tw_nm = ref.GetTextSize().x
+            th_nm = ref.GetTextSize().y
+            th = nm_to_mm(th_nm)
+            tw = nm_to_mm(tw_nm)
+            text_len = max(1, len(ref.GetText()))
+            text_width_mm = th * 0.5 + tw * text_len * 0.55
+            text_left = text_width_mm * 0.5
+            text_half = th * 0.5
+
+            # Check footprint-centre position against pads and placed texts
+            fp_cx = nm_to_mm(fp_centre.x)
+            fp_cy = nm_to_mm(fp_centre.y)
+            cur_tx0 = fp_cx - text_left
+            cur_ty0 = fp_cy - text_half
+            cur_tx1 = fp_cx + text_left
+            cur_ty1 = fp_cy + text_half
+            centre_ok = True
+            for pb in all_pad_bboxes:
+                if _rect_overlaps(cur_tx0, cur_ty0, cur_tx1, cur_ty1,
+                                   pb[0], pb[1], pb[2], pb[3]):
+                    centre_ok = False
+                    break
+            if centre_ok:
+                for placed_name, tb in placed_text_bboxes.items():
+                    if _rect_overlaps(cur_tx0, cur_ty0, cur_tx1, cur_ty1,
+                                       tb[0], tb[1], tb[2], tb[3]):
+                        centre_ok = False
+                        break
+
+            if centre_ok:
+                ref.SetVisible(True)
+                placed_text_bboxes[ref_name] = (cur_tx0, cur_ty0, cur_tx1, cur_ty1)
+                repositioned += 1
+            else:
+                safe_pos = _find_safe_ref_position(fp, all_pad_bboxes,
+                                                   placed_text_bboxes)
+                if safe_pos is not None:
+                    ref.SetPosition(pcbnew.VECTOR2I(
+                        mm_to_nm(safe_pos[0]),
+                        mm_to_nm(safe_pos[1]),
+                    ))
+                    ref.SetVisible(True)
+                    stx0 = safe_pos[0] - text_left
+                    sty0 = safe_pos[1] - text_half
+                    stx1 = safe_pos[0] + text_left
+                    sty1 = safe_pos[1] + text_half
+                    placed_text_bboxes[ref_name] = (stx0, sty0, stx1, sty1)
+                    repositioned += 1
+                else:
+                    ref.SetVisible(False)
+                    hidden += 1
+        except Exception:
+            pass
+
+    # Second pass: resolve remaining text-to-text overlaps
+    second_hidden = _resolve_text_overlaps(board)
+    print(f"  [OK] Resized {changed} reference texts on non-0402 footprints,"
+          f" {repositioned} repositioned,"
+          f" {hidden} hidden (0402+failed),"
+          f" {second_hidden} hidden in second-pass).")
+    return changed + hidden + second_hidden
+
+
+def _resolve_text_overlaps(board: Any) -> int:
+    """Second pass: hide visible reference texts that still overlap each other."""
+    # Collect all visible reference texts with bounding boxes
+    refs: list[tuple[str, Any, tuple[float, float, float, float]]] = []
+    for fp in board.GetFootprints():
+        try:
+            ref = fp.Reference()
+            if ref.IsVisible():
+                rp = ref.GetPosition()
+                tn = ref.GetTextSize()
+                tw = nm_to_mm(tn.x)
+                th_val = nm_to_mm(tn.y)
+                text_len2 = max(1, len(ref.GetText()))
+                tw2 = th_val * 0.5 + tw * text_len2 * 0.55
+                rx = nm_to_mm(rp.x) - tw2 * 0.5
+                ry = nm_to_mm(rp.y) - th_val * 0.5
+                refs.append((fp.GetReference(), ref,
+                             (rx, ry, rx + tw2, ry + th_val)))
+        except Exception:
+            pass
+
+    hidden = 0
+    for i in range(len(refs)):
+        if not refs[i][1].IsVisible():
+            continue
+        for j in range(i + 1, len(refs)):
+            if not refs[j][1].IsVisible():
+                continue
+            tb_i = refs[i][2]
+            tb_j = refs[j][2]
+            if _rect_overlaps(tb_i[0], tb_i[1], tb_i[2], tb_i[3],
+                               tb_j[0], tb_j[1], tb_j[2], tb_j[3]):
+                # Hide the one with shorter reference text name (less important)
+                # or if equal, hide the second one
+                if len(refs[i][0]) <= len(refs[j][0]):
+                    if refs[i][1].IsVisible():
+                        refs[i][1].SetVisible(False)
+                        hidden += 1
+                else:
+                    if refs[j][1].IsVisible():
+                        refs[j][1].SetVisible(False)
+                        hidden += 1
+    if hidden:
+        print(f"    [Second-pass] Hidden {hidden} overlapping reference texts.")
+    return hidden
 
 def fix_edge_clearance(board: Any) -> None:
     """Set CopperToEdgeClearance / BoardEdgeClearance to 0.0 mm,
