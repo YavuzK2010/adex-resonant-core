@@ -222,7 +222,7 @@ def mm_to_nm(v_mm: float) -> int:
     return int(round(v_mm * 1_000_000))
 
 
-def nm_to_mm(v_nm: int) -> float:
+def nm_to_mm(v_nm: float) -> float:
     return v_nm / 1_000_000.0
 
 
@@ -509,7 +509,7 @@ def _clear_rect(mask: bytearray, x0: float, y0: float, x1: float, y1: float,
             mask[row + i] = 0
 
 
-def _pad_bbox_mm(pad: Any) -> tuple[float, float, float, float]:
+def _pad_copper_bbox_mm(pad: Any) -> tuple[float, float, float, float]:
     bb = pad.GetBoundingBox()
     return (nm_to_mm(bb.GetLeft()), nm_to_mm(bb.GetTop()),
             nm_to_mm(bb.GetRight()), nm_to_mm(bb.GetBottom()))
@@ -535,7 +535,7 @@ def build_route_mask(board: Any) -> bytearray:
         mask[(n - 1) * n + i] = 1
     for fp in board.GetFootprints():
         for pad in fp.Pads():
-            x0, y0, x1, y1 = _pad_bbox_mm(pad)
+            x0, y0, x1, y1 = _pad_copper_bbox_mm(pad)
             _block_rect(mask, x0, y0, x1, y1, TRACK_CLEAR_R_MM)
 
     # Clear dedicated vertical escape corridors through the bottom bridge area.
@@ -681,7 +681,7 @@ def _route_net(board: Any, mask: bytearray, name: str, pads: list[Any]) -> int:
     clear_r = V_M_CLEAR_R_MM if is_vm else TRACK_CLEAR_R_MM
     track_w = V_M_TRACK_WIDTH_MM if is_vm else TRACK_WIDTH_MM
     for pad in pads:
-        x0, y0, x1, y1 = _pad_bbox_mm(pad)
+        x0, y0, x1, y1 = _pad_copper_bbox_mm(pad)
         _clear_rect(per_mask, x0, y0, x1, y1, clear_r)
 
     centres: list[tuple[int, int]] = []
@@ -862,8 +862,8 @@ def place_vm_escape_vias(board: Any) -> int:
 
     print(f"  [OK] Placed {placed} V_m escape vias (F.Cu ↔ B.Cu).")
     return placed
-    """Snap every castellated-target track endpoint onto the exact pad centre."""
-    snapped = 0
+
+
 def route_vm_bottom_segments(board: Any) -> int:
     """Route the B.Cu segments from V_m escape vias to their CB castellated pads.
 
@@ -885,7 +885,7 @@ def route_vm_bottom_segments(board: Any) -> int:
                 pass
             if pcbnew.B_Cu not in layers:
                 continue
-            x0, y0, x1, y1 = _pad_bbox_mm(pad)
+            x0, y0, x1, y1 = _pad_copper_bbox_mm(pad)
             _block_rect(b_mask, x0, y0, x1, y1, TRACK_CLEAR_R_MM)
 
     segments = 0
@@ -953,6 +953,7 @@ def route_vm_bottom_segments(board: Any) -> int:
                   f"CB pad ({px_mm:.1f},{py_mm:.1f}) segs={segs_added}")
 
     print(f"  [OK] Routed {segments} B.Cu segment(s) for V_m bottom escape.")
+    return segments
 # ══════════════════════════════════════════════════════════════════════
 # SPIKE_OUT → B.Cu migration
 # ══════════════════════════════════════════════════════════════════════
@@ -1038,7 +1039,7 @@ def route_spike_out_bottom_segments(board: Any) -> int:
                 pass
             if pcbnew.B_Cu not in layers:
                 continue
-            x0, y0, x1, y1 = _pad_bbox_mm(pad)
+            x0, y0, x1, y1 = _pad_copper_bbox_mm(pad)
             _block_rect(b_mask, x0, y0, x1, y1, TRACK_CLEAR_R_MM)
     for t in board.GetTracks():
         try:
@@ -2718,15 +2719,6 @@ def _phase_route() -> int:
         print(f"    [DRC iter {drc_iter+1}] fixed {iter_fixed} track endpoint(s)")
     n_edgefix = fix_edge_track_overshoots(board)
 
-    # ── Final pass: fix remaining unconnected nets (V_m & SPIKE_OUT B.Cu) ──
-    try:
-        from scripts.route_remaining_unconnected import route_remaining_unconnected_nets
-        n_remaining = route_remaining_unconnected_nets(board)
-        if n_remaining:
-            print(f"  [Fix] Routed {n_remaining} remaining B.Cu track(s) to castellated pads.")
-    except Exception:
-        pass  # module may not be available in all contexts
-    # ── End final pass ────────────────────────────────────────────────────
     print("\n[9/9] Saving board ...")
     board.Save(BOARD_FILE)
     print(f"  [OK] Written {BOARD_FILE} ({os.path.getsize(BOARD_FILE):,} bytes)")
