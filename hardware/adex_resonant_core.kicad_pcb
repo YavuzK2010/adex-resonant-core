@@ -97,6 +97,7 @@
 		(property "Reference" "CL017"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "6cab611d-6b0e-4272-bbd8-5aa534d4437f")
 			(effects
 				(font
@@ -137,6 +138,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "ca827a7b-2f90-4268-b735-7bf19f4ab02c")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -155,6 +167,7 @@
 		(property "Reference" "CR008"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "f89e7992-5c8b-4ffb-b379-bff7a203daad")
 			(effects
 				(font
@@ -195,6 +208,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "d9ca5615-690c-4ff4-a893-56c8135b7471")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -213,6 +237,7 @@
 		(property "Reference" "CT022"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "2fdb1305-9255-41e6-b1eb-7f868354995b")
 			(effects
 				(font
@@ -253,6 +278,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "00f74804-7f38-4355-985c-bfd054b6a4fb")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -271,6 +307,7 @@
 		(property "Reference" "CB001"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "6dd1ab4e-5fb9-45ff-8f4b-488a1c5a5b5f")
 			(effects
 				(font
@@ -311,6 +348,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "c1bf952e-993c-4f8a-a2b8-fdc740cc5b5f")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -329,6 +377,7 @@
 		(property "Reference" "CT010"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "50a92ceb-7a32-42a2-8a4d-b2de0f43e6ff")
 			(effects
 				(font
@@ -369,6 +418,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "1d5fe311-7219-4a94-a367-135f701a417b")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -387,6 +447,7 @@
 		(property "Reference" "CL008"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "e3b732fd-9839-45ea-935f-090d1ebbbecb")
 			(effects
 				(font
@@ -427,6 +488,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "1e45bd55-ae91-4243-b051-278279f4c5b5")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -445,14 +517,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N6_R6"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "a90f4f6a-a2e8-4162-aa0f-94e20629066a")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -576,14 +648,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N8_R3"
-			(at 0 -2 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "92fe419b-03ae-48f3-8159-feab485187fc")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -707,14 +779,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N4_R5"
-			(at 3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "451c3ce7-788c-4cfa-a5ef-580173639a26")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -838,6 +910,7 @@
 		(property "Reference" "CB006"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "402e73d4-6b82-4840-b1ab-14828a3ea01f")
 			(effects
 				(font
@@ -878,6 +951,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "4210fcc0-b5a5-47c3-b8b8-84e350aa17c6")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -896,6 +980,7 @@
 		(property "Reference" "CL003"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "e7e40bdc-1a06-4b42-b62a-765537103b9c")
 			(effects
 				(font
@@ -936,6 +1021,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "53b867db-38c3-4e87-9944-52adad035322")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -954,14 +1050,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N15_R5"
-			(at 3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "a2c698db-a14e-433d-a0bb-cbe18dce19cc")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -1085,6 +1181,7 @@
 		(property "Reference" "CL001"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "ed635e10-d5a1-46b8-9bc3-b6f74fc83227")
 			(effects
 				(font
@@ -1125,6 +1222,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "3b8dafaa-d806-48dc-91e3-522b1f576832")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -1143,6 +1251,7 @@
 		(property "Reference" "CL006"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "25e846df-217b-4401-b369-c078242fcc93")
 			(effects
 				(font
@@ -1183,6 +1292,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "ce3d6568-7a7a-41cc-b3b4-fe3157f76b22")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -1201,14 +1321,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N4_R6"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "1eaf0366-f001-424b-87a4-eabddd055ac9")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -1332,6 +1452,7 @@
 		(property "Reference" "CL023"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "568af5b0-7a6a-4205-b0d9-c73a255ebfdf")
 			(effects
 				(font
@@ -1372,6 +1493,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "d8e32312-790f-4ea9-b9f0-f6ca0179fc51")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -1390,14 +1522,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N16_R4"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "1e5441f6-1d4a-45ad-95f8-27ac935f8ff7")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -1521,6 +1653,7 @@
 		(property "Reference" "CT004"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "9611d148-8a11-4b73-b42a-6b2925314fea")
 			(effects
 				(font
@@ -1561,6 +1694,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "dd45517a-4790-4809-98df-947e593a882e")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -1579,13 +1723,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N4_Q2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "c1fec1c5-36c0-45e6-b9c8-64748ff101a6")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -1864,14 +2008,14 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "N10_C1"
-			(at 0 2.5 0)
+			(at 0 0.91 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "99f3f30a-29a8-4bc8-b44e-0fdbccdc6f5a")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -1995,14 +2139,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N1_R3"
-			(at 0 -2 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "2c63b2a9-b4be-4935-b070-ac01fa35e5f3")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -2126,13 +2270,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N8_Q1"
-			(at 0 2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "522c003f-3528-4e5e-b610-d0578395f0e9")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -2414,6 +2558,7 @@
 		(property "Reference" "CB024"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "ef5e5503-64f9-4ee1-86a8-b0957950e77e")
 			(effects
 				(font
@@ -2454,6 +2599,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "e2765288-709a-4dd3-a1e1-590781695cba")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -2472,14 +2628,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N9_R2"
-			(at -3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "73571f18-32ff-480e-97ed-fb4157665293")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -2603,14 +2759,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N6_R1"
-			(at 0 -2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "b85a38f4-1f00-488f-8240-fd2504592ffc")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -2734,13 +2890,13 @@
 		(descr "TSSOP, 8 Pin (JEDEC MO-153 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO")
 		(property "Reference" "N4_U1"
-			(at 0 0 0)
+			(at 0 1.775 0)
 			(layer "F.SilkS")
 			(uuid "7be87e73-2517-48ab-a5eb-15230939fd30")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -3019,6 +3175,7 @@
 		(property "Reference" "CR031"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "0b05a14c-98d7-40d9-9f3c-86e64109daf3")
 			(effects
 				(font
@@ -3059,6 +3216,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "a75ca1d9-220a-43b7-a49a-72ed0f142822")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -3077,6 +3245,7 @@
 		(property "Reference" "CL028"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "a02b5810-b96d-4713-83ba-8593533840d3")
 			(effects
 				(font
@@ -3117,6 +3286,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "4481aa58-2ccc-40c1-8bf2-09d45c47bb6a")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -3135,6 +3315,7 @@
 		(property "Reference" "CL024"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "a5b9c28a-bec6-4321-a794-373a419171f7")
 			(effects
 				(font
@@ -3175,6 +3356,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "e909653d-010e-4dc4-9379-6b763af9711f")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -3193,14 +3385,14 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "N14_C1"
-			(at 0 2.5 0)
+			(at 0 0.91 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "eddd2a15-e944-4610-a0ac-56a15b6cf853")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -3324,13 +3516,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N16_Q1"
-			(at 0 2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "d7a1ffd1-db7d-4553-9a71-bd2bb6332e86")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -3612,14 +3804,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N14_R6"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "c0da477a-48ad-4393-984e-2bd51f2cc954")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -3743,13 +3935,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N13_Q1"
-			(at 0 2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "666837f4-4359-4bf3-9629-9a0a4f8b18b6")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -4031,14 +4223,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N7_R6"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "0697d6bd-8fae-4fc6-88c8-972acdc0eac9")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -4162,14 +4354,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N10_R3"
-			(at 0 -2 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "2e9250e0-1568-49b8-8c5f-18d2f7e8f14e")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -4293,14 +4485,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N10_R1"
-			(at 0 -2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "9ee21ac2-dda2-4635-9eed-84daeaaa76cd")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -4424,13 +4616,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N10_Q2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "a63d33cf-5506-4e3d-855f-2d7218ed28fe")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -4709,6 +4901,7 @@
 		(property "Reference" "CB011"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "9bbd1fee-4f07-4072-a3ce-bfd253c271df")
 			(effects
 				(font
@@ -4749,6 +4942,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "c0899244-2d58-4b15-9c2d-80abb7e333a0")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -4767,13 +4971,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N12_Q2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "a9c76e4d-0cbe-4761-b078-38be4c8ce5c2")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -5052,13 +5256,13 @@
 		(descr "TSSOP, 8 Pin (JEDEC MO-153 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO")
 		(property "Reference" "N9_U1"
-			(at 0 0 0)
+			(at 0 1.775 0)
 			(layer "F.SilkS")
 			(uuid "ad9b74c4-a479-4bb6-bd74-dcc511f62a3a")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -5337,6 +5541,7 @@
 		(property "Reference" "CR030"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "da0c056b-976f-4721-bc9f-32b627cb23c6")
 			(effects
 				(font
@@ -5377,6 +5582,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "feca7154-9ccb-4164-9449-8f33b8ae2caf")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -5395,6 +5611,7 @@
 		(property "Reference" "CL020"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "14080c15-c33f-4587-b789-cc152ce9f6d7")
 			(effects
 				(font
@@ -5435,6 +5652,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "a4a52fa6-a4de-476a-b3a6-9c398d6e47d6")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -5453,14 +5681,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N3_R2"
-			(at -3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "f7d8e2fd-21c3-4dbb-b7cc-6413a7381205")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -5584,6 +5812,7 @@
 		(property "Reference" "CT012"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "d6e51ef5-4412-433b-8e76-844e593e7d8e")
 			(effects
 				(font
@@ -5624,6 +5853,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "e613c358-9eb7-421a-8aca-d30a41da250f")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -5642,6 +5882,7 @@
 		(property "Reference" "CL021"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "6a922b30-0ac7-46fa-920a-8b53a9fa1530")
 			(effects
 				(font
@@ -5682,6 +5923,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "e0f69966-4955-4936-a129-f722bc245b67")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -5700,6 +5952,7 @@
 		(property "Reference" "CB019"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "f8f891aa-ba4d-4860-b7f0-7fc303c7f582")
 			(effects
 				(font
@@ -5740,6 +5993,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "12c69ee0-6969-4c57-a7c4-f63f946b358a")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -5758,14 +6022,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N7_R4"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "d6505ad6-211b-4c2f-90f5-5dfbcd2d63db")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -5889,14 +6153,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N14_R4"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "b83d0d33-aebc-4f57-a671-fa500f7d55ac")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -6020,6 +6284,7 @@
 		(property "Reference" "CB014"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "04a1eb38-87aa-4aa8-ae49-05de5b5b1fec")
 			(effects
 				(font
@@ -6060,6 +6325,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "cc1714cf-0727-4d96-a7a6-340d9b97d441")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -6078,13 +6354,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N6_Q1"
-			(at 0 2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "6f3b599e-1222-4471-8228-498f109ac49d")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -6366,6 +6642,7 @@
 		(property "Reference" "CL018"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "a6487b88-181f-4caa-bb54-a350b6f024a0")
 			(effects
 				(font
@@ -6406,6 +6683,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "5e602313-d125-43c5-a8d4-ba1caa6276ed")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -6424,14 +6712,14 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "N1_C1"
-			(at 0 -2.5 0)
+			(at 0 0.91 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "311ae264-e4a7-42e5-82a5-ebb219c514bd")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -6555,14 +6843,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N5_R3"
-			(at 0 -2 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "c4718d01-fc8a-4bd6-8091-de505a94e7e1")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -6686,13 +6974,13 @@
 		(descr "TSSOP, 8 Pin (JEDEC MO-153 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO")
 		(property "Reference" "N12_U1"
-			(at 0 0 0)
+			(at 0 1.775 0)
 			(layer "F.SilkS")
 			(uuid "85f0005f-3557-46ab-8982-5e53aabf2359")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -6971,6 +7259,7 @@
 		(property "Reference" "CR018"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "addee6a6-f146-4bf1-ac19-5514f1fba72b")
 			(effects
 				(font
@@ -7011,6 +7300,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "5ddf2a77-4ee7-4c07-bf3c-3e4134dc8239")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -7029,6 +7329,7 @@
 		(property "Reference" "CL032"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "0bb8544e-61e0-455a-813e-67531c4c196c")
 			(effects
 				(font
@@ -7069,6 +7370,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "a8dae327-ac65-46bd-84ba-38cb3e1f8a40")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -7087,13 +7399,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N5_Q1"
-			(at 0 2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "0f72796b-b378-44da-873b-87bd92144606")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -7375,14 +7687,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N9_R5"
-			(at 3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "62f08d57-40fa-49e5-aa07-ed2a08d9a642")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -7506,13 +7818,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N7_Q2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "37fae21f-4fe0-45c9-b47a-4cc56296deac")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -7791,14 +8103,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N9_R3"
-			(at 0 -2 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "f0760d12-c44e-47d5-b19a-ce75ff6892ce")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -7922,6 +8234,7 @@
 		(property "Reference" "CT034"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "3100b8dc-b6b2-44df-b56f-f8ccd907cd99")
 			(effects
 				(font
@@ -7962,6 +8275,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "e1df1f89-0a61-47f7-a719-7728e80f543d")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -7980,13 +8304,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N1_Q1"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "a811779a-8d6d-4b89-b4b5-58dd2385313d")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -8268,6 +8592,7 @@
 		(property "Reference" "CT029"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "95de2b5d-f57b-4490-9232-c653e96e71de")
 			(effects
 				(font
@@ -8308,6 +8633,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "85398046-808f-4da9-babc-059219ad89cc")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -8326,6 +8662,7 @@
 		(property "Reference" "CT013"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "8014c5ce-24c9-41ce-aedc-90fc38baaf17")
 			(effects
 				(font
@@ -8366,6 +8703,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "af5f6892-2f88-43fb-a99c-04222015192e")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -8384,6 +8732,7 @@
 		(property "Reference" "CR002"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "c593504e-ef71-42a9-91dc-4d4496a344c4")
 			(effects
 				(font
@@ -8424,6 +8773,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "ff6754b4-f89c-4986-aab4-1326b2158708")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -8442,14 +8802,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N7_R3"
-			(at 0 -2 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "46c1953f-dd53-490e-9e66-34857c01065f")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -8573,14 +8933,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N5_R4"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "892de057-10bc-4657-b9f1-019d975e9cdd")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -8704,6 +9064,7 @@
 		(property "Reference" "CB022"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "7b79f3e3-0071-426a-82e0-2ad83eea7900")
 			(effects
 				(font
@@ -8744,6 +9105,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "64584d89-a6ff-4b17-ac5c-adc3b6e43306")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -8762,13 +9134,13 @@
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B12_L1"
-			(at 0 -2.5 0)
+			(at 0 1.7 0)
 			(layer "F.SilkS")
 			(uuid "74bd5d97-fcf7-45b2-8b3a-7c981be17d1f")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -8892,6 +9264,7 @@
 		(property "Reference" "CR015"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "96c433aa-0b5a-474c-815a-b94913cdaf0a")
 			(effects
 				(font
@@ -8932,6 +9305,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "cbf68f4f-b147-4245-b67d-18ee3e99e821")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -8950,6 +9334,7 @@
 		(property "Reference" "CL030"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "546d285d-8b58-4146-88b4-6f4b2cc91c18")
 			(effects
 				(font
@@ -8990,6 +9375,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "62a8fe5a-555e-419f-b8b5-b893f12dd509")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -9008,13 +9404,13 @@
 		(descr "TSSOP, 8 Pin (JEDEC MO-153 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO")
 		(property "Reference" "N5_U1"
-			(at 0 0 0)
+			(at 0 1.775 0)
 			(layer "F.SilkS")
 			(uuid "01b4548e-0ab5-4a9e-ac12-8923aba7decb")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -9293,13 +9689,13 @@
 		(descr "TSSOP, 8 Pin (JEDEC MO-153 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO")
 		(property "Reference" "N3_U1"
-			(at 0 0 0)
+			(at 0 1.775 0)
 			(layer "F.SilkS")
 			(uuid "6f9c86d9-736f-4d05-a7d9-7ba8b06a0a4b")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -9578,6 +9974,7 @@
 		(property "Reference" "CB020"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "37167c88-a1ea-4311-8848-235f820701f4")
 			(effects
 				(font
@@ -9618,6 +10015,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "6be26f01-658a-4704-9e88-3ad7326198d3")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -9636,14 +10044,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N10_R5"
-			(at 3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "65967ab8-c339-4a20-8094-9e6860d4ea38")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -9767,6 +10175,7 @@
 		(property "Reference" "CB034"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "edfbe4a4-561d-4760-bd5f-47af5d61befc")
 			(effects
 				(font
@@ -9807,6 +10216,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "4ab4e083-79d0-4ecf-bd5d-6dbc8fc4a52e")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -9825,6 +10245,7 @@
 		(property "Reference" "CR034"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "ccb2e052-7791-4ea0-ab3a-c7d316d5b22f")
 			(effects
 				(font
@@ -9865,6 +10286,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "0b8c3bf9-e310-4bfa-a517-e4996a7ef5cb")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -9883,6 +10315,7 @@
 		(property "Reference" "CR004"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "c0245d12-3853-4209-a5e3-d5f80a6f3519")
 			(effects
 				(font
@@ -9923,6 +10356,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "29d21190-b120-413b-9033-bad3152a4d77")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -9941,6 +10385,7 @@
 		(property "Reference" "CB002"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "524d8ec7-de1d-4d89-9dd3-b6aaaf513645")
 			(effects
 				(font
@@ -9981,6 +10426,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "46fe0699-9d37-45c9-8f10-ed82f957068b")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -9999,13 +10455,13 @@
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B11_L1"
-			(at 0 -2.5 0)
+			(at 0 1.7 0)
 			(layer "F.SilkS")
 			(uuid "f02b19e0-8a73-45e0-bf8a-746011f9cfa4")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -10129,14 +10585,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N4_R1"
-			(at 0 -2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "0039361b-f67c-400b-9fc5-a82383824823")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -10260,14 +10716,14 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "N7_C1"
-			(at 0 -2.5 0)
+			(at 0 0.91 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "ed82d4ba-7a8b-494a-b6f9-75abf2ccb3cb")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -10391,14 +10847,14 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "N11_C1"
-			(at 0 2.5 0)
+			(at 0 0.91 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "52e7b653-c1f2-4769-99ad-ea9aae3169d0")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -10522,14 +10978,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N1_R1"
-			(at 0 -2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "58f4c82a-180a-4074-8d20-a675b1f1b388")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -10653,6 +11109,7 @@
 		(property "Reference" "CT007"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "3aee0f0f-cbf7-439d-a346-1e96b7f49709")
 			(effects
 				(font
@@ -10693,6 +11150,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "10b97891-4940-44f5-94bc-d631d759713c")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -10711,14 +11179,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N3_R1"
-			(at 0 -2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "26e6d3a9-1ca2-4e4a-92c7-a7574210fbe6")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -10842,14 +11310,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N12_R2"
-			(at -2.6 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "f709b0b6-e705-4147-a938-3e2fc5eb6d22")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -10973,6 +11441,7 @@
 		(property "Reference" "CB009"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "0fc9a934-eab3-42fa-b244-6487010f4813")
 			(effects
 				(font
@@ -11013,6 +11482,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "75969aaa-d17d-4daa-9ea3-591dfa2cada8")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -11031,6 +11511,7 @@
 		(property "Reference" "CL027"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "dee084f9-b0c7-473a-8327-010284a2daf0")
 			(effects
 				(font
@@ -11071,6 +11552,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "231b7d15-5085-4706-b96a-ea7a4bce44b4")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -11089,6 +11581,7 @@
 		(property "Reference" "CT023"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "710f8bb6-0e18-4f68-a5da-481f2e08f1ed")
 			(effects
 				(font
@@ -11129,6 +11622,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "a8a0648a-9eed-446d-8690-f5f4527efa8c")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -11147,6 +11651,7 @@
 		(property "Reference" "CR026"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "b01aef17-80d9-4b2b-9da7-d4b44b0b5c4a")
 			(effects
 				(font
@@ -11187,6 +11692,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "a07481a3-c0f8-4b63-8b13-da8893ffafef")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -11205,14 +11721,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N12_R4"
-			(at 2.6 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "f9257548-5c51-4e2f-9318-c9253dd6efdb")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -11336,14 +11852,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N9_R1"
-			(at 0 -2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "af57f979-797f-4fda-8dee-eabaf3ca5427")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -11467,13 +11983,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N14_Q2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "c0dbbb0e-82a8-464b-b170-6d59fb550f9b")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -11752,13 +12268,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B4_D2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "c6b30e90-5a74-4f0d-b9bf-5e2378c2c1bf")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -12039,6 +12555,7 @@
 		(property "Reference" "CB010"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "72bd01e7-dea3-4cd2-bdb7-9d97b0c4f807")
 			(effects
 				(font
@@ -12079,6 +12596,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "654baacb-2631-4c6e-88bc-c8775235ceb7")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -12097,6 +12625,7 @@
 		(property "Reference" "CL011"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "bc466e40-c93a-4e83-b19b-aedeb621f030")
 			(effects
 				(font
@@ -12137,6 +12666,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "b50fcc9f-f450-4e87-a2ae-0b019eb022b2")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -12155,13 +12695,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N13_Q2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "6a83f090-7801-4df9-bdc9-3fc89cea5fcb")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -12440,14 +12980,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N1_R5"
-			(at 3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "f6d7450d-0032-48dc-986b-8e004f9f66bb")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -12571,6 +13111,7 @@
 		(property "Reference" "CT002"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "8aedb0eb-e5cd-4683-9730-9b6f079f6d7e")
 			(effects
 				(font
@@ -12611,6 +13152,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "24dc0054-5042-4194-b632-34e3fcc3de06")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -12629,6 +13181,7 @@
 		(property "Reference" "CT016"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "226c89c7-2e45-44b2-bba0-ae96bf894956")
 			(effects
 				(font
@@ -12669,6 +13222,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "344704ee-e9f7-4b27-a2cb-89ce6d23b1d8")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -12687,6 +13251,7 @@
 		(property "Reference" "CR013"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "f267ac76-790d-47c9-99b6-30524280e00d")
 			(effects
 				(font
@@ -12727,6 +13292,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "e1e129d4-06c9-446b-b636-b5dcf0dc15a0")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -12745,14 +13321,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N2_R2"
-			(at -3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "28b62ee8-d8d5-456c-932e-d2274be1725f")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -12876,6 +13452,7 @@
 		(property "Reference" "CL007"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "b346efa9-86b0-4d6f-ba1a-daef2514c592")
 			(effects
 				(font
@@ -12916,6 +13493,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "f1055981-ab34-439f-abaa-ee6320b706ea")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -12934,6 +13522,7 @@
 		(property "Reference" "CR023"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "baa54e96-1188-45d3-bbf0-670bebde6508")
 			(effects
 				(font
@@ -12974,6 +13563,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "8b873d6c-2717-4238-bb38-5174eae53783")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -12992,6 +13592,7 @@
 		(property "Reference" "CT005"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "a7902b74-9826-4df2-acb9-c19fec62698e")
 			(effects
 				(font
@@ -13032,6 +13633,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "0dcb8fb9-99a9-4ab2-b32a-6d46db0e551f")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -13050,6 +13662,7 @@
 		(property "Reference" "CT024"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "814ff4e4-5979-471e-b85f-5767dce02305")
 			(effects
 				(font
@@ -13090,6 +13703,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "8997f700-e01d-4ce3-b3c9-721433648ed4")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -13108,6 +13732,7 @@
 		(property "Reference" "CR005"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "95db0fc0-9ceb-4739-8fff-4820928d1b4e")
 			(effects
 				(font
@@ -13148,6 +13773,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "112f7305-8ef2-4c4b-9de3-8f7285d636ea")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -13166,14 +13802,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N1_R2"
-			(at -3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "90f8d270-b927-44fc-9af8-3ed6c03246a4")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -13297,6 +13933,7 @@
 		(property "Reference" "CR012"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "0deeea0b-5545-4d5f-8e6f-ca488a15680a")
 			(effects
 				(font
@@ -13337,6 +13974,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "4fd7ab87-953e-49e2-9360-d2c4d757226e")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -13355,14 +14003,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N4_R3"
-			(at 0 -2 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "00c486ed-89dd-4ee9-be01-af4b9e1a7d94")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -13486,14 +14134,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N11_R3"
-			(at 0 -2 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "ef710b37-9ea5-4ee2-a2c4-fd95d1ce3805")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -13617,14 +14265,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N8_R2"
-			(at -3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "296848b6-868a-4cfd-aec8-d67126207d1b")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -13748,6 +14396,7 @@
 		(property "Reference" "CT027"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "407305a7-e8f4-4fd4-a089-0741aa7a395e")
 			(effects
 				(font
@@ -13788,6 +14437,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "7a809d54-25d3-4ccb-819c-0a63106daba9")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -13806,13 +14466,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N3_Q1"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "d763f44c-30c9-48ad-acdb-4297af95e09e")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -14094,14 +14754,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N16_R6"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "7ad5f1c2-c582-421a-9e49-42448ac5214b")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -14225,13 +14885,13 @@
 		(descr "TSSOP, 8 Pin (JEDEC MO-153 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO")
 		(property "Reference" "N2_U1"
-			(at 0 0 0)
+			(at 0 1.775 0)
 			(layer "F.SilkS")
 			(uuid "bcf53675-0ed3-4900-8164-83523a15fa5b")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -14510,6 +15170,7 @@
 		(property "Reference" "CR007"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "1640f0f5-c44d-47f2-a185-1f6b27e16623")
 			(effects
 				(font
@@ -14550,6 +15211,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "3670fc02-2759-4a67-9f13-195a6d2ae0e9")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -14568,14 +15240,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N11_R1"
-			(at 0 -2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "087e3d24-f5d9-4066-b966-0dadb46da1cb")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -14699,14 +15371,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N2_R1"
-			(at 0 -2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "47ee21e1-97b7-4d5b-80de-bb1683e54bf4")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -14830,14 +15502,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N6_R3"
-			(at 0 -2 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "d64bb9fb-bba5-4873-980d-1ed09b1e4189")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -14961,13 +15633,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N8_Q2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "07cebd04-d1c0-41dc-8f27-d242cd600076")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -15246,13 +15918,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B7_D2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "00192a0d-0e5c-440f-936b-3eb97901a517")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -15533,13 +16205,13 @@
 		(descr "TSSOP, 8 Pin (JEDEC MO-153 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO")
 		(property "Reference" "N7_U1"
-			(at 0 0 0)
+			(at 0 1.775 0)
 			(layer "F.SilkS")
 			(uuid "52be5225-cf6c-41bb-be5d-8a898baae035")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -15818,14 +16490,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N13_R2"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "2464c7de-c3b4-42db-9343-9c9be4d9b366")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -15949,13 +16621,13 @@
 		(descr "TSSOP, 8 Pin (JEDEC MO-153 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO")
 		(property "Reference" "N8_U1"
-			(at 0 0 0)
+			(at 0 1.775 0)
 			(layer "F.SilkS")
 			(uuid "467502ac-5a10-46e1-9868-e31e2c2bf84f")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -16234,6 +16906,7 @@
 		(property "Reference" "CR001"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "861d76d4-c986-49b9-ae14-2c8f6359a526")
 			(effects
 				(font
@@ -16274,6 +16947,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "042ceb99-2013-4634-a85d-0eeece20510c")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -16292,14 +16976,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N6_R4"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "573683ce-2237-49cb-b131-852346695936")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -16423,13 +17107,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N2_Q1"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "749d4e52-69c0-4cc3-8980-ad7accf1fd75")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -16711,6 +17395,7 @@
 		(property "Reference" "CB028"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "b761d56a-f618-4606-b32a-5ce3cc0aa013")
 			(effects
 				(font
@@ -16751,6 +17436,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "583aa07a-1b97-45af-a969-ebd1973df8d3")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -16769,14 +17465,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N1_R6"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "bd71e0b6-de82-4a92-b431-193d4632c867")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -16900,14 +17596,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N2_R4"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "a5db257c-91ac-484f-9b6d-1a3835eb8123")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -17031,6 +17727,7 @@
 		(property "Reference" "CB004"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "97d7ceb6-bc39-4ce4-ab29-7cc2a4d2d491")
 			(effects
 				(font
@@ -17071,6 +17768,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "66760aca-4745-4a22-a757-dbc5612c4225")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -17089,14 +17797,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N4_R4"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "2b975196-616a-48a6-bfe6-b2aca26c40e5")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -17220,13 +17928,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N3_Q2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "8d7d6505-943a-43de-9c90-07425902d52f")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -17505,6 +18213,7 @@
 		(property "Reference" "CR020"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "081db0b0-4129-4513-8837-ebabbbd4f446")
 			(effects
 				(font
@@ -17545,6 +18254,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "7c4abcd0-54bc-4ecd-81b4-c908015d2b5f")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -17563,6 +18283,7 @@
 		(property "Reference" "CT006"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "6732dd62-357d-4fc5-9d62-bc7d2b816df4")
 			(effects
 				(font
@@ -17603,6 +18324,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "f411e4d8-d3ef-4432-bf75-c2ee5f4f2de4")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -17621,6 +18353,7 @@
 		(property "Reference" "CB003"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "6d08227c-65a4-4234-ba53-1a6d91b1d300")
 			(effects
 				(font
@@ -17661,6 +18394,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "05be1015-3281-46e2-a29a-91b182d77df6")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -17679,6 +18423,7 @@
 		(property "Reference" "CL022"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "bb0f1184-0a27-4a80-bc2d-307cd735aab1")
 			(effects
 				(font
@@ -17719,6 +18464,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "389268ab-0a62-48c2-879c-3995d90f8860")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -17737,14 +18493,14 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "N12_C1"
-			(at 0 2.5 0)
+			(at 0 0.91 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "7434ab91-e616-4932-a83e-04dc8fa0a3e4")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -17868,6 +18624,7 @@
 		(property "Reference" "CB032"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "0a4526e7-ec67-41a4-8d12-ffcf392f42d8")
 			(effects
 				(font
@@ -17908,6 +18665,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "076f27b8-d5c3-4831-a1d9-2cf1d3aff3d2")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -17926,6 +18694,7 @@
 		(property "Reference" "CR028"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "09413cdd-ebae-4339-adac-c9716c2127a1")
 			(effects
 				(font
@@ -17966,6 +18735,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "6b3d258b-e1e6-4403-859c-7f289e0a50e7")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -17984,14 +18764,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N14_R3"
-			(at 0 -2 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "70757123-cafb-437d-b4bf-6e9aa7644480")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -18115,6 +18895,7 @@
 		(property "Reference" "CL005"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "041ef774-f191-4346-b250-5e928a5b5107")
 			(effects
 				(font
@@ -18155,6 +18936,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "5a12b33e-9a0e-4f5d-9552-1ba9b42ea170")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -18173,6 +18965,7 @@
 		(property "Reference" "CT019"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "554179ac-b3ee-4433-bb26-350745d3b5a9")
 			(effects
 				(font
@@ -18213,6 +19006,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "f7ff3c0c-c83d-48b0-b1b3-16fd0cbd90c3")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -18231,13 +19035,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N6_Q2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "1c0a2e1f-fe03-47d8-aac0-d39f2ab4dfcb")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -18516,6 +19320,7 @@
 		(property "Reference" "CB023"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "bdb40c1b-d0c5-41ee-ab10-db7477825c87")
 			(effects
 				(font
@@ -18556,6 +19361,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "d04211f5-caef-4779-b774-643f1061c8a6")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -18574,14 +19390,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N13_R3"
-			(at 0 -2 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "11c6a253-9d09-42aa-a225-7a4f5b97041e")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -18705,6 +19521,7 @@
 		(property "Reference" "CL014"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "714b0321-5b5d-44b3-b7f2-7aaf17a054c1")
 			(effects
 				(font
@@ -18745,6 +19562,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "f1cea66d-bac7-49b8-9e8b-43c8944655ee")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -18763,6 +19591,7 @@
 		(property "Reference" "CL013"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "db1b7855-1b0f-483e-96a1-aa075efca546")
 			(effects
 				(font
@@ -18803,6 +19632,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "caa10e2a-04b3-4092-ab40-72d6f297e365")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -18821,6 +19661,7 @@
 		(property "Reference" "CT011"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "b1f98853-bf4d-49ca-a0d3-76627412d015")
 			(effects
 				(font
@@ -18861,6 +19702,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "e3cfc1fa-a8d1-4df8-bc2c-ca9d71184c7e")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -18879,14 +19731,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N3_R4"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "21b692a3-8d9f-450e-9671-ccd8a72791bf")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -19010,6 +19862,7 @@
 		(property "Reference" "CR032"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "b4d98965-b6ee-4718-af2a-5a987c7e5e50")
 			(effects
 				(font
@@ -19050,6 +19903,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "ae6b229c-6c30-4119-ab9a-538a739da9e7")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -19068,14 +19932,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N13_R4"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "87c4bb58-d0bc-49e9-90fb-b1d388b53998")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -19199,6 +20063,7 @@
 		(property "Reference" "CT028"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "07938347-ab6e-43ca-89bf-9295f8efe077")
 			(effects
 				(font
@@ -19239,6 +20104,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "8f67ae7b-8ad0-4bc7-aa4c-23c3d27a0e9c")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -19257,13 +20133,13 @@
 		(descr "TSSOP, 8 Pin (JEDEC MO-153 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO")
 		(property "Reference" "N1_U1"
-			(at 0 0 0)
+			(at 0 1.775 0)
 			(layer "F.SilkS")
 			(uuid "0c6d68bb-c7c5-4750-a9b8-e00f6afac64c")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -19542,13 +20418,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N1_Q2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "6442b54f-bd57-482b-b560-c9f0ae229aae")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -19827,14 +20703,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N5_R2"
-			(at -3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "48357960-5d0c-4d81-8684-83fd6d7b32d5")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -19958,6 +20834,7 @@
 		(property "Reference" "CT001"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "08794e96-a60a-4f08-a622-3b8f938f62c3")
 			(effects
 				(font
@@ -19998,6 +20875,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "0adb06c0-353a-426d-a362-5a9bcb3f26cc")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -20016,6 +20904,7 @@
 		(property "Reference" "CL004"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "f4f1b4ba-0708-47d6-b750-473ea18b1b18")
 			(effects
 				(font
@@ -20056,6 +20945,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "a0d81360-2411-4aed-9878-2898ea6eeb01")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -20074,14 +20974,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N5_R1"
-			(at 0 -2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "d4d063da-b6dc-4535-9ede-c34c9af4850e")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -20205,6 +21105,7 @@
 		(property "Reference" "CB018"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "dd237e7a-ab4d-4af2-b6e1-1db01a361641")
 			(effects
 				(font
@@ -20245,6 +21146,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "b0dfbd93-1f56-4e6a-95ef-8ac4c43f9a88")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -20263,14 +21175,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N15_R1"
-			(at 0 -2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "d9b25e41-b9f4-4e82-953e-41503d3cab12")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -20394,6 +21306,7 @@
 		(property "Reference" "CB015"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "42893282-80a1-4e32-9a65-295050c80592")
 			(effects
 				(font
@@ -20434,6 +21347,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "cb732f42-e43b-4439-85c1-c04b05c06d17")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -20452,6 +21376,7 @@
 		(property "Reference" "CL016"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "839e8233-e27f-479f-bdde-d8dde2989c5a")
 			(effects
 				(font
@@ -20492,6 +21417,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "856c185c-9959-44b2-8f41-dc18c85d9e40")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -20510,6 +21446,7 @@
 		(property "Reference" "CB008"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "c7d9b5cf-24c0-44f7-8190-c8a002d54e82")
 			(effects
 				(font
@@ -20550,6 +21487,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "5974db78-6fa5-4c4b-a5ae-42a66d45d491")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -20568,6 +21516,7 @@
 		(property "Reference" "CR006"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "ce25d56b-4325-4bf0-97cc-a80ba0d594ba")
 			(effects
 				(font
@@ -20608,6 +21557,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "19f19e3f-2814-4953-8b49-9aa28c4da0c1")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -20626,6 +21586,7 @@
 		(property "Reference" "CL029"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "ba4bb1fb-2790-4789-bc4c-561c192ea395")
 			(effects
 				(font
@@ -20666,6 +21627,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "f86f54a9-5a1c-4267-a3ea-ec80f9654e48")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -20684,6 +21656,7 @@
 		(property "Reference" "CL010"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "b1420eaa-e7dc-4e5d-8e3a-acc1bbba9bb9")
 			(effects
 				(font
@@ -20724,6 +21697,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "3fb0858d-9114-4122-a42a-644771828410")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -20742,13 +21726,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B14_D2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "e32d741e-f9c1-4148-b890-11d5323781e3")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -21029,13 +22013,13 @@
 		(descr "TSSOP, 8 Pin (JEDEC MO-153 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO")
 		(property "Reference" "N6_U1"
-			(at 0 0 0)
+			(at 0 1.775 0)
 			(layer "F.SilkS")
 			(uuid "4b07e1b6-5323-48d4-8085-0639ee939199")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -21314,13 +22298,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N10_Q1"
-			(at 0 2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "58dc9e5b-f9ec-46be-9f07-b8d26fc73257")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -21602,6 +22586,7 @@
 		(property "Reference" "CT032"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "3733fd6d-1fc6-49e8-9597-8716cf8e6352")
 			(effects
 				(font
@@ -21642,6 +22627,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "7346178f-f5b1-4e93-9d0d-ffaa4e66a4f5")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -21660,6 +22656,7 @@
 		(property "Reference" "CR016"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "991b235f-3d40-41bd-823e-71cb8d3ea76e")
 			(effects
 				(font
@@ -21700,6 +22697,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "425d796a-71db-461e-80c3-4ba422f89a11")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -21718,13 +22726,13 @@
 		(descr "TSSOP, 8 Pin (JEDEC MO-153 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO")
 		(property "Reference" "N10_U1"
-			(at 0 0 0)
+			(at 0 1.775 0)
 			(layer "F.SilkS")
 			(uuid "e4fed1bd-efaa-4dfa-9ccc-0d0134d510c6")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -22003,6 +23011,7 @@
 		(property "Reference" "CB013"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "d1f22fff-0f3f-4dcf-a405-788df8791867")
 			(effects
 				(font
@@ -22043,6 +23052,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "e9df4e12-5d78-4a42-a88c-b954c9758cb2")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -22061,13 +23081,13 @@
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B5_L1"
-			(at 0 -2.5 0)
+			(at 0 1.7 0)
 			(layer "F.SilkS")
 			(uuid "82b11764-7db1-4ee6-8075-922c24fbc4db")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -22191,6 +23211,7 @@
 		(property "Reference" "CT021"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "7fa93601-3b53-4428-8562-589e45cbf348")
 			(effects
 				(font
@@ -22231,6 +23252,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "5ec46df6-4ab3-4d17-81a0-30375a2fa785")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -22249,6 +23281,7 @@
 		(property "Reference" "CB012"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "6f0420d8-05c0-4615-8a73-b15aebcc3cd7")
 			(effects
 				(font
@@ -22289,6 +23322,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "f1de9ff6-f635-43c0-99c6-58efec8eedfb")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -22307,6 +23351,7 @@
 		(property "Reference" "CL031"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "3ba80e9d-2414-435f-9dd5-804f765e66b2")
 			(effects
 				(font
@@ -22347,6 +23392,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "5e685ceb-8d13-4dad-8916-06203d206de0")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -22365,13 +23421,13 @@
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B3_L1"
-			(at 0 -2.5 0)
+			(at 0 1.7 0)
 			(layer "F.SilkS")
 			(uuid "e532616c-ad85-4f0f-bfab-cccf6489f0dd")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -22495,14 +23551,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N7_R1"
-			(at 0 -2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "c0497c27-bc3b-4b29-b4df-d11eb711393e")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -22626,6 +23682,7 @@
 		(property "Reference" "CT015"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "6cadfd5f-d971-47dd-8678-5b660ccdee14")
 			(effects
 				(font
@@ -22666,6 +23723,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "bcade534-f9a1-485b-88a7-c43a9b7bafc5")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -22684,13 +23752,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N11_Q1"
-			(at 0 2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "338675ee-bd17-4761-8558-5eb29a50488a")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -22972,6 +24040,7 @@
 		(property "Reference" "CT025"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "c4b6b560-ad87-4966-b254-619838f0d84e")
 			(effects
 				(font
@@ -23012,6 +24081,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "7a3b6edd-3a6d-44b3-9934-0aaedfb73758")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -23030,14 +24110,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N3_R5"
-			(at 3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "dddd72d6-7828-449a-bcd3-3cf7b9b23e94")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -23161,6 +24241,7 @@
 		(property "Reference" "CR014"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "b11a9abf-4266-48e8-994d-6f7ca3e1df56")
 			(effects
 				(font
@@ -23201,6 +24282,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "6fbdf6fd-f486-4239-ace7-55da7c3952e8")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -23219,13 +24311,13 @@
 		(descr "TSSOP, 8 Pin (JEDEC MO-153 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO")
 		(property "Reference" "N16_U1"
-			(at 0 0 0)
+			(at 0 1.775 0)
 			(layer "F.SilkS")
 			(uuid "f6e807ab-c321-4b6d-85d4-31f27c39de75")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -23504,14 +24596,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N4_R2"
-			(at -2.6 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "fdace11e-10d5-4812-8829-06d4ff4bb470")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -23635,6 +24727,7 @@
 		(property "Reference" "CT026"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "87df5600-eb9a-43e5-9251-55917765ae7d")
 			(effects
 				(font
@@ -23675,6 +24768,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "2a567e95-a848-4462-b956-493522eba53a")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -23693,14 +24797,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N2_R6"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "4a5ccc62-4ac1-4cd4-ade8-daf01277f3ce")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -23824,14 +24928,14 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "N3_C1"
-			(at 0 -2.5 0)
+			(at 0 0.91 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "bc0606cb-8692-430e-8c0c-39a26f986b33")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -23955,14 +25059,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N13_R1"
-			(at 0 -2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "9b130d9f-73f8-48ea-a117-8ec8983a727e")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -24086,6 +25190,7 @@
 		(property "Reference" "CB029"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "29a0b00c-3828-49c9-b4c2-fd04a9c35a06")
 			(effects
 				(font
@@ -24126,6 +25231,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "ae965e64-4812-4d6b-9638-a1acd2dffb0c")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -24144,13 +25260,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N15_Q1"
-			(at 0 2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "4b915e70-6db7-4da5-b747-474e8b530f0f")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -24432,6 +25548,7 @@
 		(property "Reference" "CT003"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "3b324661-0529-4144-af4d-2dba3d3a9ca0")
 			(effects
 				(font
@@ -24472,6 +25589,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "dc6b6519-4b31-44e5-9210-58673fd2ae07")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -24490,6 +25618,7 @@
 		(property "Reference" "CT020"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "4cf27978-e007-4603-a344-92ef7562df29")
 			(effects
 				(font
@@ -24530,6 +25659,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "a44999b3-c399-4473-a250-dbf1a5d53d7b")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -24548,14 +25688,14 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "N13_C1"
-			(at 0 2.5 0)
+			(at 0 0.91 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "c7dcdbc0-ba5a-4107-bd4d-d66cdd09a871")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -24679,6 +25819,7 @@
 		(property "Reference" "CR017"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "48da1435-a629-4fe9-a4dc-0177edaa998a")
 			(effects
 				(font
@@ -24719,6 +25860,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "299ce878-307f-4caa-b94b-d0fdbc0b8c08")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -24737,6 +25889,7 @@
 		(property "Reference" "CL034"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "fb422759-94cc-4f03-b90c-a29e616eca06")
 			(effects
 				(font
@@ -24777,6 +25930,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "e43c9a50-d000-403d-a84c-30dbce2f38b6")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -24795,13 +25959,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N11_Q2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "a886da16-01ba-4533-a096-50dc97d2c122")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -25080,6 +26244,7 @@
 		(property "Reference" "CL019"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "4d60bc62-1fca-4826-95b9-ca39d4591118")
 			(effects
 				(font
@@ -25120,6 +26285,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "39228257-3eb2-44e2-8b0d-9e342c8d9b81")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -25138,14 +26314,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N3_R6"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "6bd736dd-809d-4632-a171-a9703a71d542")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -25269,14 +26445,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N6_R2"
-			(at -3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "401b4910-70f6-4941-9c2b-0357e0b5bfb8")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -25400,13 +26576,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N9_Q1"
-			(at 0 2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "734488ce-54ca-402f-a21b-a688d3aea800")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -25688,13 +26864,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N14_Q1"
-			(at 0 2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "9f5bf802-ed15-4532-a54e-977a86214287")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -25976,14 +27152,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N14_R2"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "a3f54522-bd16-4dbd-b500-e60a33cdcedb")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -26107,14 +27283,14 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "N2_C1"
-			(at 0 -2.5 0)
+			(at 0 0.91 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "6421e810-bdc7-4034-99ec-0a78af227c19")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -26238,14 +27414,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N16_R5"
-			(at 3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "a49373d6-3030-4b69-95d6-45fd92314087")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -26369,13 +27545,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B1_D2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "edccba23-0b80-405c-b149-0f01e3e25490")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -26656,14 +27832,14 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "N16_C1"
-			(at 0 2.5 0)
+			(at 0 0.91 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "de70a46b-da2b-41e8-bad0-193f2aee5157")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -26787,6 +27963,7 @@
 		(property "Reference" "CT018"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "5932a0b4-9c1c-429d-b703-03520df9a2f2")
 			(effects
 				(font
@@ -26827,6 +28004,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "41dfa3ea-7de4-4224-826f-9c4422c85a08")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -26845,14 +28033,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N13_R5"
-			(at 3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "7f44e18b-f4d5-4fb1-a59a-90ddbee53d51")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -26976,6 +28164,7 @@
 		(property "Reference" "CT017"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "e6ac1940-98af-4024-882c-28a50e0d9350")
 			(effects
 				(font
@@ -27016,6 +28205,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "9a4f67f0-cbbb-4eb9-8762-2234e105517c")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -27034,13 +28234,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N12_Q1"
-			(at 0 2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "1935d3bb-a3bb-48a3-87af-1760f161a611")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -27322,6 +28522,7 @@
 		(property "Reference" "CB016"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "ea00639b-1f1f-4be8-a137-587ab9e02dcb")
 			(effects
 				(font
@@ -27362,6 +28563,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "ddaa015a-3e4b-4e6f-b7f4-72f0194d0b2b")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -27380,6 +28592,7 @@
 		(property "Reference" "CL033"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "24ee1099-1dae-4a23-8cf8-8e4d07e0e702")
 			(effects
 				(font
@@ -27420,6 +28633,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "ccb9c9fb-2913-4daf-ad2b-3134cef1a935")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -27438,6 +28662,7 @@
 		(property "Reference" "CR009"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "d84deb66-7f07-4f36-afb1-742a8ab8e8f8")
 			(effects
 				(font
@@ -27478,6 +28703,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "c7589ef2-b810-4274-adbd-60c78d173eda")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -27496,14 +28732,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N1_R4"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "9e6565a2-9566-4b2d-bf73-e9dd6f06ef54")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -27627,6 +28863,7 @@
 		(property "Reference" "CL012"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "bcebb556-1115-47fa-a4f2-c9ddabd80001")
 			(effects
 				(font
@@ -27667,6 +28904,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "4dfe88e4-9cdb-4fa0-b318-347d73731dea")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -27685,14 +28933,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N16_R3"
-			(at 0 -2 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "04e0ffae-fdff-44b5-b369-e8724c1ecaec")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -27816,13 +29064,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B9_D2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "88642743-92bd-479c-a4bf-e61b9bc162c1")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -28103,6 +29351,7 @@
 		(property "Reference" "CB026"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "2ba59f23-a243-4140-b97e-fd6e82d9835d")
 			(effects
 				(font
@@ -28143,6 +29392,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "4f7eab39-f851-4150-8b8f-b3c52e18ad5e")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -28161,14 +29421,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N9_R6"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "97b30801-f11e-4ef3-a45c-79226b001912")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -28292,14 +29552,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N2_R3"
-			(at 0 -2 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "59fa12df-935d-4c27-9dcb-330f07e57f99")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -28423,14 +29683,14 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "N9_C1"
-			(at 0 -2.5 0)
+			(at 0 0.91 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "7ab6d04c-1b5e-4d83-a4b4-0932bb26a0fa")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -28554,14 +29814,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N11_R4"
-			(at 2.6 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "7766447d-1af7-44b2-8d35-114941d1b18f")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -28685,13 +29945,13 @@
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B1_L1"
-			(at 0 -2.5 0)
+			(at 0 1.7 0)
 			(layer "F.SilkS")
 			(uuid "e5ab7eb4-1a49-4069-aa99-08e4219c3a8b")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -28815,14 +30075,14 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "N8_C1"
-			(at 0 -2.5 0)
+			(at 0 0.91 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "8ad54991-d26e-4e4f-81e1-62af4a71ff70")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -28946,13 +30206,13 @@
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B2_L1"
-			(at 0 -2.5 0)
+			(at 0 1.7 0)
 			(layer "F.SilkS")
 			(uuid "f2df57c8-059c-43c1-8c44-e23dca5f07c2")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -29076,6 +30336,7 @@
 		(property "Reference" "CR019"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "2a35588c-cfe6-42e5-b0a9-6400f86467a8")
 			(effects
 				(font
@@ -29116,6 +30377,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "10c4793c-362f-4dee-83f5-2dfb2d8511d4")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -29134,13 +30406,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B3_D2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "0cb285a8-fff3-4095-9a80-87ed37d84c4a")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -29421,13 +30693,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N9_Q2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "b11aaf7f-df49-4ea0-b4b0-97eca10eee4d")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -29706,13 +30978,13 @@
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B4_L1"
-			(at 0 -2.5 0)
+			(at 0 1.7 0)
 			(layer "F.SilkS")
 			(uuid "57791533-a39e-46d7-9b21-c5fc24de323f")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -29836,13 +31108,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B5_D2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "7d9924d5-3d7b-4952-ab26-af4b1129c38d")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -30123,14 +31395,14 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "N15_C1"
-			(at 0 2.5 0)
+			(at 0 0.91 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "2fdd65c6-4252-4715-a5e9-95addb3cb696")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -30254,14 +31526,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N12_R3"
-			(at 0 -2 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "fa7649bd-ed65-4fe6-8bda-ac5b938d05ff")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -30385,13 +31657,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B6_D2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "15192bb0-25e3-45b1-8343-bb4693292ea3")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -30672,13 +31944,13 @@
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B7_L1"
-			(at 0 -2.5 0)
+			(at 0 1.7 0)
 			(layer "F.SilkS")
 			(uuid "e4769f4c-21c7-4f7e-9af0-48f82e142f92")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -30802,13 +32074,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B8_D2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "077a6225-8d48-49e3-b3eb-5cdf4abc4551")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -31089,6 +32361,7 @@
 		(property "Reference" "CB021"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "f73d7b70-2cf2-4780-a0bd-7f44c9fa247a")
 			(effects
 				(font
@@ -31129,6 +32402,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "0e2ec702-074c-4f3f-ac47-f421537384af")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -31147,13 +32431,13 @@
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B9_L1"
-			(at 0 -2.5 0)
+			(at 0 1.7 0)
 			(layer "F.SilkS")
 			(uuid "ea1f9c25-7c7f-44c2-9bb4-f383a0e5c3b4")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -31277,14 +32561,14 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "N6_C1"
-			(at 0 -2.5 0)
+			(at 0 0.91 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "08ad0db3-817f-4377-8b23-29feb43500ec")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -31408,14 +32692,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N12_R6"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "c72934f3-810d-4625-9171-bfe263e2b47d")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -31539,13 +32823,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B10_D2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "cfc1d11d-8fbd-486b-83fe-dee2d20b4e1a")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -31826,6 +33110,7 @@
 		(property "Reference" "CT009"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "f18b426d-7a3c-48d7-9ee3-a9cf32291e0e")
 			(effects
 				(font
@@ -31866,6 +33151,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "1d387e34-eb79-45fc-83b7-10872cf897e7")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -31884,13 +33180,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B11_D2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "6025fe62-5f90-43cf-89ea-9e4493303f2a")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -32171,13 +33467,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B12_D2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "a461f859-17fd-438c-aba1-286e70a17483")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -32458,6 +33754,7 @@
 		(property "Reference" "CR003"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "744e10a8-8237-4857-b9e6-e43ccbc4d82c")
 			(effects
 				(font
@@ -32498,6 +33795,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "1aa9c375-c20e-4de6-b845-f6e81d53040c")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -32516,13 +33824,13 @@
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B15_L1"
-			(at 0 -2.5 0)
+			(at 0 1.7 0)
 			(layer "F.SilkS")
 			(uuid "49c6f750-03a5-409b-a6c5-a979906034fc")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -32646,13 +33954,13 @@
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B13_L1"
-			(at 0 -2.5 0)
+			(at 0 1.7 0)
 			(layer "F.SilkS")
 			(uuid "46a2f262-0404-40eb-a088-e55b8e33118c")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -32776,6 +34084,7 @@
 		(property "Reference" "CT033"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "7837ef38-63f3-4fc0-a254-77eeb822dedc")
 			(effects
 				(font
@@ -32816,6 +34125,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "c1eebe94-b8a4-466b-8194-8447ef43daaa")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -32834,13 +34154,13 @@
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B14_L1"
-			(at 0 -2.5 0)
+			(at 0 1.7 0)
 			(layer "F.SilkS")
 			(uuid "ae8c8e50-393e-4aa4-943c-43c4311a4c8a")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -32964,13 +34284,13 @@
 		(descr "TSSOP, 8 Pin (JEDEC MO-153 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO")
 		(property "Reference" "N15_U1"
-			(at 0 0 0)
+			(at 0 1.775 0)
 			(layer "F.SilkS")
 			(uuid "a1f71e46-08d7-44a2-81a5-85364f63285e")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -33249,13 +34569,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B15_D2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "19427cbb-9699-402d-9ed6-a8ec66ca501a")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -33536,13 +34856,13 @@
 		(descr "TSSOP, 8 Pin (JEDEC MO-153 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO")
 		(property "Reference" "N13_U1"
-			(at 0 0 0)
+			(at 0 1.775 0)
 			(layer "F.SilkS")
 			(uuid "ce29a722-d2ce-4f9b-b17b-0e1d9c6889f3")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -33821,14 +35141,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N8_R4"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "ff05c143-a5fb-4649-9608-408a0898ec87")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -33952,13 +35272,13 @@
 		(descr "TSSOP, 8 Pin (JEDEC MO-153 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO")
 		(property "Reference" "N11_U1"
-			(at 0 0 0)
+			(at 0 1.775 0)
 			(layer "F.SilkS")
 			(uuid "83ad74c8-28d6-4bde-81b3-11ae09bf9208")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -34237,14 +35557,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N6_R5"
-			(at 3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "f98d815a-7261-42f0-9d84-87a440aa95e6")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -34368,14 +35688,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N8_R1"
-			(at 0 -2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "795a2f30-94b7-429d-bc39-86340be0a522")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -34499,6 +35819,7 @@
 		(property "Reference" "CT014"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "7fa4613f-a859-41c0-b50c-011b2ab31aca")
 			(effects
 				(font
@@ -34539,6 +35860,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "5993b207-d9a3-4112-b4e2-0df3e41c6ab9")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -34557,6 +35889,7 @@
 		(property "Reference" "CR024"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "fa865eb2-cafe-48d5-a5f7-db0902da09b2")
 			(effects
 				(font
@@ -34597,6 +35930,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "4132025b-1a6e-4ce0-9d53-3f8231e20406")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -34615,14 +35959,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N2_R5"
-			(at 3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "d05984ba-af0a-4cad-abfc-05e465a28504")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -34746,13 +36090,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N5_Q2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "84b9295c-5d1f-4329-bfc6-2aa85cbf6f06")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -35031,13 +36375,13 @@
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B8_L1"
-			(at 0 -2.5 0)
+			(at 0 1.7 0)
 			(layer "F.SilkS")
 			(uuid "0ddfe170-f29a-411b-88ee-0bd8cdd33dde")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -35161,6 +36505,7 @@
 		(property "Reference" "CR025"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "f7b3e7d2-f54f-45eb-a069-3bf06659a7c2")
 			(effects
 				(font
@@ -35201,6 +36546,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "907da3aa-0b9f-472b-8b04-87faa33bd2f1")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -35219,6 +36575,7 @@
 		(property "Reference" "CL025"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "ac1b966f-7f81-4d82-9975-95a28b7f8aad")
 			(effects
 				(font
@@ -35259,6 +36616,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "db304294-f480-4917-b750-2f91f3e57f19")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -35277,6 +36645,7 @@
 		(property "Reference" "CB005"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "826f3874-9ff1-4851-bfde-f61e65a5da25")
 			(effects
 				(font
@@ -35317,6 +36686,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "a1163b57-fdd2-4794-95d8-de6f2d8dbd0a")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -35335,14 +36715,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N7_R2"
-			(at -2.6 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "11eacf3d-edf3-41fd-8456-f306f1c60dd7")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -35466,14 +36846,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N15_R2"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "85c992dc-593a-413c-bff3-fe7603e7f3e9")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -35597,6 +36977,7 @@
 		(property "Reference" "CL015"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "1d8fac89-84f9-4836-b429-3fbd1c09499a")
 			(effects
 				(font
@@ -35637,6 +37018,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "04376cda-1eeb-4ae1-b61d-f7bfb76c97a7")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -35655,14 +37047,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N13_R6"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "908263a8-56d6-42f6-8acc-398a01a5bc07")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -35786,14 +37178,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N10_R6"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "27a82f62-a357-4cbb-ac80-7ec3a323429f")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -35917,14 +37309,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N15_R4"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "0cb92333-4158-4459-b0ce-80ffb028209c")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -36048,14 +37440,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N14_R1"
-			(at 0 -2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "d8daa658-6bfd-4be4-9bd6-3e3dad3bb29c")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -36179,6 +37571,7 @@
 		(property "Reference" "CB007"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "748b6cf8-6d5a-43bd-aec3-c2b6059ce1e1")
 			(effects
 				(font
@@ -36219,6 +37612,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "efbf331a-681d-4c61-b2d6-e08c16805a44")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -36237,14 +37641,14 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "N5_C1"
-			(at 0 -2.5 0)
+			(at 0 0.91 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "abc22c3e-dd2b-4681-aa6b-196ba108a71f")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -36368,13 +37772,13 @@
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B10_L1"
-			(at 0 -2.5 0)
+			(at 0 1.7 0)
 			(layer "F.SilkS")
 			(uuid "f9dc0386-a746-490f-a03b-680f99a97c1a")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -36498,6 +37902,7 @@
 		(property "Reference" "CT031"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "39e3f56f-94ef-40b9-9bf9-6186dee3ceb3")
 			(effects
 				(font
@@ -36538,6 +37943,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "c9a1eee6-e069-4a0e-bc68-ddc2477a2f41")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -36556,13 +37972,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N2_Q2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "b919a66a-9554-47d5-9f27-9694c3aa2591")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -36841,6 +38257,7 @@
 		(property "Reference" "CB027"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "81c9db48-3774-4f4f-957c-aefc9d3c9190")
 			(effects
 				(font
@@ -36881,6 +38298,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "0985124e-b784-4ba8-b46a-dde09c25d554")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -36899,14 +38327,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N11_R5"
-			(at 3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "1237a186-8286-41f9-a64d-18e9dd61f74a")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -37030,6 +38458,7 @@
 		(property "Reference" "CB017"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "7a7c08d9-b5da-489a-904f-0ca5b088ed5c")
 			(effects
 				(font
@@ -37070,6 +38499,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "96b981c0-45c6-4e70-a48b-ca0e795172df")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -37088,6 +38528,7 @@
 		(property "Reference" "CT008"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "b6f2c575-a4ff-48ab-a541-f2ade1a23a4b")
 			(effects
 				(font
@@ -37128,6 +38569,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "513d5e54-1ccc-491e-ab5a-177643d462e7")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -37146,6 +38598,7 @@
 		(property "Reference" "CB033"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "c0313e3d-e79b-4a45-a2b4-4477ca561ca8")
 			(effects
 				(font
@@ -37186,6 +38639,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "0e889608-9324-42a0-9aaa-2827621d399d")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -37204,14 +38668,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N9_R4"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "6d4e8dda-917e-4c02-9822-140f3b1591a2")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -37335,6 +38799,7 @@
 		(property "Reference" "CR021"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "b233e8c3-d6bb-4ef5-9f52-dcfca9e90e14")
 			(effects
 				(font
@@ -37375,6 +38840,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "410cd621-b933-414a-a2d3-1623b423817c")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -37393,6 +38869,7 @@
 		(property "Reference" "CT030"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "a7993756-1e0b-4f7d-8e59-d1fef7e85b60")
 			(effects
 				(font
@@ -37433,6 +38910,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 -0.4)
+			(end 0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "c1818ce5-acdc-4867-b2b0-b300532ab64b")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0)
 			(size 1.2 0.8)
@@ -37451,6 +38939,7 @@
 		(property "Reference" "CB025"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "86ecd9c2-e429-4ad7-bd69-ea19a9b23dac")
 			(effects
 				(font
@@ -37491,6 +38980,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "7481ce78-7505-4ed5-8d2b-d72de16b48bb")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -37509,6 +39009,7 @@
 		(property "Reference" "CB030"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "ab5a85de-cfe2-462b-b1a6-6bcbe57582a7")
 			(effects
 				(font
@@ -37549,6 +39050,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "1d9bfb0d-3668-4fbd-bef6-60d05464cefc")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -37567,14 +39079,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N5_R6"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "a932eae7-fd52-4ad4-8b0a-8ec9b8b25d20")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -37698,6 +39210,7 @@
 		(property "Reference" "CR011"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "5c417ceb-0c68-41d9-8a4c-b6f325d46478")
 			(effects
 				(font
@@ -37738,6 +39251,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "f1548ee4-c754-468f-a616-83d6b452cf09")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -37756,14 +39280,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N11_R2"
-			(at -2.6 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "7a5fc7d1-81ec-4903-ae06-8106fd6238a6")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -37887,14 +39411,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N15_R3"
-			(at 0 -2 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "537edc3a-64a7-4e8b-ab1e-8f1cd65313dc")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -38018,14 +39542,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N16_R2"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "4d3e7d59-a474-490f-8a2c-157586e6644e")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -38149,6 +39673,7 @@
 		(property "Reference" "CR022"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "83ef1c78-195f-46a5-a12e-ec63b6ac9c04")
 			(effects
 				(font
@@ -38189,6 +39714,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "dfa3370d-6e9b-4e66-81fb-5095af1b16f8")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -38207,6 +39743,7 @@
 		(property "Reference" "CR027"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "0568a676-97e6-4055-a966-6fe063608180")
 			(effects
 				(font
@@ -38247,6 +39784,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "e545227e-7f06-431b-8e1c-467fc9e58c41")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -38265,6 +39813,7 @@
 		(property "Reference" "CL026"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "6e1dfb42-69d2-4248-a264-fa317aa820a7")
 			(effects
 				(font
@@ -38305,6 +39854,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "0f4a0d5d-49ac-46aa-b3f8-19a5419c7a11")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -38323,14 +39883,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N3_R3"
-			(at 0 -2 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "ac5a758a-7495-48fc-8c1c-bb56b1f2eed8")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -38454,6 +40014,7 @@
 		(property "Reference" "CR010"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "ee31e981-1a31-4a0c-90c3-f3261a266d01")
 			(effects
 				(font
@@ -38494,6 +40055,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "e0ab4d9b-04b1-467d-8731-df61bf8eb4f8")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -38512,14 +40084,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N12_R1"
-			(at 0 -2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "e8c9847f-a9a9-4c6f-b8e7-b61f40fe23b2")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -38643,14 +40215,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N8_R5"
-			(at 3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "23c21e06-dae1-498b-aa22-e113ef432180")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -38774,14 +40346,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N11_R6"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "2ebac039-2316-48e2-8f5e-5cac24235131")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -38905,13 +40477,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B2_D2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "153a7e34-0d8a-4eca-9a3a-4c2dfd2b209d")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -39192,14 +40764,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N5_R5"
-			(at 3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "f579e3e3-36b3-4d7b-955a-546e949e229a")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -39323,13 +40895,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N7_Q1"
-			(at 0 2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "3dff217e-a812-4379-8ca1-b1b7868c557a")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -39611,14 +41183,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N15_R6"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "1400c460-9e35-467d-926b-2b380c81b5d8")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -39742,6 +41314,7 @@
 		(property "Reference" "CB031"
 			(at 0 0 180)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "10a8c3ba-6226-4ef4-810a-9aad49703a0d")
 			(effects
 				(font
@@ -39782,6 +41355,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 0.4)
+			(end -0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "5c765363-5a9d-4a93-965e-fd138e19bd56")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 180)
 			(size 1.2 0.8)
@@ -39800,13 +41384,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N15_Q2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "7e95ea2d-7af6-488d-910a-fcf60f46891e")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -40085,14 +41669,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N8_R6"
-			(at 0 2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "4ca73351-e2fb-4ff6-8045-17abc9b89bd0")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -40216,6 +41800,7 @@
 		(property "Reference" "CR033"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "2cbcb58f-a26e-417f-9e1c-3a48e43bc144")
 			(effects
 				(font
@@ -40256,6 +41841,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "1dfdb8ba-5577-44f3-977a-94c1ec0c7bf3")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -40274,6 +41870,7 @@
 		(property "Reference" "CR029"
 			(at 0 0 90)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "ba648218-46a4-464a-8dc8-7fd4cb517659")
 			(effects
 				(font
@@ -40314,6 +41911,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start 0.6 -0.4)
+			(end -0.6 0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "560daf10-5220-4cee-8610-c1257b5289a9")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 90)
 			(size 1.2 0.8)
@@ -40332,6 +41940,7 @@
 		(property "Reference" "CL009"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "fe35eafe-252b-4f21-9e8d-e97fb318f36d")
 			(effects
 				(font
@@ -40372,6 +41981,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "85d070c6-ad55-4169-9550-ea272800d61c")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -40390,13 +42010,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N16_Q2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "f4d830dd-f8aa-4bab-91ae-902ece5046ee")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -40675,14 +42295,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N10_R2"
-			(at -2.6 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "d8fd8cd7-1de1-4150-a0aa-5b2478bce050")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -40806,14 +42426,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N12_R5"
-			(at 3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "aa6648e1-df8b-4d2e-a664-f3c8a8d64793")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -40937,14 +42557,14 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "N4_C1"
-			(at 0 -2.5 0)
+			(at 0 0.91 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "7b499b17-1682-4863-9dae-d7155f15ee18")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -41068,14 +42688,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N7_R5"
-			(at 3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "7ebcebe5-7e91-497f-a7fb-300a02ef68df")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -41199,14 +42819,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N14_R5"
-			(at 3.2 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "bbe5a570-940d-446b-a737-400bdf22aba7")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -41330,13 +42950,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "N4_Q1"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "934dacd3-fdeb-432d-83ab-713fc43e7305")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -41618,13 +43238,13 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "B13_D2"
-			(at 0 -2.5 0)
+			(at 0 1.85 0)
 			(layer "F.SilkS")
 			(uuid "3d5d0cc6-4a09-40e4-b36e-e6031e1dda4d")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -41905,14 +43525,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N16_R1"
-			(at 0 -2.5 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "d6807c9f-3f2e-485f-904a-4cb0eda19957")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -42036,13 +43656,13 @@
 		(descr "TSSOP, 8 Pin (JEDEC MO-153 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO")
 		(property "Reference" "N14_U1"
-			(at 0 0 0)
+			(at 0 1.775 0)
 			(layer "F.SilkS")
 			(uuid "3fbfff49-e312-49d9-ba8c-1135af67f7af")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -42321,13 +43941,13 @@
 		(descr "Inductor SMD 1008 (2520 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: https://ecsxtal.com/store/pdf/ECS-MPI2520-SMD-POWER-INDUCTOR.pdf)")
 		(tags "inductor")
 		(property "Reference" "B6_L1"
-			(at 0 -2.5 0)
+			(at 0 1.7 0)
 			(layer "F.SilkS")
 			(uuid "c37366c3-eaa9-49dd-9d87-10b2d19ad85e")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
@@ -42451,6 +44071,7 @@
 		(property "Reference" "CL002"
 			(at 0 0 270)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "aa1292cc-333a-4006-9d2d-6edebaa6c6f3")
 			(effects
 				(font
@@ -42491,6 +44112,17 @@
 			)
 		)
 		(duplicate_pad_numbers_are_jumpers no)
+		(fp_rect
+			(start -0.6 0.4)
+			(end 0.6 -0.4)
+			(stroke
+				(width 0)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "86cdf9a5-1685-4153-96fd-0b0eddd4dd70")
+		)
 		(pad "" np_thru_hole roundrect
 			(at 0 0 270)
 			(size 1.2 0.8)
@@ -42509,14 +44141,14 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "N10_R4"
-			(at 2.6 0 0)
+			(at 0 0.92 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "a1d2d10c-0571-40af-aff7-bff11fef193b")
 			(effects
 				(font
 					(size 0.5 0.5)
-					(thickness 0.1)
+					(thickness 0.09)
 				)
 			)
 		)
