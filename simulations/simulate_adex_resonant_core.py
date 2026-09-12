@@ -22,8 +22,10 @@ import subprocess
 import tempfile
 from typing import Iterable
 
+import os
 import matplotlib
 
+# File-based (non-interactive) backend – guaranteed to work everywhere.
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -243,7 +245,12 @@ def compute_metrics(time: np.ndarray, potentials: np.ndarray, phases: np.ndarray
     })
 
 
-def save_plot(time: np.ndarray, potentials: np.ndarray, phases: np.ndarray, currents: np.ndarray, path: pathlib.Path) -> None:
+def save_plot(time: np.ndarray, potentials: np.ndarray, phases: np.ndarray, currents: np.ndarray, path: pathlib.Path, interactive: bool = False) -> None:
+    """Generate and display/save the phase-locking response figure.
+
+    When *interactive* is True and a DISPLAY is available, the saved plot is
+    opened in the system image viewer.  In all cases the figure is saved to *path*.
+    """
     fig, (top, bottom) = plt.subplots(2, 1, figsize=(12, 7), sharex=True)
     milliseconds = time * 1e3
     for index in range(16):
@@ -263,6 +270,8 @@ def save_plot(time: np.ndarray, potentials: np.ndarray, phases: np.ndarray, curr
     fig.tight_layout()
     fig.savefig(path, dpi=160)
     plt.close(fig)
+    if interactive and os.environ.get("DISPLAY"):
+        subprocess.Popen(["xdg-open", str(path)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 def try_ngspice(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationParameters) -> bool:
@@ -282,6 +291,12 @@ def try_ngspice(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationP
 
 
 def main() -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(description="AdEx Resonant Core phase-locking simulation")
+    parser.add_argument("--interactive", action="store_true", help="Show dynamic real-time plot")
+    args = parser.parse_args()
+
     adex, bridge, sim = AdExParameters(), BridgeParameters(), SimulationParameters()
     spice_ok = try_ngspice(adex, bridge, sim)
     time, potentials, currents, bridge_voltages = run_numerical(adex, bridge, sim)
@@ -294,14 +309,20 @@ def main() -> None:
     traces["mean_bridge_voltage_V"] = bridge_voltages.mean(axis=1)
     traces.to_csv(EXPORTS / "phase_locking_traces.csv", index=False)
     metrics.to_csv(EXPORTS / "phase_locking_metrics.csv", index=False)
-    save_plot(time, potentials, phases, currents, EXPORTS / "phase_locking_response.png")
+    test_plot_path = EXPORTS / "local_test_verification.png"
+    save_plot(time, potentials, phases, currents, test_plot_path, interactive=args.interactive)
+    bridge_rms = float(np.sqrt(np.mean(currents ** 2)))  # A
     print(f"Simulation duration: {sim.duration * 1e3:.0f} ms")
-    print(
-        f"Varactor resonances: theta={bridge.theta_resonance_hz:.2f} Hz, "
-        f"gamma={bridge.gamma_resonance_hz:.2f} Hz"
-    )
     print(f"PySpice/Ngspice netlist path: {'available' if spice_ok else 'fallback-equivalent'}")
-    print(metrics.to_string(index=False))
+    print()
+    print("=== AdEx Resonant Core — Execution Report ===")
+    print(f"  Calculated Peak Theta Frequency (Hz)  : {bridge.theta_resonance_hz:.4f}")
+    print(f"  Calculated Peak Gamma Frequency (Hz)  : {bridge.gamma_resonance_hz:.4f}")
+    print(f"  Mean Phase-Locking Value (PLV)        : {metrics.loc[0, 'value']:.6f}")
+    print(f"  Varactor Bridge Current RMS (mA)      : {bridge_rms * 1e3:.6f}")
+    print(f"  Cluster Cross-Correlation              : {metrics.loc[1, 'value']:.6f}")
+    print(f"  Plot saved to                         : {test_plot_path}")
+    print("===========================================")
 
 
 if __name__ == "__main__":
