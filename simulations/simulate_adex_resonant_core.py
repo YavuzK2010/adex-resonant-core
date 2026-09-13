@@ -33,7 +33,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy.signal import welch
+from scipy.signal import hilbert, welch
 
 try:
     from PySpice.Spice.Netlist import Circuit
@@ -219,7 +219,6 @@ def _run_numerical_legacy(
     time, potentials, adaptation, currents, tuning, tank_frequency, _ = run_numerical(adex, bridge, sim)
     del time, tuning, tank_frequency
     return potentials, adaptation, currents, np.zeros_like(potentials)
-
 def run_numerical(
     adex: AdExParameters, bridge: BridgeParameters, sim: SimulationParameters
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, pd.DataFrame]:
@@ -306,6 +305,61 @@ def spike_phases(time: np.ndarray, potentials: np.ndarray, adex: AdExParameters)
     centered = potentials - np.mean(potentials, axis=0, keepdims=True)
     analytic_signal = np.asarray(hilbert(centered, axis=0), dtype=np.complex128)
     return np.unwrap(np.angle(analytic_signal), axis=0)
+
+def compute_cross_validated_metrics(
+    time: np.ndarray,
+    potentials: np.ndarray,
+    phases: np.ndarray,
+    adex: AdExParameters,
+) -> tuple[pd.DataFrame, np.ndarray, np.ndarray]:
+    """Cross-check phase coherence using event, analytic, and network metrics."""
+    del phases, adex
+    voltage = np.asarray(potentials, dtype=float)
+    analytic_phase = np.unwrap(np.angle(hilbert(voltage, axis=0)), axis=0)
+    wrapped_phase = np.angle(np.exp(1j * analytic_phase))
+    kuramoto = np.abs(np.mean(np.exp(1j * analytic_phase), axis=1))
+    threshold = np.mean(voltage, axis=0) + np.std(voltage, axis=0)
+    crossings = (voltage[:-1] < threshold) & (voltage[1:] >= threshold)
+    event_phases = [
+        wrapped_phase[np.flatnonzero(crossings[:, index]), index]
+        for index in range(voltage.shape[1])
+    ]
+    spike_phase_samples = np.concatenate(event_phases)
+    spike_time_plv = float(np.abs(np.mean(np.exp(1j * spike_phase_samples))))
+    hilbert_plv = float(np.mean(kuramoto))
+    recent = wrapped_phase[-min(voltage.shape[0], 20000):]
+    deltas = np.angle(np.exp(1j * (recent[:, :, None] - recent[:, None, :])))
+    pairwise = np.angle(np.mean(np.exp(1j * deltas), axis=0))
+    pairwise_dispersion = float(np.mean(np.std(deltas, axis=0)))
+    phase_lag_std = float(np.std(deltas))
+    metrics = pd.DataFrame([
+        {"metric": "spike_time_plv", "value": spike_time_plv},
+        {"metric": "hilbert_instantaneous_plv", "value": hilbert_plv},
+        {"metric": "kuramoto_order_parameter_mean", "value": float(np.mean(kuramoto))},
+        {"metric": "pairwise_phase_dispersion_rad", "value": pairwise_dispersion},
+        {"metric": "phase_lag_distribution_std_rad", "value": phase_lag_std},
+    ])
+    return metrics, kuramoto, pairwise
+
+
+def save_cross_validation_plot(
+    time: np.ndarray, kuramoto: np.ndarray, pairwise: np.ndarray, path: pathlib.Path
+) -> None:
+    figure, axes = plt.subplots(2, 1, figsize=(11, 8), gridspec_kw={"height_ratios": [1.2, 1]})
+    axes[0].plot(time, kuramoto, color="#0b7285", linewidth=1.0)
+    axes[0].set_ylabel("R(t)")
+    axes[0].set_title("Kuramoto Order Parameter")
+    axes[0].set_ylim(0, 1.02)
+    axes[0].grid(alpha=0.25)
+    image = axes[1].imshow(pairwise, cmap="twilight", vmin=-np.pi, vmax=np.pi)
+    axes[1].set_title("16x16 Pairwise Phase Difference Matrix")
+    axes[1].set_xlabel("Neuron j")
+    axes[1].set_ylabel("Neuron i")
+    figure.colorbar(image, ax=axes[1], label="delta phi (rad)")
+    figure.tight_layout()
+    figure.savefig(path, dpi=150)
+    plt.close(figure)
+
 
 def compute_metrics(
     time: np.ndarray, potentials: np.ndarray, phases: np.ndarray, currents: np.ndarray
@@ -521,6 +575,10 @@ def main() -> None:
     time, potentials, currents, bridge_voltages, tuning, tank_frequency, aer_events = run_numerical(adex, bridge, sim)
     phases = spike_phases(time, potentials, adex)
     metrics = compute_metrics(time, potentials, bridge_voltages, currents)
+    cross_metrics, kuramoto, pairwise = compute_cross_validated_metrics(
+        time, potentials, bridge_voltages, adex
+    )
+    metrics = pd.concat([cross_metrics, metrics], ignore_index=True)
     traces = pd.DataFrame({"time_s": time})
     for index in range(16):
         traces[f"V_m{index + 1}_V"] = potentials[:, index]
@@ -535,6 +593,7 @@ def main() -> None:
     tuning_spectrum.to_csv(EXPORTS / "tuning_welch_peaks.csv", index=False)
     test_plot_path = EXPORTS / "local_test_verification.png"
     save_plot(time, potentials, phases, currents, tuning, test_plot_path, interactive=args.interactive)
+    save_cross_validation_plot(time, kuramoto, pairwise, test_plot_path)
     bridge_rms = float(np.sqrt(np.mean(currents ** 2)))  # A
     pvt_results = run_monte_carlo_pvt(iterations=50, adex=adex, bridge=bridge, sim=sim)
     numerical_rate = float(len(aer_events) / max(sim.duration, sim.dt) / sim.grid_side**2)

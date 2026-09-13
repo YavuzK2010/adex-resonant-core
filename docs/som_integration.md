@@ -252,7 +252,17 @@ The resonant bridge uses a 100 mH inductor, 47 nF fixed capacitance, and a 10-10
 
 `dI_ij/dt = ((V_m,i - V_m,j) - R_s I_ij - Q_ij/C_var(V_tune)) / L`
 
-The signed bridge currents are summed into each cell's membrane-current input by Kirchhoff Current Law. Phase-locking is measured only after integration: SciPy's Hilbert Transform is applied to the simulated membrane-voltage time-series `V_m(t)` before computing PLV; the verified mean PLV is **0.988065**. No phase oscillator, Kuramoto coupling state, or frequency drive is used. Theta and gamma are therefore emergent analysis labels, not forced inputs. Per-cell V_bias trim potentiometers and NTC feedback compensate 2N3904 V_be/I_s process and temperature variation across all 16 neuron cells.
+The signed bridge currents are summed into each cell's membrane-current input by Kirchhoff Current Law. Phase coherence is cross-validated only after integration using five independent views of the physical waveforms:
+
+| Method | Verified value |
+|---|---:|
+| Spike-Time PLV, analytic phase at discrete voltage crossings | **0.874361** |
+| Hilbert Instantaneous PLV, continuous `V_m(t)` phase | **0.983851** |
+| Kuramoto Order Parameter, mean `R(t)` | **0.983851** |
+| Pairwise Phase Dispersion, 16x16 circular phase matrix | **0.222575 rad** |
+| Phase-Lag Distribution standard deviation | **0.241026 rad** |
+
+This replaces a single idealized PLV claim with event-, waveform-, and network-level checks. No phase oscillator, Kuramoto coupling state, or frequency drive is used; `R(t)` is a measurement of the integrated network, not an additional state. Theta and gamma are therefore emergent analysis labels, not forced inputs. Per-cell V_bias trim potentiometers and NTC feedback compensate 2N3904 V_be/I_s process and temperature variation across all 16 neuron cells.
 
 ## 9. Mixed-Signal Isolation, Guard Rings, and Calibration
 

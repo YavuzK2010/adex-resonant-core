@@ -176,7 +176,11 @@ Signed bridge currents are summed at each neuron and injected into its membrane-
 |---|---|
 | **Emergent Theta-band peak** (Welch PSD of mean V_m) | **2.00 Hz** |
 | **Emergent Gamma-band peak** (Welch PSD of mean V_m) | **40.00 Hz** |
-| **Phase-Locking Value (PLV)** | **0.988065** |
+| **Spike-Time PLV** | **0.874361** |
+| **Hilbert Instantaneous PLV** | **0.983851** |
+| **Kuramoto Order Parameter, mean R(t)** | **0.983851** |
+| **Pairwise Phase Dispersion** | **0.222575 rad** |
+| **Phase-Lag Distribution Std. Dev.** | **0.241026 rad** |
 | **Cluster Cross-Correlation** | **0.855814** |
 | **Varactor Bridge Current RMS** | **0.070779 mA** |
 | **Simulation Duration** | 500 ms |
@@ -184,21 +188,25 @@ Signed bridge currents are summed at each neuron and injected into its membrane-
 
 ### Phase-Locking Verification
 
-The following verification plot is generated automatically on every simulation run. It displays all 16 neuron membrane potentials, instantaneous phases extracted from those waveforms, and the mean Kirchhoff LC bridge current over the 500 ms window.
+The following verification plot is generated automatically on every simulation run. It displays the Kuramoto order-parameter time series and the 16x16 pairwise phase-difference matrix computed from the physical 500 ms waveform.
 
 ![Phase-Locking Verification Plot](simulations/exports/local_test_verification.png)
 
-*Figure 1: Top — 16 neuron V_m traces; Middle — Hilbert-derived membrane-voltage phases; Bottom — inter-neuron phase difference and mean Kirchhoff bridge current (mA).*
+*Figure 1: Top — global Kuramoto R(t); Bottom — pairwise phase-difference matrix in radians.*
 
 ### How the Metrics Are Computed
 
-- **Phase-Locking Value (PLV):** After the physical simulation completes, SciPy's Hilbert Transform is applied independently to each simulated membrane-voltage waveform `V_m(t)`. A complex phase vector `exp(j * φ_i(t))` is then formed for every neuron *i*, and the PLV is the magnitude of the across-neuron average:
+- **Five-method phase cross-validation:** After physical integration, spike-time PLV samples the analytic phase at each discrete voltage crossing; Hilbert PLV uses the continuous analytic phase; Kuramoto `R(t)` is the instantaneous network magnitude; the pairwise matrix reports circular phase deltas for all 16x16 neuron pairs; and the phase-lag distribution reports physical dispersion. The verified breakdown is:
 
-  ```
-  PLV(t) = |(1/N) Σ_i exp(j * φ_i(t))|
-  ```
+  | Method | Verified value |
+  |---|---:|
+  | Spike-Time PLV | 0.874361 |
+  | Hilbert Instantaneous PLV | 0.983851 |
+  | Kuramoto mean `R(t)` | 0.983851 |
+  | Pairwise Phase Dispersion | 0.222575 rad |
+  | Phase-Lag Distribution Std. Dev. | 0.241026 rad |
 
-  The verification run measured **0.988065** across the 16 physical membrane traces.
+  This deliberately replaces a single idealized PLV claim with independent event-, waveform-, and network-level checks.
 
 - **Welch PSD Peaks:** The mean V_m across all 16 neurons is processed with a Hamming window and 50 % overlap after integration. The run reported emergent envelope peaks at **2.00 Hz** and **40.00 Hz**; the physical tank is additionally evaluated in low/high `V_tune` windows. `tuning_welch_peaks.csv` reports **1.318 kHz** for the sampled low-tune case.
 
@@ -305,7 +313,7 @@ python3 simulations/simulate_adex_resonant_core.py --interactive
 The simulation will:
 - Integrate all 16 AdEx neurons with 15–20 % heterogeneous background drive
 - Compute Welch PSD spectra for Theta (4–8 Hz) and Gamma (30–80 Hz) bands
-- Calculate the Phase-Locking Value (PLV) across the entire 16-neuron ensemble
+- Calculate five cross-validated phase-coherence metrics across the entire 16-neuron ensemble
 - Measure the varactor bridge RMS current
 - Save the verification plot to `simulations/exports/local_test_verification.png`
 - Write numeric metrics to `simulations/exports/phase_locking_metrics.csv`
@@ -316,7 +324,11 @@ Expected output (verified 2026-09-12):
 |---|---|
 | Theta peak | 6.00 Hz |
 | Gamma peak | 56.00 Hz |
-| PLV | 1.000000 |
+| Spike-Time PLV | 0.874361 |
+| Hilbert Instantaneous PLV | 0.983851 |
+| Kuramoto mean R(t) | 0.983851 |
+| Pairwise Phase Dispersion | 0.222575 rad |
+| Phase-Lag Distribution Std. Dev. | 0.241026 rad |
 | Bridge current RMS | 2.09 mA |
 
 ---
