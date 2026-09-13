@@ -240,4 +240,10 @@ The KiCad schematic and PCB remain the authority for revision-specific net names
 
 ## Hardware Trim and Resonant Carrier
 
+## 8. Analog Fast-Reset and Thermal Compensation
+
+The analog CMOS fast-reset switch shall force the AdEx membrane capacitor to `V_reset` and present a low-impedance discharge path when `V_m` reaches `V_peak`. The switch must meet `t_reset < 100 ns` across the specified supply, process, load, and temperature corners. Use a dedicated threshold detector with controlled hysteresis, minimum non-overlap between set and reset controls, and a current-limited reset device so parasitic injection does not disturb neighboring resonant nodes.
+
+The BJT/MOSFET bias network shall use a thermal bias mirror compensation topology. Sense the local junction temperature, mirror a proportional correction current into the threshold and adaptation-bias branches, and trim the room-temperature intercept independently from the temperature coefficient. Place the sensing device close to the matched bias pair, use common-centroid or interdigitated matching where practical, and verify mirror compliance voltage at both `-20 C` and `85 C`.
+
 The resonant bridge uses a 100 uH parallel inductor, 10 uF external storage capacitance, and a 10-100 pF reverse-biased varactor. This produces an approximately 5.03 kHz carrier, with theta/gamma represented by envelope modulation. Per-cell V_bias trim potentiometers and NTC feedback compensate 2N3904 V_be/I_s process and temperature variation across all 16 neuron cells.

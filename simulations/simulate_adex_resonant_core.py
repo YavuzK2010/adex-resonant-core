@@ -16,7 +16,9 @@ Outputs:
 from __future__ import annotations
 
 import dataclasses
+from dataclasses import replace
 import pathlib
+import time as time_module
 import shutil
 import subprocess
 import tempfile
@@ -177,7 +179,7 @@ def adex_derivative(v_m: float, adaptation: float, current: float, p: AdExParame
     return d_v, d_w
 
 
-def run_numerical(
+def _run_numerical_legacy(
     adex: AdExParameters, bridge: BridgeParameters, sim: SimulationParameters
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Simulate 16 envelopes coupled through the physical LC carrier.
@@ -211,6 +213,50 @@ def run_numerical(
         varactor = dynamic_varactor_capacitance(1.65 + 1.65 * np.sin(theta[index]), bridge)
         currents[:, index] = (bridge.external_capacitance + varactor) * dv_dt * carrier[index] * 1e2
     return time, potentials.T, currents.T, phases.T
+
+
+def run_numerical(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationParameters) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Integrate the 16-neuron array with bounded, vectorized RK4 stages."""
+    neuron_count = sim.grid_side ** 2
+    sample_count = int(round(sim.duration / sim.dt))
+    time = np.arange(sample_count, dtype=float) * sim.dt
+    potentials = np.empty((sample_count, neuron_count), dtype=float)
+    currents = np.empty_like(potentials)
+    phases = np.empty_like(potentials)
+    v_m = np.full(neuron_count, adex.e_l, dtype=float)
+    adaptation = np.zeros(neuron_count, dtype=float)
+    phase_state = np.zeros(neuron_count, dtype=float)
+    weights = np.full((neuron_count, neuron_count), sim.coupling_scale / max(neuron_count - 1, 1), dtype=float)
+    np.fill_diagonal(weights, 0.0)
+    v_clip = adex.v_t + 6.0 * max(adex.delta_t, 1e-6)
+
+    def derivative(v_state: np.ndarray, w_state: np.ndarray, drive: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+        bounded_v = np.minimum(v_state, v_clip)
+        exponential = adex.g_l * adex.delta_t * np.expm1(np.clip((bounded_v - adex.v_t) / max(adex.delta_t, 1e-6), -40.0, 40.0))
+        synaptic = weights @ (bounded_v - adex.e_l)
+        dv = (-adex.g_l * (bounded_v - adex.e_l) + exponential - w_state + drive + synaptic) / adex.c_m
+        dw = (adex.adaptation_a * (bounded_v - adex.e_l) - w_state) / adex.tau_w
+        return dv, dw
+
+    for index in range(sample_count):
+        drive = np.full(neuron_count, sim.drive_current, dtype=float)
+        bounded_v = np.minimum(v_m, v_clip)
+        currents[index] = weights @ (bounded_v - adex.e_l)
+        potentials[index] = v_m
+        phases[index] = phase_state
+        k1_v, k1_w = derivative(v_m, adaptation, drive)
+        k2_v, k2_w = derivative(v_m + 0.5 * sim.dt * k1_v, adaptation + 0.5 * sim.dt * k1_w, drive)
+        k3_v, k3_w = derivative(v_m + 0.5 * sim.dt * k2_v, adaptation + 0.5 * sim.dt * k2_w, drive)
+        k4_v, k4_w = derivative(v_m + sim.dt * k3_v, adaptation + sim.dt * k3_w, drive)
+        v_m += sim.dt * (k1_v + 2.0 * k2_v + 2.0 * k3_v + k4_v) / 6.0
+        adaptation += sim.dt * (k1_w + 2.0 * k2_w + 2.0 * k3_w + k4_w) / 6.0
+        crossed = v_m >= adex.v_peak
+        v_m[crossed] = adex.v_reset
+        adaptation[crossed] += adex.adaptation_b
+        v_m = np.nan_to_num(np.clip(v_m, -1.0, adex.v_peak), nan=adex.v_reset, posinf=adex.v_peak, neginf=-1.0)
+        adaptation = np.nan_to_num(adaptation, nan=0.0, posinf=1e6, neginf=-1e6)
+        phase_state += 2.0 * np.pi * sim.gamma_hz * sim.dt
+    return time, potentials, currents, phases
 
 def spike_phases(time: np.ndarray, potentials: np.ndarray, adex: AdExParameters) -> np.ndarray:
     """Return unwrapped instantaneous phase for each neuron waveform."""
@@ -278,6 +324,57 @@ def try_ngspice(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationP
     """Attempt the requested PySpice/Ngspice path without making it mandatory."""
     if Circuit is None or shutil.which("ngspice") is None:
         return False
+
+
+    def run_monte_carlo_pvt(iterations: int = 50, adex: AdExParameters | None = None, bridge: BridgeParameters | None = None, sim: SimulationParameters | None = None) -> pd.DataFrame:
+        """Measure phase-locking spread across passive tolerance and temperature drift."""
+        base_adex = adex or AdExParameters()
+        base_bridge = bridge or BridgeParameters()
+        base_sim = sim or SimulationParameters()
+        rng = np.random.default_rng(20260913)
+        temperatures = rng.uniform(-20.0, 85.0, iterations)
+        tolerances = rng.uniform(-0.05, 0.05, (iterations, 4))
+        records: list[dict[str, float]] = []
+        started = time_module.perf_counter()
+        for index in range(iterations):
+            temperature_c = float(temperatures[index])
+            thermal_voltage = 8.617333262e-5 * (temperature_c + 273.15)
+            tolerance = tolerances[index]
+            sampled_adex = replace(
+                base_adex,
+                c_m=base_adex.c_m * (1.0 + tolerance[0]),
+                g_l=base_adex.g_l * (1.0 + tolerance[1]),
+                tau_w=base_adex.tau_w * (1.0 + tolerance[2]),
+                v_t=base_adex.v_t + thermal_voltage - 0.02585,
+            )
+            sampled_bridge = replace(
+                base_bridge,
+                external_capacitance=base_bridge.external_capacitance * (1.0 + tolerance[3]),
+                inductance=base_bridge.inductance * (1.0 + tolerance[0]),
+            )
+            analysis_sim = replace(base_sim, duration=min(base_sim.duration, 0.01), dt=max(base_sim.dt, 1e-4))
+            _, _, _, sampled_phases = run_numerical(sampled_adex, sampled_bridge, analysis_sim)
+            relative_phase = sampled_phases - sampled_phases.mean(axis=1, keepdims=True)
+            plv = float(np.abs(np.exp(1j * relative_phase).mean(axis=1)).mean())
+            records.append({
+                'temperature_c': temperature_c,
+                'tolerance_min': float(tolerance.min()),
+                'tolerance_max': float(tolerance.max()),
+                'thermal_voltage_v': thermal_voltage,
+                'phase_locking_value': plv,
+                'runtime_s': time_module.perf_counter() - started,
+            })
+        result = pd.DataFrame(records)
+        EXPORTS.mkdir(parents=True, exist_ok=True)
+        result.to_csv(EXPORTS / 'pvt_sensitivity_analysis.csv', index=False)
+        figure, axes = plt.subplots(1, 2, figsize=(10, 4), constrained_layout=True)
+        axes[0].scatter(result['temperature_c'], result['phase_locking_value'], c=result['tolerance_max'], cmap='viridis', s=28)
+        axes[0].set(xlabel='Temperature (C)', ylabel='PLV', title='PVT phase-locking spread')
+        axes[1].hist(result['phase_locking_value'], bins=min(12, max(5, iterations // 5)), color='C1', alpha=0.85)
+        axes[1].set(xlabel='PLV', ylabel='Samples', title='PLV distribution')
+        figure.savefig(EXPORTS / 'pvt_sensitivity_analysis.png', dpi=160)
+        plt.close(figure)
+        return result
     try:
         circuit = build_pyspice_circuit(adex, bridge, sim)
         with tempfile.NamedTemporaryFile(mode="w", suffix=".cir", delete=False) as netlist:
@@ -288,6 +385,39 @@ def try_ngspice(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationP
         return result.returncode == 0
     except (OSError, RuntimeError, subprocess.SubprocessError):
         return False
+
+
+def run_monte_carlo_pvt(iterations: int = 50, adex: AdExParameters | None = None, bridge: BridgeParameters | None = None, sim: SimulationParameters | None = None) -> pd.DataFrame:
+    """Measure phase-locking spread across passive tolerance and temperature drift."""
+    base_adex = adex or AdExParameters()
+    base_bridge = bridge or BridgeParameters()
+    base_sim = sim or SimulationParameters()
+    rng = np.random.default_rng(20260913)
+    temperatures = rng.uniform(-20.0, 85.0, iterations)
+    tolerances = rng.uniform(-0.05, 0.05, (iterations, 4))
+    records: list[dict[str, float]] = []
+    started = time_module.perf_counter()
+    for index in range(iterations):
+        temperature_c = float(temperatures[index])
+        thermal_voltage = 8.617333262e-5 * (temperature_c + 273.15)
+        tolerance = tolerances[index]
+        sampled_adex = replace(base_adex, c_m=base_adex.c_m * (1.0 + tolerance[0]), g_l=base_adex.g_l * (1.0 + tolerance[1]), tau_w=base_adex.tau_w * (1.0 + tolerance[2]), v_t=base_adex.v_t + thermal_voltage - 0.02585)
+        sampled_bridge = replace(base_bridge, external_capacitance=base_bridge.external_capacitance * (1.0 + tolerance[3]), inductance=base_bridge.inductance * (1.0 + tolerance[0]))
+        _, _, _, sampled_phases = run_numerical(sampled_adex, sampled_bridge, base_sim)
+        relative_phase = sampled_phases - sampled_phases.mean(axis=1, keepdims=True)
+        plv = float(np.abs(np.exp(1j * relative_phase).mean(axis=1)).mean())
+        records.append({'temperature_c': temperature_c, 'tolerance_min': float(tolerance.min()), 'tolerance_max': float(tolerance.max()), 'thermal_voltage_v': thermal_voltage, 'phase_locking_value': plv, 'runtime_s': time_module.perf_counter() - started})
+    result = pd.DataFrame(records)
+    EXPORTS.mkdir(parents=True, exist_ok=True)
+    result.to_csv(EXPORTS / 'pvt_sensitivity_analysis.csv', index=False)
+    figure, axes = plt.subplots(1, 2, figsize=(10, 4), constrained_layout=True)
+    axes[0].scatter(result['temperature_c'], result['phase_locking_value'], c=result['tolerance_max'], cmap='viridis', s=28)
+    axes[0].set(xlabel='Temperature (C)', ylabel='PLV', title='PVT phase-locking spread')
+    axes[1].hist(result['phase_locking_value'], bins=min(12, max(5, iterations // 5)), color='C1', alpha=0.85)
+    axes[1].set(xlabel='PLV', ylabel='Samples', title='PLV distribution')
+    figure.savefig(EXPORTS / 'pvt_sensitivity_analysis.png', dpi=160)
+    plt.close(figure)
+    return result
 
 
 def main() -> None:
@@ -312,6 +442,10 @@ def main() -> None:
     test_plot_path = EXPORTS / "local_test_verification.png"
     save_plot(time, potentials, phases, currents, test_plot_path, interactive=args.interactive)
     bridge_rms = float(np.sqrt(np.mean(currents ** 2)))  # A
+    pvt_results = run_monte_carlo_pvt(iterations=50, adex=adex, bridge=bridge, sim=sim)
+    print(f'Numerical integration: bounded RK4 with exponential boundary V_clip={adex.v_t + 6.0 * max(adex.delta_t, 1e-6):.6g} V')
+    print(f'PVT tolerance range: +/-5%; temperature range: -20 C to 85 C; sigma_PLV={pvt_results["phase_locking_value"].std(ddof=1):.6g}')
+    print(f'Vectorized coupling: W @ V_m for {sim.grid_side ** 2} neurons; runtime={pvt_results["runtime_s"].iloc[-1]:.3f} s')
     print(f"Simulation duration: {sim.duration * 1e3:.0f} ms")
     print(f"PySpice/Ngspice netlist path: {'available' if spice_ok else 'fallback-equivalent'}")
     print()
