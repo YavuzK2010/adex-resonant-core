@@ -1,4 +1,4 @@
-# AdEx Resonant Core — 4x4 Neuromorphic Resonant SoM Core
+# AdEx Resonant Core: A 16-Neuron AdEx Neuromorphic Core with Tunable Resonant Coupling
 
 <p align="center">
   <img alt="KiCad 10" src="https://img.shields.io/badge/EDA-KiCad%2010-3399FF?logo=pcb&logoColor=white">
@@ -6,6 +6,7 @@
   <img alt="Python 3.14" src="https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white">
   <img alt="Fedora" src="https://img.shields.io/badge/OS-Fedora-294172?logo=fedora&logoColor=white">
   <img alt="DRC 0 Errors" src="https://img.shields.io/badge/DRC-0%20Errors-success">
+  <img alt="Status" src="https://img.shields.io/badge/Status-Pre--Fabrication%20(0%20DRC%2C%20Transistor--Level%20Sim)-yellow">
   <img alt="License" src="https://img.shields.io/badge/License-CERN--OHL--P%20v2-important">
 </p>
 
@@ -13,7 +14,7 @@
 
 ## Executive Summary
 
-The **AdEx Resonant Core** is an open-source, 16-neuron **Adaptive Exponential Integrate-and-Fire (AdEx)** neuromorphic System-on-Module (SoM) implemented as a **70.0 mm × 70.0 mm, 4-layer PCB** with **96 castellated edge pads** for carrier-board integration. Each of the 16 cells is coupled to its four nearest neighbours through a **varactor-tuned LC resonant bridge** (100 mH + 47 nF fixed capacitance + 10–100 nF effective varactor capacitance). Theta and Gamma are emergent envelope bands, not driven frequencies.
+The **AdEx Resonant Core** is an open-source, 16-neuron **Adaptive Exponential Integrate-and-Fire (AdEx)** Tunable Analog Resonant SoM Architecture implemented as a **70.0 mm × 70.0 mm, 4-layer PCB** with **96 castellated edge pads** for carrier-board integration. The current verification reflects a production-ready CAD layout (0 DRC) and second-order transistor-level simulation dynamics, all validated prior to physical silicon/PCB fabrication. Each of the 16 cells is coupled to its four nearest neighbours through a **varactor-tuned LC resonant bridge** (100 mH + 47 nF fixed capacitance + 10–100 nF effective varactor capacitance). Theta and Gamma are emergent envelope bands, not driven frequencies.
 
 The design combines a discrete-analog neuron circuit (2N3904 differential pair, LM393 comparator, BSS138 reset MOSFET) with passive inductors and BB833 varactor diodes to form a tunable resonant coupling matrix. The full 4×4 numerical model uses only passive L/C values, membrane capacitance, DC bias current `I_bias`, heterogeneous initial conditions, and Kirchhoff bridge feedback. There is no external AC or frequency forcing. Post-simulation Welch PSD and Hilbert analysis measured **8.0 Hz** (Theta band), **40.00 Hz** (Gamma band), and **PLV = 0.988065** in the verification run.
 
@@ -338,6 +339,39 @@ Expected output (verified 2026-09-12):
 - **[SoM Integration Guide](docs/som_integration.md)** — Complete carrier-board design contract, including the full 96-pad signal mapping table, power sequencing, reflow profile, bring-up checklist, and mechanical keepouts.
 - **Castellated Pinout:** All 96 pads are assigned with per-neuron V_m, SPIKE_OUT, VDD, VSS, GND, and V_tune signals — one set per neuron, distributed evenly across the four edges.
 - **Power Domains:** The SoM expects a 3.3 V logic supply (VDD/GND) and a quiet analog return (VSS). Tuning voltage V_tune is referenced to GND.
+
+---
+
+## Physical Hardware Bring-Up & Experimental Roadmap
+
+The following benchmarks are planned for the physical silicon/PCB prototyping phase. All metrics target oscilloscope-level verification against the transistor-level simulation baselines established in this repository.
+
+### Bench 1 — CPLD/FPGA AER Event Capture
+- **Objective:** Validate Address-Event Representation (AER) handshake timing between the SoM and an external CPLD/FPGA carrier.
+- **Measurements:** AER request/acknowledge pulse widths, neuron-to-neuron event latency, and spike-packet collision rate under sustained 16-neuron firing.
+- **Success Criterion:** < 1 µs handshake jitter; zero dropped packets over 10⁶ events.
+
+### Bench 2 — Varactor Tuning Curve (C-V Sweep)
+- **Objective:** Characterise the BB833 varactor diode's capacitance vs. `V_tune` (0–5 V) on the fabricated PCB.
+- **Measurements:** LCR-meter or VNA sweep of each resonant LC bridge; compare against the BB833 datasheet 10–100 nF range.
+- **Success Criterion:** Measured tuning range within ±10 % of simulation prediction (1.313 kHz–2.108 kHz carrier envelope).
+
+### Bench 3 — Oscilloscope V_m Traces (Single-Neuron Dynamics)
+- **Objective:** Capture membrane-potential waveforms from any of the 16 V_m monitor pads under DC bias.
+- **Measurements:** Resting potential, action-potential amplitude, spike width (FWHM), and after-hyperpolarisation (AHP) depth.
+- **Success Criterion:** Waveform shape consistent with 2nd-order transistor-level Ngspice simulation; spike amplitude ≥ 2 V pk-pk.
+
+### Bench 4 — 16-Neuron Multi-Node Phase Coherence
+- **Objective:** Simultaneous 4-channel oscilloscope capture of V_m from four neighbouring cells to verify emergent Theta/Gamma coupling.
+- **Measurements:** Hilbert-based instantaneous phase difference, cross-correlation lag, and spike-time PLV.
+- **Success Criterion:** PLV ≥ 0.85 on at least two adjacent neuron pairs; measurable Theta (4–8 Hz) and Gamma (30–80 Hz) envelope modulation in Welch PSD.
+
+### Bench 5 — Thermal and Supply Sensitivity
+- **Objective:** Quantify oscillator drift over 0–50 °C ambient and ±5 % supply rail variation.
+- **Measurements:** V_m baseline drift, spike-rate change per °C, and resonant-peak shift per mV supply ripple.
+- **Success Criterion:** Spike-rate temperature coefficient < 1 Hz/°C; resonant peak shift < 5 % over full operating range.
+
+> **Note:** All bench results will be published as addenda to this repository once hardware is fabricated and tested.
 
 ---
 

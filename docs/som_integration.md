@@ -1,7 +1,7 @@
 # AdEx Resonant Core SoM Integration Guide
 
-**Document status:** Carrier-board integration contract  
-**Module:** AdEx Resonant Core 16-neuron SoM  
+**Document status:** Carrier-board integration contract (pre-fabrication; 0 DRC, transistor-level simulation verified)
+**Module:** AdEx Resonant Core 16-neuron Tunable Analog Resonant SoM
 **Board outline:** 70 mm x 70 mm, four copper layers  
 **Interface:** 96 castellated edge pads, 0.5 mm nominal pitch unless the released fabrication drawing states otherwise
 
