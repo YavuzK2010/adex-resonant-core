@@ -15,7 +15,7 @@
 
 The **AdEx Resonant Core** is an open-source, 16-neuron **Adaptive Exponential Integrate-and-Fire (AdEx)** neuromorphic System-on-Module (SoM) implemented as a **70.0 mm × 70.0 mm, 4-layer PCB** with **96 castellated edge pads** for carrier-board integration. Each of the 16 cells is coupled to its four nearest neighbours through a **varactor-tuned LC resonant bridge** (100 mH + 47 nF fixed capacitance + 10–100 nF effective varactor capacitance). Theta and Gamma are emergent envelope bands, not driven frequencies.
 
-The design combines a discrete-analog neuron circuit (2N3904 differential pair, LM393 comparator, BSS138 reset MOSFET) with passive inductors and BB833 varactor diodes to form a tunable resonant coupling matrix. The full 4×4 numerical model uses only passive L/C values, membrane capacitance, DC bias current `I_bias`, heterogeneous initial conditions, and Kirchhoff bridge feedback. There is no external AC or frequency forcing. Post-simulation Welch PSD and Hilbert analysis measured **2.00 Hz**, **40.00 Hz**, and **PLV = 0.988065** in the verification run.
+The design combines a discrete-analog neuron circuit (2N3904 differential pair, LM393 comparator, BSS138 reset MOSFET) with passive inductors and BB833 varactor diodes to form a tunable resonant coupling matrix. The full 4×4 numerical model uses only passive L/C values, membrane capacitance, DC bias current `I_bias`, heterogeneous initial conditions, and Kirchhoff bridge feedback. There is no external AC or frequency forcing. Post-simulation Welch PSD and Hilbert analysis measured **8.0 Hz** (Theta band), **40.00 Hz** (Gamma band), and **PLV = 0.988065** in the verification run.
 
 The physical parallel LC tank tunes from approximately **1.313 kHz to 2.108 kHz** as `V_tune` moves from 5 V to 0 V. This is a **60.6% frequency shift**; the observed Theta and Gamma rhythms are **envelope modulation rates** of the carrier, not the carrier itself. A 3.5 kHz upper endpoint is not physically compatible with the specified 100 mH, 47 nF, and 10–100 nF values.
 
@@ -167,14 +167,14 @@ Signed bridge currents are summed at each neuron and injected into its membrane-
 | **Tank resonance (calculated)** | 1.313–2.108 kHz |
 | **Frequency tuning ratio** | 60.6% (>25%) |
 | **Welch PSD tank peaks** | 1.318–2.051 kHz; 183.1 Hz/V |
-| **Emergent envelope: Theta** | **2.00 Hz** (Welch PSD peak) |
+| **Emergent envelope: Theta** | **8.0 Hz** (Welch PSD peak) |
 | **Emergent envelope: Gamma** | **40.00 Hz** (Welch PSD peak) |
 
 ### Key Performance Metrics
 
 | Metric | Value |
 |---|---|
-| **Emergent Theta-band peak** (Welch PSD of mean V_m) | **2.00 Hz** |
+| **Emergent Theta-band peak** (Welch PSD of mean V_m) | **8.0 Hz** |
 | **Emergent Gamma-band peak** (Welch PSD of mean V_m) | **40.00 Hz** |
 | **Spike-Time PLV** | **0.874361** |
 | **Hilbert Instantaneous PLV** | **0.983851** |

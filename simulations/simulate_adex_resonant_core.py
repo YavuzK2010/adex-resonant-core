@@ -374,8 +374,8 @@ def compute_metrics(
     relative_phase = phases - phases.mean(axis=1, keepdims=True)
     plv = float(np.abs(np.exp(1j * relative_phase).mean(axis=0)).mean())
     rms_mA = float(np.sqrt(np.mean(np.square(currents))) * 1000.0)
-    theta_peak = peak_in_band(1.0, 15.0)
-    gamma_peak = peak_in_band(25.0, 120.0)
+    theta_peak = peak_in_band(4.0, 8.0)
+    gamma_peak = peak_in_band(30.0, 80.0)
     corr_matrix = np.corrcoef(potentials.T)
     mask = ~np.eye(corr_matrix.shape[0], dtype=bool)
     cluster_correlation = float(corr_matrix[mask].mean()) if potentials.shape[1] > 1 else 1.0

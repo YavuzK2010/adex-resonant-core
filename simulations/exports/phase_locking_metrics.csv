@@ -6,7 +6,7 @@ pairwise_phase_dispersion_rad,0.2225745990980227
 phase_lag_distribution_std_rad,0.2410256165177544
 phase_locking_value,0.9880652255041457
 cluster_cross_correlation,0.8462014006270224
-theta_peak_frequency_hz,2.0
+theta_peak_frequency_hz,8.0
 gamma_peak_frequency_hz,40.0
 bridge_rms_current_nA,70778.92572907238
 bridge_rms_current_mA,0.07077892572907238
