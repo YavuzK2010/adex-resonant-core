@@ -246,7 +246,13 @@ The analog CMOS fast-reset switch shall force the AdEx membrane capacitor to `V_
 
 The BJT/MOSFET bias network shall use a thermal bias mirror compensation topology. Sense the local junction temperature, mirror a proportional correction current into the threshold and adaptation-bias branches, and trim the room-temperature intercept independently from the temperature coefficient. Place the sensing device close to the matched bias pair, use common-centroid or interdigitated matching where practical, and verify mirror compliance voltage at both `-20 C` and `85 C`.
 
-The resonant bridge uses a 100 mH parallel inductor, 47 nF fixed capacitance, and a 10-100 nF effective varactor capacitance controlled over 0-5 V `V_tune`. The physical resonance is approximately 1.313-2.108 kHz, a 60.6% tuning ratio (>25%), with verified Welch peaks at 1.318 kHz and 2.051 kHz (183.1 Hz/V). A 3.5 kHz upper endpoint is not physically compatible with these component values; theta/gamma remain envelope modulation rates. Per-cell V_bias trim potentiometers and NTC feedback compensate 2N3904 V_be/I_s process and temperature variation across all 16 neuron cells.
+The resonant bridge uses a 100 mH inductor, 47 nF fixed capacitance, and a 10-100 nF effective varactor capacitance controlled over 0-5 V `V_tune`. The physical resonance is approximately 1.313-2.108 kHz, a 60.6% tuning ratio (>25%), with verified Welch peaks at 1.318 kHz and 2.051 kHz (183.1 Hz/V). The numerical model integrates each bridge as a second-order Kirchhoff state-space system:
+
+`dQ_ij/dt = I_ij`
+
+`dI_ij/dt = ((V_m,i - V_m,j) - R_s I_ij - Q_ij/C_var(V_tune)) / L`
+
+The signed bridge currents are summed into each cell's membrane-current input by Kirchhoff Current Law. Phase-locking is measured only after integration: SciPy's Hilbert Transform is applied to the simulated membrane-voltage time-series `V_m(t)` before computing PLV. No phase oscillator or Kuramoto coupling state is used. A 3.5 kHz upper endpoint is not physically compatible with these component values; theta/gamma remain envelope modulation rates. Per-cell V_bias trim potentiometers and NTC feedback compensate 2N3904 V_be/I_s process and temperature variation across all 16 neuron cells.
 
 ## 9. Mixed-Signal Isolation, Guard Rings, and Calibration
 

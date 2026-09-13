@@ -147,9 +147,15 @@ Each neuron cell includes a **BJT V_bias trim potentiometer** for fine-tuning th
 
 ---
 
-## Simulation & Spectral Metrics (Welch PSD Verified)
+## Simulation & Spectral Metrics (State-Space RLC Verified)
 
-A full 16-neuron numerical integration of the AdEx dynamics + varactor LC bridge network was executed via `simulate_adex_resonant_core.py`. The model supports both PySpice/Ngspice netlist emission and a pure-numerical fallback for CI environments. All spectral estimates are computed via **Welch's averaged periodogram** (Hamming window, 50 % overlap) on the mean membrane potential of the 16-neuron ensemble.
+A full 16-neuron numerical integration of the AdEx dynamics plus physical varactor LC bridge network is executed via `simulate_adex_resonant_core.py`. Every bridge is integrated as a second-order Kirchhoff state-space system with charge `Q_ij` and current `I_ij` states:
+
+`dQ_ij/dt = I_ij`
+
+`dI_ij/dt = ((V_m,i - V_m,j) - R_s I_ij - Q_ij/C_var(V_tune)) / L`
+
+Signed bridge currents are summed at each neuron and injected into its membrane-current equation. The model supports both PySpice/Ngspice netlist emission and a pure-numerical fallback for CI environments. All spectral estimates are computed via **Welch's averaged periodogram** (Hamming window, 50 % overlap) on the mean membrane potential of the 16-neuron ensemble.
 
 ### Physical LC Tank Parameters
 
@@ -178,15 +184,15 @@ A full 16-neuron numerical integration of the AdEx dynamics + varactor LC bridge
 
 ### Phase-Locking Verification
 
-The following verification plot is generated automatically on every simulation run. It displays all 16 neuron membrane potentials, per-cell instantaneous spike phases, and the mean LC bridge current over the 500 ms window.
+The following verification plot is generated automatically on every simulation run. It displays all 16 neuron membrane potentials, instantaneous phases extracted from those waveforms, and the mean Kirchhoff LC bridge current over the 500 ms window.
 
 ![Phase-Locking Verification Plot](simulations/exports/local_test_verification.png)
 
-*Figure 1: Top — 16 neuron V_m traces; Middle — instantaneous spike phases (0–2π); Bottom — inter-neuron phase difference and mean LC bridge current (mA).*
+*Figure 1: Top — 16 neuron V_m traces; Middle — Hilbert-derived membrane-voltage phases; Bottom — inter-neuron phase difference and mean Kirchhoff bridge current (mA).*
 
 ### How the Metrics Are Computed
 
-- **Phase-Locking Value (PLV):** For each time step, a complex phase vector `exp(j * φ_i(t))` is formed for every neuron *i* from its instantaneous spike phase φ_i(t). The PLV is the magnitude of the across-neuron average of these vectors:
+- **Phase-Locking Value (PLV):** After the physical simulation completes, SciPy's Hilbert Transform is applied independently to each simulated membrane-voltage waveform `V_m(t)`. A complex phase vector `exp(j * φ_i(t))` is then formed for every neuron *i*, and the PLV is the magnitude of the across-neuron average:
 
   ```
   PLV(t) = |(1/N) Σ_i exp(j * φ_i(t))|

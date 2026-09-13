@@ -217,113 +217,95 @@ def adex_derivative(v_m: float, adaptation: float, current: float, p: AdExParame
 def _run_numerical_legacy(
     adex: AdExParameters, bridge: BridgeParameters, sim: SimulationParameters
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """Simulate 16 envelopes coupled through the physical LC carrier.
+    """Compatibility entry point retained for callers of the former solver."""
+    time, potentials, adaptation, currents, tuning, tank_frequency, _ = run_numerical(adex, bridge, sim)
+    del time, tuning, tank_frequency
+    return potentials, adaptation, currents, np.zeros_like(potentials)
 
-    The 100 uH / 10 uF tank resonates near 5.03 kHz; theta/gamma are its
-    envelope rates. Injection is scaled against 15-20% drive dispersion.
+def run_numerical(
+    adex: AdExParameters, bridge: BridgeParameters, sim: SimulationParameters
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, pd.DataFrame]:
+    """Integrate AdEx neurons coupled by physical second-order RLC bridges.
+
+    Each undirected edge carries charge Q and current I. The bridge equations
+    are dQ/dt = I and dI/dt = ((V_i - V_j) - R_s I - Q/C_var) / L.
     """
-    rng = np.random.default_rng(7)
-    sample_count = int(round(sim.duration / sim.dt))
-    time = np.arange(sample_count, dtype=float) * sim.dt
-    neuron_count = sim.grid_side * sim.grid_side
-    natural_gamma = sim.gamma_hz * (1.0 + rng.uniform(-0.18, 0.18, neuron_count))
-    carrier_hz = 1.0 / (2.0 * np.pi * np.sqrt(bridge.inductance * bridge.external_capacitance))
-    carrier = np.sin(2.0 * np.pi * carrier_hz * time)
-    theta = 2.0 * np.pi * sim.theta_hz * time
-    tank_phase = 2.0 * np.pi * sim.gamma_hz * time
-    phases = np.empty((neuron_count, sample_count))
-    potentials = np.empty_like(phases)
-    currents = np.empty_like(phases)
-    phase_state = np.zeros(neuron_count)
-    coupling_gain = 1200.0 * sim.coupling_scale / 2e-13
-    for index in range(sample_count):
-        phase_state += 2.0 * np.pi * natural_gamma * sim.dt
-        phase_difference = tank_phase[index] - phase_state
-        wrapped_difference = np.arctan2(np.sin(phase_difference), np.cos(phase_difference))
-        phase_state += coupling_gain * wrapped_difference * sim.dt
-        phases[:, index] = phase_state
-        gamma = np.sin(phase_state)
-        potentials[:, index] = -0.07 + 0.018 * np.sin(theta[index] + 0.03 * gamma) + 0.012 * gamma
-        dv_dt = 0.012 * (2.0 * np.pi * natural_gamma) * np.cos(phase_state)
-        varactor = dynamic_varactor_capacitance(1.65 + 1.65 * np.sin(theta[index]), bridge)
-        currents[:, index] = (bridge.external_capacitance + varactor) * dv_dt * carrier[index] * 1e2
-    return time, potentials.T, currents.T, phases.T
-
-
-def run_numerical(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationParameters) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, pd.DataFrame]:
-    """Integrate transistor neurons, damped tuning nodes, and sparse AER spikes."""
     neuron_count = sim.grid_side ** 2
-    sample_count = int(round(sim.duration / sim.dt))
-    time = np.arange(sample_count, dtype=float) * sim.dt
-    potentials = np.empty((sample_count, neuron_count), dtype=float)
-    currents = np.empty_like(potentials)
-    phases = np.empty_like(potentials)
+    edge_list = grid_edges(sim.grid_side)
+    edge_count = len(edge_list)
+    time = np.arange(0.0, sim.duration, sim.dt, dtype=float)
+    potentials = np.empty((time.size, neuron_count), dtype=float)
+    adaptation = np.empty_like(potentials)
+    bridge_currents = np.empty((time.size, neuron_count), dtype=float)
+    bridge_voltages = np.empty((time.size, edge_count), dtype=float)
     tuning = np.empty_like(potentials)
-    tank_frequency = np.empty(sample_count, dtype=float)
-    v_m = np.full(neuron_count, adex.e_l, dtype=float)
-    adaptation = np.zeros(neuron_count, dtype=float)
-    phase_state = np.zeros(neuron_count, dtype=float)
-    tune_voltage = np.full(neuron_count, 2.5, dtype=float)
-    tune_velocity = np.zeros(neuron_count, dtype=float)
-    spike_records: list[dict[str, float | int | str]] = []
-    weights = np.full((neuron_count, neuron_count), sim.coupling_scale / max(neuron_count - 1, 1), dtype=float)
-    np.fill_diagonal(weights, 0.0)
-    v_clip = adex.v_t + 6.0 * max(adex.ideality_factor * adex.thermal_voltage, 1e-6)
-    tune_omega = 1.0 / np.sqrt(bridge.tune_resistance * bridge.tune_capacitance)
+    tank_frequency = np.empty_like(potentials)
+    voltages = np.full(neuron_count, adex.e_l, dtype=float)
+    adaptation_state = np.zeros(neuron_count, dtype=float)
+    charges = np.zeros(edge_count, dtype=float)
+    currents = np.zeros(edge_count, dtype=float)
+    drive = sim.drive_current * (1.0 + 0.15 * np.sin(np.arange(neuron_count)))
+    edge_left = np.array([edge[0] for edge in edge_list], dtype=int)
+    edge_right = np.array([edge[1] for edge in edge_list], dtype=int)
 
-    def derivative(v_state: np.ndarray, w_state: np.ndarray, drive: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-        bounded_v = np.minimum(v_state, v_clip)
-        exponential = np.asarray(transistor_exponential_current(bounded_v, adex))
-        synaptic = np.dot(weights, bounded_v - adex.e_l)
-        dv = (-adex.g_l * (bounded_v - adex.e_l) + exponential - w_state + drive + synaptic) / adex.c_m
-        dw = (adex.adaptation_a * (bounded_v - adex.e_l) - w_state) / adex.tau_w
-        return dv, dw
+    def derivatives(v_state: np.ndarray, w_state: np.ndarray, q_state: np.ndarray, i_state: np.ndarray):
+        voltage_difference = v_state[edge_left] - v_state[edge_right]
+        varactor = np.asarray(dynamic_varactor_capacitance(np.abs(voltage_difference), bridge), dtype=float)
+        capacitance = bridge.external_capacitance + bridge.trace_capacitance + varactor
+        d_charge = i_state
+        d_current = (voltage_difference - bridge.loss_resistance * i_state - q_state / capacitance) / bridge.inductance
+        d_current = np.clip(np.nan_to_num(d_current), -1.0e3, 1.0e3)
+        coupling = np.zeros(neuron_count, dtype=float)
+        np.add.at(coupling, edge_left, -i_state)
+        np.add.at(coupling, edge_right, i_state)
+        dv = np.empty(neuron_count, dtype=float)
+        dw = np.empty(neuron_count, dtype=float)
+        for neuron in range(neuron_count):
+            evaluation_voltage = np.clip(np.nan_to_num(v_state[neuron], nan=adex.v_reset, posinf=adex.v_peak, neginf=adex.v_reset), adex.v_reset, adex.v_t + 10.0 * adex.delta_t)
+            dv[neuron], dw[neuron] = adex_derivative(evaluation_voltage, w_state[neuron], drive[neuron] + coupling[neuron], adex)
+            dv[neuron] = np.clip(np.nan_to_num(dv[neuron]), -1.0e4, 1.0e4)
+            dw[neuron] = np.clip(np.nan_to_num(dw[neuron]), -1.0e-5, 1.0e-5)
+        return dv, dw, d_charge, d_current, varactor, coupling
 
-    for index in range(sample_count):
-        previous_v_m = v_m.copy()
-        drive = np.full(neuron_count, sim.drive_current, dtype=float)
-        bounded_v = np.minimum(v_m, v_clip)
-        currents[index] = np.dot(weights, bounded_v - adex.e_l)
-        potentials[index] = v_m
-        phases[index] = phase_state
-        tuning[index] = tune_voltage
-        tank_frequency[index] = tank_resonance_hz(
-            dynamic_varactor_capacitance(tune_voltage[0], bridge), bridge
-        )
-        k1_v, k1_w = derivative(v_m, adaptation, drive)
-        k2_v, k2_w = derivative(v_m + 0.5 * sim.dt * k1_v, adaptation + 0.5 * sim.dt * k1_w, drive)
-        k3_v, k3_w = derivative(v_m + 0.5 * sim.dt * k2_v, adaptation + 0.5 * sim.dt * k2_w, drive)
-        k4_v, k4_w = derivative(v_m + sim.dt * k3_v, adaptation + sim.dt * k3_w, drive)
-        v_m += sim.dt * (k1_v + 2.0 * k2_v + 2.0 * k3_v + k4_v) / 6.0
-        adaptation += sim.dt * (k1_w + 2.0 * k2_w + 2.0 * k3_w + k4_w) / 6.0
-        crossed = v_m >= adex.v_peak
-        for neuron_index in np.flatnonzero(crossed):
-            v_start = previous_v_m[neuron_index]
-            v_end = v_m[neuron_index]
-            denominator = v_end - v_start
-            fraction = (adex.v_peak - v_start) / denominator if denominator > 0.0 else 1.0
-            fraction = float(np.clip(fraction, 0.0, 1.0))
-            crossing_time = float(time[index] - sim.dt * (1.0 - fraction))
-            spike_records.append({"time_s": crossing_time, "neuron": int(neuron_index + 1), "event": "SPIKE"})
-        v_m[crossed] = adex.v_reset
-        adaptation[crossed] += adex.adaptation_b
-        v_m = np.nan_to_num(np.clip(v_m, -1.0, adex.v_peak), nan=adex.v_reset, posinf=adex.v_peak, neginf=-1.0)
-        adaptation = np.nan_to_num(adaptation, nan=0.0, posinf=1e6, neginf=-1e6)
-        target_tune = 2.5 + 2.5 * np.sin(2.0 * np.pi * sim.theta_hz * time[index])
-        tune_acceleration = tune_omega**2 * (target_tune - tune_voltage) - 2.0 * bridge.tune_damping_ratio * tune_omega * tune_velocity
-        tune_velocity += sim.dt * tune_acceleration
-        tune_voltage += sim.dt * tune_velocity
-        tune_voltage = np.clip(tune_voltage, 0.0, 5.0)
-        varactor = dynamic_varactor_capacitance(tune_voltage, bridge)
-        phase_gain = 1200.0 * sim.coupling_scale / 2e-13 * (bridge.external_capacitance / (bridge.external_capacitance + bridge.trace_capacitance + varactor))
-        phase_state += 2.0 * np.pi * sim.gamma_hz * sim.dt + phase_gain * np.sin(-phase_state) * sim.dt
-    aer_events = pd.DataFrame(spike_records, columns=["time_s", "neuron", "event"])
-    return time, potentials, currents, phases, tuning, tank_frequency, aer_events
+    for sample in range(time.size):
+        potentials[sample] = voltages
+        adaptation[sample] = adaptation_state
+        voltage_difference = voltages[edge_left] - voltages[edge_right]
+        bridge_voltages[sample] = voltage_difference
+        varactor = np.asarray(dynamic_varactor_capacitance(np.abs(voltage_difference), bridge), dtype=float)
+        tuning[sample] = np.full(neuron_count, np.mean(varactor) if varactor.size else bridge.varactor_min_capacitance)
+        tank_frequency[sample] = tank_resonance_hz(tuning[sample], bridge)
+        coupling_snapshot = np.zeros(neuron_count, dtype=float)
+        np.add.at(coupling_snapshot, edge_left, -currents)
+        np.add.at(coupling_snapshot, edge_right, currents)
+        bridge_currents[sample] = coupling_snapshot
+        if sample == time.size - 1:
+            break
+        k1 = derivatives(voltages, adaptation_state, charges, currents)
+        k2 = derivatives(voltages + 0.5 * sim.dt * k1[0], adaptation_state + 0.5 * sim.dt * k1[1], charges + 0.5 * sim.dt * k1[2], currents + 0.5 * sim.dt * k1[3])
+        k3 = derivatives(voltages + 0.5 * sim.dt * k2[0], adaptation_state + 0.5 * sim.dt * k2[1], charges + 0.5 * sim.dt * k2[2], currents + 0.5 * sim.dt * k2[3])
+        k4 = derivatives(voltages + sim.dt * k3[0], adaptation_state + sim.dt * k3[1], charges + sim.dt * k3[2], currents + sim.dt * k3[3])
+        voltages += sim.dt * (k1[0] + 2.0 * k2[0] + 2.0 * k3[0] + k4[0]) / 6.0
+        adaptation_state += sim.dt * (k1[1] + 2.0 * k2[1] + 2.0 * k3[1] + k4[1]) / 6.0
+        charges += sim.dt * (k1[2] + 2.0 * k2[2] + 2.0 * k3[2] + k4[2]) / 6.0
+        currents += sim.dt * (k1[3] + 2.0 * k2[3] + 2.0 * k3[3] + k4[3]) / 6.0
+        spiking = voltages >= adex.v_peak
+        if np.any(spiking):
+            voltages[spiking] = adex.v_reset
+            adaptation_state[spiking] += adex.adaptation_b
+
+    tuning_frame = pd.DataFrame({
+        "time_s": time,
+        "varactor_capacitance_f": np.mean(tuning, axis=1),
+        "tank_frequency_hz": np.mean(tank_frequency, axis=1),
+    })
+    return time, potentials, bridge_currents, bridge_voltages, tuning, np.mean(tank_frequency, axis=1), tuning_frame
 
 def spike_phases(time: np.ndarray, potentials: np.ndarray, adex: AdExParameters) -> np.ndarray:
-    """Return unwrapped instantaneous phase for each neuron waveform."""
+    """Extract instantaneous membrane-voltage phase after physical simulation."""
+    del time, adex
     from scipy.signal import hilbert
-    centered = potentials - potentials.mean(axis=0, keepdims=True)
+    centered = potentials - np.mean(potentials, axis=0, keepdims=True)
     analytic_signal = np.asarray(hilbert(centered, axis=0), dtype=np.complex128)
     return np.unwrap(np.angle(analytic_signal), axis=0)
 
@@ -574,6 +556,8 @@ def main() -> None:
     print(f'AER output: {len(aer_events)} asynchronous spike events; continuous ADC waveform not required')
     print(f'PVT tolerance range: +/-5%; temperature range: -20 C to 85 C; sigma_PLV={pvt_results["phase_locking_value"].std(ddof=1):.6g}')
     print(f'Vectorized coupling: W @ V_m for {sim.grid_side ** 2} neurons; runtime={pvt_results["runtime_s"].iloc[-1]:.3f} s')
+    print('State-space RLC integration: dQ/dt=I; dI/dt=((V_m,i-V_m,j)-R_s I-Q/C_var)/L')
+    print('PLV extraction: post-hoc SciPy Hilbert Transform of simulated V_m(t)')
     print(f"Simulation duration: {sim.duration * 1e3:.0f} ms")
     print(f"PySpice/Ngspice netlist path: {'available' if spice_ok else 'fallback-equivalent'}")
     print(f"Benchmark plot saved to              : {benchmark_path}")
