@@ -1,8 +1,0 @@
-metric,value
-phase_locking_value,0.9999997073226918
-cluster_cross_correlation,0.9997800090985473
-theta_peak_frequency_hz,6.0
-gamma_peak_frequency_hz,56.0
-bridge_rms_current_nA,2088606.4630972636
-bridge_rms_current_mA,2.0886064630972636
-bridge_rms_current_uA,2088.6064630972637

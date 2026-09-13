@@ -22,6 +22,7 @@ _autosave-*/
 *.raw
 *.log
 *.op.raw
+simulations/exports/
 simulations/results/*.png
 simulations/results/*.csv
 
