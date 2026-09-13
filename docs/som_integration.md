@@ -268,7 +268,18 @@ This replaces a single idealized PLV claim with event-, waveform-, and network-l
 
 ## 9. Mixed-Signal Isolation, Guard Rings, and Calibration
 
-## 10. 16x16 Synapse Crossbar Routing
+## 10. Physical 4x4 Nearest-Neighbor RLC Routing
+
+The released PCB is modeled as a 4x4 2D nearest-neighbor grid, not a 16x16 synapse crossbar. Each neuron cell has at most four physical bridge connections: North, South, East, and West. The topology therefore contains 24 undirected LC bridges, matching the routed PCB traces and excluding diagonal and long-range connections.
+
+Each bridge is a second-order Kirchhoff state-space element with charge `Q_ij` and branch current `I_ij`:
+
+$$
+\frac{dQ_{ij}}{dt}=I_{ij},\qquad
+\frac{dI_{ij}}{dt}=\frac{(V_{m,i}-V_{m,j})-R_s I_{ij}-Q_{ij}/(C_{fixed}+C_{var}(V_{tune}))}{L}
+$$
+
+The AdEx membrane equation receives only the signed sum of these physical branch currents. There is no artificial all-to-all voltage coupling matrix and no externally imposed oscillation frequency. The Hilbert, event-phase, and Kuramoto values reported below are measurements of the integrated grid waveform.
 
 Route the 16x16 synapse matrix as an orthogonal two-layer crossbar. Each
 vertical synapse-column trace shall remain on `F.Cu`; each horizontal

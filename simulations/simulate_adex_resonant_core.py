@@ -106,6 +106,9 @@ class SimulationParameters:
     coupling_scale: float = 2e-13
 
 
+GRID_SIZE = 4
+
+
 def dynamic_varactor_capacitance(
     voltage_difference: np.ndarray | float, bridge: BridgeParameters
 ) -> np.ndarray | float:
@@ -146,6 +149,15 @@ def grid_edges(side: int) -> list[tuple[int, int]]:
             if row + 1 < side:
                 edges.append((index, index + side))
     return edges
+
+
+def grid_adjacency() -> np.ndarray:
+    """Return the undirected 4x4 physical nearest-neighbour adjacency matrix."""
+    adjacency = np.zeros((GRID_SIZE * GRID_SIZE, GRID_SIZE * GRID_SIZE), dtype=int)
+    for left, right in grid_edges(GRID_SIZE):
+        adjacency[left, right] = 1
+        adjacency[right, left] = 1
+    return adjacency
 
 
 def build_pyspice_circuit(
@@ -229,6 +241,8 @@ def run_numerical(
     """
     neuron_count = sim.grid_side ** 2
     edge_list = grid_edges(sim.grid_side)
+    adjacency = grid_adjacency()
+    edge_list = [(left, right) for left in range(adjacency.shape[0]) for right in range(left + 1, adjacency.shape[1]) if adjacency[left, right]]
     edge_count = len(edge_list)
     time = np.arange(0.0, sim.duration, sim.dt, dtype=float)
     potentials = np.empty((time.size, neuron_count), dtype=float)
@@ -622,7 +636,7 @@ def main() -> None:
         print(f'Welch tank peaks: low V_tune={low_peak:.3f} Hz, high V_tune={high_peak:.3f} Hz, |df/dV_tune|={tune_slope:.3f} Hz/V')
     print(f'AER output: {len(aer_events)} asynchronous spike events; continuous ADC waveform not required')
     print(f'Parametric sensitivity range: passive ±5%; temperature −20 °C to 85 °C; sigma_PLV={parametric_results["phase_locking_value"].std(ddof=1):.6g}')
-    print(f'Vectorized coupling: W @ V_m for {sim.grid_side ** 2} neurons; runtime={parametric_results["runtime_s"].iloc[-1]:.3f} s')
+    print(f'Physical grid coupling: 4x4 nearest-neighbor Kirchhoff bridges; runtime={parametric_results["runtime_s"].iloc[-1]:.3f} s')
     print('State-space RLC integration: dQ/dt=I; dI/dt=((V_m,i-V_m,j)-R_s I-Q/C_var)/L')
     print('PLV extraction: post-hoc SciPy Hilbert Transform of simulated V_m(t)')
     print(f"Simulation duration: {sim.duration * 1e3:.0f} ms")
@@ -630,6 +644,8 @@ def main() -> None:
     print(f"Benchmark plot saved to              : {benchmark_path}")
     print()
     print("=== AdEx Resonant Core — Execution Report ===")
+    print(f"Physical topology: 4x4 2D nearest-neighbour grid; {len(grid_edges(GRID_SIZE))} RLC bridges")
+    print("Kirchhoff solver: second-order state-space equations dQ/dt=I and dI/dt=((V_m,i-V_m,j)-R_s I-Q/C)/L")
     print(f"  FFT Peak Theta Frequency (Hz)         : {metrics.loc[2, 'value']:.4f}")
     print(f"  FFT Peak Gamma Frequency (Hz)         : {metrics.loc[3, 'value']:.4f}")
     print(f"  Mean Phase-Locking Value (PLV)        : {metrics.loc[0, 'value']:.6f}")

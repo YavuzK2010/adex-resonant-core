@@ -157,6 +157,17 @@ Each neuron cell includes a **BJT V_bias trim potentiometer** for fine-tuning th
 
 A full 16-neuron numerical integration of the AdEx dynamics plus physical varactor LC bridge network is executed via `simulate_adex_resonant_core.py`. Every bridge is integrated as a second-order Kirchhoff state-space system with charge `Q_ij` and current `I_ij` states:
 
+The topology is a physical **4x4 2D nearest-neighbor grid**, matching the PCB trace layout. Each cell connects only to its North, South, East, and West neighbors, giving 24 undirected RLC bridges and no all-to-all voltage coupling matrix. The solver derives the bridge list from this 4x4 adjacency matrix.
+
+For every physical bridge `(i,j)`, the state equations are solved directly:
+
+$$
+\frac{dQ_{ij}}{dt}=I_{ij},\qquad
+\frac{dI_{ij}}{dt}=\frac{(V_{m,i}-V_{m,j})-R_s I_{ij}-Q_{ij}/C_{ij}(V_{tune})}{L}
+$$
+
+The membrane coupling current is the signed Kirchhoff current sum from the cell's physical neighbors, `I_coupling,i = sum_j I_ij`. No synthetic `W @ V_m` term, phase oscillator, or preset frequency drive is used.
+
 `dQ_ij/dt = I_ij`
 
 `dI_ij/dt = ((V_m,i - V_m,j) - R_s I_ij - Q_ij/C_var(V_tune)) / L`
