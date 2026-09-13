@@ -72,7 +72,7 @@ class BridgeParameters:
 
     @property
     def theta_resonance_hz(self) -> float:
-        return 1.0 / (2.0 * np.pi * np.sqrt(self.inductance * self.theta_capacitance))
+        return 1.0 / (2.0 * np.pi * np.sqrt(self.inductance * self.external_capacitance))
 
     @property
     def gamma_resonance_hz(self) -> float:
@@ -201,7 +201,9 @@ def run_numerical(
     coupling_gain = 1200.0 * sim.coupling_scale / 2e-13
     for index in range(sample_count):
         phase_state += 2.0 * np.pi * natural_gamma * sim.dt
-        phase_state += coupling_gain * np.angle(np.exp(1j * (tank_phase[index] - phase_state))) * sim.dt
+        phase_difference = tank_phase[index] - phase_state
+        wrapped_difference = np.arctan2(np.sin(phase_difference), np.cos(phase_difference))
+        phase_state += coupling_gain * wrapped_difference * sim.dt
         phases[:, index] = phase_state
         gamma = np.sin(phase_state)
         potentials[:, index] = -0.07 + 0.018 * np.sin(theta[index] + 0.03 * gamma) + 0.012 * gamma
@@ -214,7 +216,8 @@ def spike_phases(time: np.ndarray, potentials: np.ndarray, adex: AdExParameters)
     """Return unwrapped instantaneous phase for each neuron waveform."""
     from scipy.signal import hilbert
     centered = potentials - potentials.mean(axis=0, keepdims=True)
-    return np.unwrap(np.angle(hilbert(centered, axis=0)), axis=0)
+    analytic_signal = np.asarray(hilbert(centered, axis=0), dtype=np.complex128)
+    return np.unwrap(np.angle(analytic_signal), axis=0)
 
 def compute_metrics(
     time: np.ndarray, potentials: np.ndarray, phases: np.ndarray, currents: np.ndarray
