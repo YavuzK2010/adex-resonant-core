@@ -457,8 +457,8 @@ def try_ngspice(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationP
         return False
 
 
-    def run_monte_carlo_pvt(iterations: int = 50, adex: AdExParameters | None = None, bridge: BridgeParameters | None = None, sim: SimulationParameters | None = None) -> pd.DataFrame:
-        """Measure phase-locking spread across passive tolerance and temperature drift."""
+    def run_monte_carlo_parametric_sensitivity(iterations: int = 50, adex: AdExParameters | None = None, bridge: BridgeParameters | None = None, sim: SimulationParameters | None = None) -> pd.DataFrame:
+        """Measure phase-locking spread across passive component tolerances and macro-parameter variation (C_m, g_l, tau_w, V_t, L, C_ext)."""
         base_adex = adex or AdExParameters()
         base_bridge = bridge or BridgeParameters()
         base_sim = sim or SimulationParameters()
@@ -497,13 +497,13 @@ def try_ngspice(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationP
             })
         result = pd.DataFrame(records)
         EXPORTS.mkdir(parents=True, exist_ok=True)
-        result.to_csv(EXPORTS / 'pvt_sensitivity_analysis.csv', index=False)
+        result.to_csv(EXPORTS / 'parametric_sensitivity_analysis.csv', index=False)
         figure, axes = plt.subplots(1, 2, figsize=(10, 4), constrained_layout=True)
         axes[0].scatter(result['temperature_c'], result['phase_locking_value'], c=result['tolerance_max'], cmap='viridis', s=28)
-        axes[0].set(xlabel='Temperature (C)', ylabel='PLV', title='PVT phase-locking spread')
+        axes[0].set(xlabel='Temperature (C)', ylabel='PLV', title='Parametric sensitivity: PLV spread across passive & macro tolerances')
         axes[1].hist(result['phase_locking_value'], bins=min(12, max(5, iterations // 5)), color='C1', alpha=0.85)
-        axes[1].set(xlabel='PLV', ylabel='Samples', title='PLV distribution')
-        figure.savefig(EXPORTS / 'pvt_sensitivity_analysis.png', dpi=160)
+        axes[1].set(xlabel='PLV', ylabel='Samples', title='PLV distribution (passive & macro tolerances)')
+        figure.savefig(EXPORTS / 'parametric_sensitivity_analysis.png', dpi=160)
         plt.close(figure)
         return result
     try:
@@ -518,8 +518,15 @@ def try_ngspice(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationP
         return False
 
 
-def run_monte_carlo_pvt(iterations: int = 50, adex: AdExParameters | None = None, bridge: BridgeParameters | None = None, sim: SimulationParameters | None = None) -> pd.DataFrame:
-    """Measure phase-locking spread across passive tolerance and temperature drift."""
+def run_monte_carlo_parametric_sensitivity(iterations: int = 50, adex: AdExParameters | None = None, bridge: BridgeParameters | None = None, sim: SimulationParameters | None = None) -> pd.DataFrame:
+    """Measure phase-locking spread across passive component tolerances and macro-parameter variation (C_m, g_l, tau_w, V_t, L, C_ext).
+
+    Note: This analysis sweeps passive-component tolerance (±5 %) and temperature
+    drift (−20 °C to 85 °C).  Detailed BJT/MOSFET process variation (V_BE, beta,
+    I_s, Early-effect mismatch) is **not** included here — those effects require
+    a full SPICE transistor-level PDK Monte Carlo and are scheduled prior to
+    silicon fabrication.
+    """
     base_adex = adex or AdExParameters()
     base_bridge = bridge or BridgeParameters()
     base_sim = sim or SimulationParameters()
@@ -541,13 +548,13 @@ def run_monte_carlo_pvt(iterations: int = 50, adex: AdExParameters | None = None
         records.append({'temperature_c': temperature_c, 'tolerance_min': float(tolerance.min()), 'tolerance_max': float(tolerance.max()), 'thermal_voltage_v': thermal_voltage, 'phase_locking_value': plv, 'runtime_s': time_module.perf_counter() - started})
     result = pd.DataFrame(records)
     EXPORTS.mkdir(parents=True, exist_ok=True)
-    result.to_csv(EXPORTS / 'pvt_sensitivity_analysis.csv', index=False)
+    result.to_csv(EXPORTS / 'parametric_sensitivity_analysis.csv', index=False)
     figure, axes = plt.subplots(1, 2, figsize=(10, 4), constrained_layout=True)
     axes[0].scatter(result['temperature_c'], result['phase_locking_value'], c=result['tolerance_max'], cmap='viridis', s=28)
-    axes[0].set(xlabel='Temperature (C)', ylabel='PLV', title='PVT phase-locking spread')
+    axes[0].set(xlabel='Temperature (C)', ylabel='PLV', title='Parametric sensitivity: PLV spread across passive & macro tolerances')
     axes[1].hist(result['phase_locking_value'], bins=min(12, max(5, iterations // 5)), color='C1', alpha=0.85)
-    axes[1].set(xlabel='PLV', ylabel='Samples', title='PLV distribution')
-    figure.savefig(EXPORTS / 'pvt_sensitivity_analysis.png', dpi=160)
+    axes[1].set(xlabel='PLV', ylabel='Samples', title='PLV distribution (passive & macro tolerances)')
+    figure.savefig(EXPORTS / 'parametric_sensitivity_analysis.png', dpi=160)
     plt.close(figure)
     return result
 
@@ -597,7 +604,7 @@ def main() -> None:
     save_plot(time, potentials, phases, currents, tuning, test_plot_path, interactive=args.interactive)
     save_cross_validation_plot(time, kuramoto, pairwise, test_plot_path)
     bridge_rms = float(np.sqrt(np.mean(currents ** 2)))  # A
-    pvt_results = run_monte_carlo_pvt(iterations=50, adex=adex, bridge=bridge, sim=sim)
+    parametric_results = run_monte_carlo_parametric_sensitivity(iterations=50, adex=adex, bridge=bridge, sim=sim)
     numerical_rate = float(len(aer_events) / max(sim.duration, sim.dt) / sim.grid_side**2)
     spice_rate = numerical_rate if spice_ok else numerical_rate
     benchmark_path = EXPORTS / "benchmark_rk4_vs_pspice.png"
@@ -613,8 +620,8 @@ def main() -> None:
         tune_slope = abs(float(low_peak) - float(high_peak)) / 4.0
         print(f'Welch tank peaks: low V_tune={low_peak:.3f} Hz, high V_tune={high_peak:.3f} Hz, |df/dV_tune|={tune_slope:.3f} Hz/V')
     print(f'AER output: {len(aer_events)} asynchronous spike events; continuous ADC waveform not required')
-    print(f'PVT tolerance range: +/-5%; temperature range: -20 C to 85 C; sigma_PLV={pvt_results["phase_locking_value"].std(ddof=1):.6g}')
-    print(f'Vectorized coupling: W @ V_m for {sim.grid_side ** 2} neurons; runtime={pvt_results["runtime_s"].iloc[-1]:.3f} s')
+    print(f'Parametric sensitivity range: passive ±5%; temperature −20 °C to 85 °C; sigma_PLV={parametric_results["phase_locking_value"].std(ddof=1):.6g}')
+    print(f'Vectorized coupling: W @ V_m for {sim.grid_side ** 2} neurons; runtime={parametric_results["runtime_s"].iloc[-1]:.3f} s')
     print('State-space RLC integration: dQ/dt=I; dI/dt=((V_m,i-V_m,j)-R_s I-Q/C_var)/L')
     print('PLV extraction: post-hoc SciPy Hilbert Transform of simulated V_m(t)')
     print(f"Simulation duration: {sim.duration * 1e3:.0f} ms")

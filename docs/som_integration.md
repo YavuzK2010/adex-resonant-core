@@ -2,6 +2,7 @@
 
 **Document status:** Carrier-board integration contract (pre-fabrication; 0 DRC, transistor-level simulation verified)
 **Module:** AdEx Resonant Core 16-neuron Tunable Analog Resonant SoM
+**Parametric sensitivity:** Passive-component tolerance (±5 %) and temperature drift (−20 °C to 85 °C) Monte Carlo analysis performed on macro-parameters (C_m, g_l, τ_w, V_t, L, C_ext). BJT/MOSFET process variation (V_BE, β, I_s, Early-effect mismatch) is **not** included and will be addressed in a full SPICE transistor-level PDK Monte Carlo prior to silicon fabrication.
 **Board outline:** 70 mm x 70 mm, four copper layers  
 **Interface:** 96 castellated edge pads, 0.5 mm nominal pitch unless the released fabrication drawing states otherwise
 
