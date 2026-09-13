@@ -13,9 +13,9 @@
 
 ## Executive Summary
 
-The **AdEx Resonant Core** is an open-source, 16-neuron **Adaptive Exponential Integrate-and-Fire (AdEx)** neuromorphic System-on-Module (SoM) implemented as a **70.0 mm × 70.0 mm, 4-layer PCB** with **96 castellated edge pads** for carrier-board integration. Each of the 16 cells is coupled to its four nearest neighbours through a **varactor-tuned LC resonant bridge** (100 mH + 47 nF fixed capacitance + 10–100 nF effective varactor capacitance), enabling ultra-low-power phase-locking across the biologically relevant **Theta (6.00 Hz)** and **Gamma (56.00 Hz)** frequency bands.
+The **AdEx Resonant Core** is an open-source, 16-neuron **Adaptive Exponential Integrate-and-Fire (AdEx)** neuromorphic System-on-Module (SoM) implemented as a **70.0 mm × 70.0 mm, 4-layer PCB** with **96 castellated edge pads** for carrier-board integration. Each of the 16 cells is coupled to its four nearest neighbours through a **varactor-tuned LC resonant bridge** (100 mH + 47 nF fixed capacitance + 10–100 nF effective varactor capacitance). Theta and Gamma are emergent envelope bands, not driven frequencies.
 
-The design combines a discrete-analog neuron circuit (2N3904 differential pair, LM393 comparator, BSS138 reset MOSFET) with passive 100 µH inductors and BB833 varactor diodes to form a tunable resonant coupling matrix. The full 4×4 numerical model uses 15–20 % heterogeneous background drive and reports membrane-spectrum peaks from **Welch PSD analysis** rather than analytic resonance estimates. Welch-based spectral verification confirms **PLV = 1.000000** and a **varactor bridge RMS current of 2.09 mA** at the operating point.
+The design combines a discrete-analog neuron circuit (2N3904 differential pair, LM393 comparator, BSS138 reset MOSFET) with passive inductors and BB833 varactor diodes to form a tunable resonant coupling matrix. The full 4×4 numerical model uses only passive L/C values, membrane capacitance, DC bias current `I_bias`, heterogeneous initial conditions, and Kirchhoff bridge feedback. There is no external AC or frequency forcing. Post-simulation Welch PSD and Hilbert analysis measured **2.00 Hz**, **40.00 Hz**, and **PLV = 0.988065** in the verification run.
 
 The physical parallel LC tank tunes from approximately **1.313 kHz to 2.108 kHz** as `V_tune` moves from 5 V to 0 V. This is a **60.6% frequency shift**; the observed Theta and Gamma rhythms are **envelope modulation rates** of the carrier, not the carrier itself. A 3.5 kHz upper endpoint is not physically compatible with the specified 100 mH, 47 nF, and 10–100 nF values.
 
@@ -167,18 +167,18 @@ Signed bridge currents are summed at each neuron and injected into its membrane-
 | **Tank resonance (calculated)** | 1.313–2.108 kHz |
 | **Frequency tuning ratio** | 60.6% (>25%) |
 | **Welch PSD tank peaks** | 1.318–2.051 kHz; 183.1 Hz/V |
-| **Observed envelope: Theta** | **6.00 Hz** (Welch PSD peak) |
-| **Observed envelope: Gamma** | **56.00 Hz** (Welch PSD peak) |
+| **Emergent envelope: Theta** | **2.00 Hz** (Welch PSD peak) |
+| **Emergent envelope: Gamma** | **40.00 Hz** (Welch PSD peak) |
 
 ### Key Performance Metrics
 
 | Metric | Value |
 |---|---|
-| **Theta Resonance Peak** (Welch PSD of mean V_m) | **6.00 Hz** |
-| **Gamma Resonance Peak** (Welch PSD of mean V_m) | **56.00 Hz** |
-| **Phase-Locking Value (PLV)** | **1.000000** |
-| **Cluster Cross-Correlation** | **0.999780** |
-| **Varactor Bridge Current RMS** | **2.09 mA** |
+| **Emergent Theta-band peak** (Welch PSD of mean V_m) | **2.00 Hz** |
+| **Emergent Gamma-band peak** (Welch PSD of mean V_m) | **40.00 Hz** |
+| **Phase-Locking Value (PLV)** | **0.988065** |
+| **Cluster Cross-Correlation** | **0.855814** |
+| **Varactor Bridge Current RMS** | **0.070779 mA** |
 | **Simulation Duration** | 500 ms |
 | **Time Step** | 10 µs |
 
@@ -198,11 +198,11 @@ The following verification plot is generated automatically on every simulation r
   PLV(t) = |(1/N) Σ_i exp(j * φ_i(t))|
   ```
 
-  A value of **1.000000** indicates perfect phase synchrony across all 16 neurons at the reported Theta and Gamma envelope frequencies.
+  The verification run measured **0.988065** across the 16 physical membrane traces.
 
-- **Welch PSD Peaks:** The mean V_m across all 16 neurons is processed with a Hamming window and 50 % overlap. Envelope peaks remain reported for Theta and Gamma; the physical tank is additionally evaluated in low/high `V_tune` windows. `tuning_welch_peaks.csv` reports **1.318 kHz** and **2.051 kHz**, confirming **183.1 Hz/V** responsiveness.
+- **Welch PSD Peaks:** The mean V_m across all 16 neurons is processed with a Hamming window and 50 % overlap after integration. The run reported emergent envelope peaks at **2.00 Hz** and **40.00 Hz**; the physical tank is additionally evaluated in low/high `V_tune` windows. `tuning_welch_peaks.csv` reports **1.318 kHz** for the sampled low-tune case.
 
-- **Bridge RMS Current:** The instantaneous current through each varactor-tuned LC bridge is computed from the voltage difference across its terminals and the complex impedance of the parallel tank. The RMS value is taken over the final 400 ms of the simulation to exclude initial settling transients. **Verified: 2.09 mA.**
+- **Bridge RMS Current:** The instantaneous current through each varactor-tuned LC bridge is computed from the Kirchhoff state variables. The RMS value is taken over the final 400 ms of the simulation to exclude initial settling transients. **Verified: 0.070779 mA.**
 
 - **Cluster Cross-Correlation:** The mean Pearson correlation coefficient between all neuron pairs (excluding self-pairs), computed on the binned spike trains. A value of **0.999780** confirms near-identical firing patterns across the grid.
 

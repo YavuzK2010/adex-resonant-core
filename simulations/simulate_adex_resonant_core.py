@@ -102,9 +102,7 @@ class SimulationParameters:
     duration: float = 500e-3
     dt: float = 10e-6
     grid_side: int = 4
-    theta_hz: float = 6.0
-    gamma_hz: float = 55.0
-    drive_current: float = 800e-12
+    I_bias: float = 800e-12
     coupling_scale: float = 2e-13
 
 
@@ -172,7 +170,7 @@ def build_pyspice_circuit(
         node = f"VM{index + 1}"
         add_raw(f"CM{index + 1} {node} 0 {adex.c_m}")
         add_raw(f"GL{index + 1} {node} 0 {1.0 / adex.g_l}")
-        add_raw(f"IAPP{index + 1} 0 {node} {sim.drive_current}")
+        add_raw(f"IAPP{index + 1} 0 {node} {sim.I_bias}")
         add_raw(
             f"BEXP{index + 1} 0 {node} i={{ {adex.saturation_current} * "
             f"(exp(limit(v({node})-{adex.v_t},-1,0.5)/"
@@ -244,7 +242,7 @@ def run_numerical(
     adaptation_state = np.zeros(neuron_count, dtype=float)
     charges = np.zeros(edge_count, dtype=float)
     currents = np.zeros(edge_count, dtype=float)
-    drive = sim.drive_current * (1.0 + 0.15 * np.sin(np.arange(neuron_count)))
+    drive = sim.I_bias * (1.0 + 0.15 * np.sin(np.arange(neuron_count)))
     edge_left = np.array([edge[0] for edge in edge_list], dtype=int)
     edge_right = np.array([edge[1] for edge in edge_list], dtype=int)
 
