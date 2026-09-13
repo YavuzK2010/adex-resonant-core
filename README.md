@@ -13,11 +13,11 @@
 
 ## Executive Summary
 
-The **AdEx Resonant Core** is an open-source, 16-neuron **Adaptive Exponential Integrate-and-Fire (AdEx)** neuromorphic System-on-Module (SoM) implemented as a **70.0 mm × 70.0 mm, 4-layer PCB** with **96 castellated edge pads** for carrier-board integration. Each of the 16 cells is coupled to its four nearest neighbours through a **varactor-tuned LC resonant bridge** (100 µH + 10 µF + 10–100 pF BB833 varactor), enabling ultra-low-power phase-locking across the biologically relevant **Theta (6.00 Hz)** and **Gamma (56.00 Hz)** frequency bands.
+The **AdEx Resonant Core** is an open-source, 16-neuron **Adaptive Exponential Integrate-and-Fire (AdEx)** neuromorphic System-on-Module (SoM) implemented as a **70.0 mm × 70.0 mm, 4-layer PCB** with **96 castellated edge pads** for carrier-board integration. Each of the 16 cells is coupled to its four nearest neighbours through a **varactor-tuned LC resonant bridge** (100 mH + 47 nF fixed capacitance + 10–100 nF effective varactor capacitance), enabling ultra-low-power phase-locking across the biologically relevant **Theta (6.00 Hz)** and **Gamma (56.00 Hz)** frequency bands.
 
 The design combines a discrete-analog neuron circuit (2N3904 differential pair, LM393 comparator, BSS138 reset MOSFET) with passive 100 µH inductors and BB833 varactor diodes to form a tunable resonant coupling matrix. The full 4×4 numerical model uses 15–20 % heterogeneous background drive and reports membrane-spectrum peaks from **Welch PSD analysis** rather than analytic resonance estimates. Welch-based spectral verification confirms **PLV = 1.000000** and a **varactor bridge RMS current of 2.09 mA** at the operating point.
 
-The physical parallel LC tank resonates near **5.03 kHz** (determined by *L* = 100 µH, *C_ext* = 10 µF, and reverse-biased *C_var* ≈ 10–100 pF); the observed Theta and Gamma rhythms are **envelope modulation rates** of the carrier, not the carrier itself.
+The physical parallel LC tank tunes from approximately **1.313 kHz to 2.108 kHz** as `V_tune` moves from 5 V to 0 V. This is a **60.6% frequency shift**; the observed Theta and Gamma rhythms are **envelope modulation rates** of the carrier, not the carrier itself. A 3.5 kHz upper endpoint is not physically compatible with the specified 100 mH, 47 nF, and 10–100 nF values.
 
 ---
 
@@ -155,10 +155,12 @@ A full 16-neuron numerical integration of the AdEx dynamics + varactor LC bridge
 
 | Parameter | Value |
 |---|---|
-| **Inductance (L)** | 100 µH |
-| **Fixed capacitance (C_ext)** | 10 µF |
-| **Varactor capacitance (C_var)** | 10–100 pF (reverse-biased BB833) |
-| **Tank resonance (calculated)** | ≈ 5.03 kHz |
+| **Inductance (L)** | 100 mH |
+| **Fixed capacitance (C_fixed)** | 47 nF |
+| **Effective varactor capacitance (C_var)** | 10–100 nF over 0–5 V `V_tune` |
+| **Tank resonance (calculated)** | 1.313–2.108 kHz |
+| **Frequency tuning ratio** | 60.6% (>25%) |
+| **Welch PSD tank peaks** | 1.318–2.051 kHz; 183.1 Hz/V |
 | **Observed envelope: Theta** | **6.00 Hz** (Welch PSD peak) |
 | **Observed envelope: Gamma** | **56.00 Hz** (Welch PSD peak) |
 
@@ -192,7 +194,7 @@ The following verification plot is generated automatically on every simulation r
 
   A value of **1.000000** indicates perfect phase synchrony across all 16 neurons at the reported Theta and Gamma envelope frequencies.
 
-- **Welch PSD Peaks:** The mean V_m across all 16 neurons is processed with a 2-second Hamming window and 50 % overlap. The peak frequencies in the 0.5–4 Hz (Delta) and 4–8 Hz (Theta) bands are reported; the **Gamma peak** is the dominant PSD component in the 30–80 Hz band. Verified values: **6.00 Hz (Theta)** and **56.00 Hz (Gamma)**.
+- **Welch PSD Peaks:** The mean V_m across all 16 neurons is processed with a Hamming window and 50 % overlap. Envelope peaks remain reported for Theta and Gamma; the physical tank is additionally evaluated in low/high `V_tune` windows. `tuning_welch_peaks.csv` reports **1.318 kHz** and **2.051 kHz**, confirming **183.1 Hz/V** responsiveness.
 
 - **Bridge RMS Current:** The instantaneous current through each varactor-tuned LC bridge is computed from the voltage difference across its terminals and the complex impedance of the parallel tank. The RMS value is taken over the final 400 ms of the simulation to exclude initial settling transients. **Verified: 2.09 mA.**
 

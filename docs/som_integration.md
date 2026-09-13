@@ -174,7 +174,7 @@ The tables below are the complete carrier interface. `NC/RESERVED` pads must sti
 | Maximum current per neuron cell | 25 mA design limit, including local resonant-drive transient margin |
 | Recommended carrier supply capacity | 500 mA continuous at 3.3 V, with local bulk capacitance |
 | Module power-up ramp | Monotonic; 0.1 ms to 100 ms recommended |
-| Varactor control range | 0 V to 3.3 V nominal; do not exceed the selected varactor data-sheet rating |
+| Varactor control range | 0 V to 5 V simulation range; do not exceed the selected varactor data-sheet rating |
 
 The carrier must provide at least 100 nF ceramic decoupling per local supply group and at least 10 uF low-ESR bulk capacitance at the module entry. Place current limiting or a resettable protection element upstream of the module. Do not hot-plug an unpowered carrier into an active `V_tune` source.
 
@@ -246,7 +246,7 @@ The analog CMOS fast-reset switch shall force the AdEx membrane capacitor to `V_
 
 The BJT/MOSFET bias network shall use a thermal bias mirror compensation topology. Sense the local junction temperature, mirror a proportional correction current into the threshold and adaptation-bias branches, and trim the room-temperature intercept independently from the temperature coefficient. Place the sensing device close to the matched bias pair, use common-centroid or interdigitated matching where practical, and verify mirror compliance voltage at both `-20 C` and `85 C`.
 
-The resonant bridge uses a 100 uH parallel inductor, 10 uF external storage capacitance, and a 10-100 pF reverse-biased varactor. This produces an approximately 5.03 kHz carrier, with theta/gamma represented by envelope modulation. Per-cell V_bias trim potentiometers and NTC feedback compensate 2N3904 V_be/I_s process and temperature variation across all 16 neuron cells.
+The resonant bridge uses a 100 mH parallel inductor, 47 nF fixed capacitance, and a 10-100 nF effective varactor capacitance controlled over 0-5 V `V_tune`. The physical resonance is approximately 1.313-2.108 kHz, a 60.6% tuning ratio (>25%), with verified Welch peaks at 1.318 kHz and 2.051 kHz (183.1 Hz/V). A 3.5 kHz upper endpoint is not physically compatible with these component values; theta/gamma remain envelope modulation rates. Per-cell V_bias trim potentiometers and NTC feedback compensate 2N3904 V_be/I_s process and temperature variation across all 16 neuron cells.
 
 ## 9. Mixed-Signal Isolation, Guard Rings, and Calibration
 

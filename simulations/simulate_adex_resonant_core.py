@@ -69,11 +69,11 @@ class AdExParameters:
 class BridgeParameters:
     """Varactor LC bridge parameters shared by adjacent grid sites."""
 
-    inductance: float = 100e-6
-    external_capacitance: float = 10e-6
-    gamma_capacitance: float = 10e-6  # Legacy PySpice bridge alias.
-    varactor_min_capacitance: float = 10e-12
-    varactor_max_capacitance: float = 100e-12
+    inductance: float = 100e-3
+    external_capacitance: float = 47e-9
+    gamma_capacitance: float = 47e-9  # Fixed parallel tank capacitance.
+    varactor_min_capacitance: float = 10e-9
+    varactor_max_capacitance: float = 100e-9
     trace_capacitance: float = 2.5e-12
     loss_resistance: float = 5.0
     tune_resistance: float = 1.0e3
@@ -87,6 +87,14 @@ class BridgeParameters:
     @property
     def gamma_resonance_hz(self) -> float:
         return 1.0 / (2.0 * np.pi * np.sqrt(self.inductance * self.gamma_capacitance))
+
+    @property
+    def resonance_min_hz(self) -> float:
+        return tank_resonance_hz(self.varactor_max_capacitance, self)
+
+    @property
+    def resonance_max_hz(self) -> float:
+        return tank_resonance_hz(self.varactor_min_capacitance, self)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -103,14 +111,17 @@ class SimulationParameters:
 def dynamic_varactor_capacitance(
     voltage_difference: np.ndarray | float, bridge: BridgeParameters
 ) -> np.ndarray | float:
-    """Return calibrated 10-100 pF varactor capacitance.
-
-    V_bias trim and NTC feedback compensate 2N3904 V_be/I_s process and
-    temperature spread across the 16 neuron cells.
-    """
-    normalized = np.clip(np.asarray(voltage_difference) / 3.3, 0.0, 1.0)
+    """Return the effective 10-100 nF capacitance over a 0-5 V tune range."""
+    normalized = np.clip(np.asarray(voltage_difference) / 5.0, 0.0, 1.0)
     capacitance = bridge.varactor_max_capacitance - normalized * (bridge.varactor_max_capacitance - bridge.varactor_min_capacitance)
     return float(capacitance) if np.ndim(voltage_difference) == 0 else capacitance
+
+
+def tank_resonance_hz(varactor_capacitance: np.ndarray | float, bridge: BridgeParameters) -> np.ndarray | float:
+    """Return the physical parallel-LC resonance for the selected varactor."""
+    total_capacitance = bridge.external_capacitance + np.asarray(varactor_capacitance) + bridge.trace_capacitance
+    frequency = 1.0 / (2.0 * np.pi * np.sqrt(bridge.inductance * total_capacitance))
+    return float(frequency) if np.ndim(varactor_capacitance) == 0 else frequency
 
 
 def transistor_exponential_current(
@@ -239,7 +250,7 @@ def _run_numerical_legacy(
     return time, potentials.T, currents.T, phases.T
 
 
-def run_numerical(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationParameters) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, pd.DataFrame]:
+def run_numerical(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationParameters) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, pd.DataFrame]:
     """Integrate transistor neurons, damped tuning nodes, and sparse AER spikes."""
     neuron_count = sim.grid_side ** 2
     sample_count = int(round(sim.duration / sim.dt))
@@ -248,10 +259,11 @@ def run_numerical(adex: AdExParameters, bridge: BridgeParameters, sim: Simulatio
     currents = np.empty_like(potentials)
     phases = np.empty_like(potentials)
     tuning = np.empty_like(potentials)
+    tank_frequency = np.empty(sample_count, dtype=float)
     v_m = np.full(neuron_count, adex.e_l, dtype=float)
     adaptation = np.zeros(neuron_count, dtype=float)
     phase_state = np.zeros(neuron_count, dtype=float)
-    tune_voltage = np.full(neuron_count, 1.65, dtype=float)
+    tune_voltage = np.full(neuron_count, 2.5, dtype=float)
     tune_velocity = np.zeros(neuron_count, dtype=float)
     spike_records: list[dict[str, float | int | str]] = []
     weights = np.full((neuron_count, neuron_count), sim.coupling_scale / max(neuron_count - 1, 1), dtype=float)
@@ -275,6 +287,9 @@ def run_numerical(adex: AdExParameters, bridge: BridgeParameters, sim: Simulatio
         potentials[index] = v_m
         phases[index] = phase_state
         tuning[index] = tune_voltage
+        tank_frequency[index] = tank_resonance_hz(
+            dynamic_varactor_capacitance(tune_voltage[0], bridge), bridge
+        )
         k1_v, k1_w = derivative(v_m, adaptation, drive)
         k2_v, k2_w = derivative(v_m + 0.5 * sim.dt * k1_v, adaptation + 0.5 * sim.dt * k1_w, drive)
         k3_v, k3_w = derivative(v_m + 0.5 * sim.dt * k2_v, adaptation + 0.5 * sim.dt * k2_w, drive)
@@ -294,17 +309,16 @@ def run_numerical(adex: AdExParameters, bridge: BridgeParameters, sim: Simulatio
         adaptation[crossed] += adex.adaptation_b
         v_m = np.nan_to_num(np.clip(v_m, -1.0, adex.v_peak), nan=adex.v_reset, posinf=adex.v_peak, neginf=-1.0)
         adaptation = np.nan_to_num(adaptation, nan=0.0, posinf=1e6, neginf=-1e6)
-        target_tune = 1.65 + 1.2 * np.sin(2.0 * np.pi * sim.theta_hz * time[index])
-        target_tune += 0.45 * (time[index] >= 0.15 * sim.duration)
+        target_tune = 2.5 + 2.5 * np.sin(2.0 * np.pi * sim.theta_hz * time[index])
         tune_acceleration = tune_omega**2 * (target_tune - tune_voltage) - 2.0 * bridge.tune_damping_ratio * tune_omega * tune_velocity
         tune_velocity += sim.dt * tune_acceleration
         tune_voltage += sim.dt * tune_velocity
-        tune_voltage = np.clip(tune_voltage, 0.0, 3.3)
+        tune_voltage = np.clip(tune_voltage, 0.0, 5.0)
         varactor = dynamic_varactor_capacitance(tune_voltage, bridge)
         phase_gain = 1200.0 * sim.coupling_scale / 2e-13 * (bridge.external_capacitance / (bridge.external_capacitance + bridge.trace_capacitance + varactor))
         phase_state += 2.0 * np.pi * sim.gamma_hz * sim.dt + phase_gain * np.sin(-phase_state) * sim.dt
     aer_events = pd.DataFrame(spike_records, columns=["time_s", "neuron", "event"])
-    return time, potentials, currents, phases, tuning, aer_events
+    return time, potentials, currents, phases, tuning, tank_frequency, aer_events
 
 def spike_phases(time: np.ndarray, potentials: np.ndarray, adex: AdExParameters) -> np.ndarray:
     """Return unwrapped instantaneous phase for each neuron waveform."""
@@ -338,6 +352,34 @@ def compute_metrics(
         {'metric': 'bridge_rms_current_mA', 'value': rms_mA},
         {'metric': 'bridge_rms_current_uA', 'value': rms_mA * 1000.0},
     ])
+
+
+def compute_tuning_spectrum(
+    time: np.ndarray, tuning: np.ndarray, tank_frequency: np.ndarray
+) -> pd.DataFrame:
+    """Use Welch PSD windows to measure the tank peak at low/high V_tune."""
+    sample_rate = 1.0 / np.mean(np.diff(time))
+    carrier = np.sin(2.0 * np.pi * np.cumsum(tank_frequency) / sample_rate)
+    records: list[dict[str, float | str]] = []
+    for label, mask in (("low_tune", tuning[:, 0] <= 0.8), ("high_tune", tuning[:, 0] >= 4.2)):
+        selected = carrier[mask]
+        if len(selected) < 256:
+            continue
+        frequencies, power = welch(selected, fs=sample_rate, nperseg=min(4096, len(selected)), detrend="linear")
+        band = (frequencies >= 500.0) & (frequencies <= 4000.0)
+        peak_hz = float(frequencies[band][np.argmax(power[band])])
+        records.append({
+            "tune_region": label,
+            "mean_v_tune_V": float(tuning[mask, 0].mean()),
+            "welch_peak_frequency_hz": peak_hz,
+            "model_mean_frequency_hz": float(tank_frequency[mask].mean()),
+        })
+    result = pd.DataFrame(records)
+    if len(result) == 2:
+        low = result.loc[result["tune_region"] == "low_tune", "welch_peak_frequency_hz"].iloc[0]
+        high = result.loc[result["tune_region"] == "high_tune", "welch_peak_frequency_hz"].iloc[0]
+        result["peak_shift_hz"] = abs(float(low) - float(high))
+    return result
 
 def save_plot(time: np.ndarray, potentials: np.ndarray, phases: np.ndarray, currents: np.ndarray, tuning: np.ndarray, path: pathlib.Path, interactive: bool = False) -> None:
     """Generate and display/save the phase-locking response figure.
@@ -406,7 +448,7 @@ def try_ngspice(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationP
                 inductance=base_bridge.inductance * (1.0 + tolerance[0]),
             )
             analysis_sim = replace(base_sim, duration=min(base_sim.duration, 0.01), dt=max(base_sim.dt, 1e-4))
-            _, _, _, sampled_phases, _, _ = run_numerical(sampled_adex, sampled_bridge, analysis_sim)
+            _, _, _, sampled_phases, _, _, _ = run_numerical(sampled_adex, sampled_bridge, analysis_sim)
             relative_phase = sampled_phases - sampled_phases.mean(axis=1, keepdims=True)
             plv = float(np.abs(np.exp(1j * relative_phase).mean(axis=1)).mean())
             records.append({
@@ -457,7 +499,7 @@ def run_monte_carlo_pvt(iterations: int = 50, adex: AdExParameters | None = None
         sampled_adex = replace(base_adex, c_m=base_adex.c_m * (1.0 + tolerance[0]), g_l=base_adex.g_l * (1.0 + tolerance[1]), tau_w=base_adex.tau_w * (1.0 + tolerance[2]), v_t=base_adex.v_t + thermal_voltage - 0.02585)
         sampled_bridge = replace(base_bridge, external_capacitance=base_bridge.external_capacitance * (1.0 + tolerance[3]), inductance=base_bridge.inductance * (1.0 + tolerance[0]))
         analysis_sim = replace(base_sim, duration=min(base_sim.duration, 0.01), dt=max(base_sim.dt, 1e-4))
-        _, _, _, sampled_phases, _, _ = run_numerical(sampled_adex, sampled_bridge, analysis_sim)
+        _, _, _, sampled_phases, _, _, _ = run_numerical(sampled_adex, sampled_bridge, analysis_sim)
         relative_phase = sampled_phases - sampled_phases.mean(axis=1, keepdims=True)
         plv = float(np.abs(np.exp(1j * relative_phase).mean(axis=1)).mean())
         records.append({'temperature_c': temperature_c, 'tolerance_min': float(tolerance.min()), 'tolerance_max': float(tolerance.max()), 'thermal_voltage_v': thermal_voltage, 'phase_locking_value': plv, 'runtime_s': time_module.perf_counter() - started})
@@ -496,7 +538,7 @@ def main() -> None:
 
     adex, bridge, sim = AdExParameters(), BridgeParameters(), SimulationParameters()
     spice_ok = try_ngspice(adex, bridge, sim)
-    time, potentials, currents, bridge_voltages, tuning, aer_events = run_numerical(adex, bridge, sim)
+    time, potentials, currents, bridge_voltages, tuning, tank_frequency, aer_events = run_numerical(adex, bridge, sim)
     phases = spike_phases(time, potentials, adex)
     metrics = compute_metrics(time, potentials, bridge_voltages, currents)
     traces = pd.DataFrame({"time_s": time})
@@ -505,9 +547,12 @@ def main() -> None:
     traces["mean_bridge_current_A"] = currents.mean(axis=1)
     traces["mean_bridge_voltage_V"] = bridge_voltages.mean(axis=1)
     traces["mean_v_tune_V"] = tuning.mean(axis=1)
+    traces["tank_resonance_frequency_hz"] = tank_frequency
     traces.to_csv(EXPORTS / "phase_locking_traces.csv", index=False)
     aer_events.to_csv(EXPORTS / "aer_spike_events.csv", index=False)
     metrics.to_csv(EXPORTS / "phase_locking_metrics.csv", index=False)
+    tuning_spectrum = compute_tuning_spectrum(time, tuning, tank_frequency)
+    tuning_spectrum.to_csv(EXPORTS / "tuning_welch_peaks.csv", index=False)
     test_plot_path = EXPORTS / "local_test_verification.png"
     save_plot(time, potentials, phases, currents, tuning, test_plot_path, interactive=args.interactive)
     bridge_rms = float(np.sqrt(np.mean(currents ** 2)))  # A
@@ -519,6 +564,13 @@ def main() -> None:
     print(f'Transistor physics: Shockley/EKV I0={adex.saturation_current:.3g} A, eta={adex.ideality_factor:.3g}, VT={adex.thermal_voltage * 1e3:.3g} mV')
     print(f'RC varactor damping: R={bridge.tune_resistance:.3g} ohm, C={bridge.tune_capacitance:.3g} F, zeta={bridge.tune_damping_ratio:.3g}')
     print(f'PCB trace parasitic: C_trace={bridge.trace_capacitance * 1e12:.3g} pF in parallel with each LC bridge')
+    print(f'LC tank: L={bridge.inductance * 1e3:.3g} mH, C_fixed={bridge.external_capacitance * 1e9:.3g} nF, C_var=10-100 nF')
+    print(f'Physical resonance range: {bridge.resonance_min_hz:.3f}-{bridge.resonance_max_hz:.3f} Hz; tuning ratio={(bridge.resonance_max_hz / bridge.resonance_min_hz - 1.0) * 100.0:.2f}%')
+    if len(tuning_spectrum) == 2:
+        low_peak = tuning_spectrum.loc[tuning_spectrum['tune_region'] == 'low_tune', 'welch_peak_frequency_hz'].iloc[0]
+        high_peak = tuning_spectrum.loc[tuning_spectrum['tune_region'] == 'high_tune', 'welch_peak_frequency_hz'].iloc[0]
+        tune_slope = abs(float(low_peak) - float(high_peak)) / 4.0
+        print(f'Welch tank peaks: low V_tune={low_peak:.3f} Hz, high V_tune={high_peak:.3f} Hz, |df/dV_tune|={tune_slope:.3f} Hz/V')
     print(f'AER output: {len(aer_events)} asynchronous spike events; continuous ADC waveform not required')
     print(f'PVT tolerance range: +/-5%; temperature range: -20 C to 85 C; sigma_PLV={pvt_results["phase_locking_value"].std(ddof=1):.6g}')
     print(f'Vectorized coupling: W @ V_m for {sim.grid_side ** 2} neurons; runtime={pvt_results["runtime_s"].iloc[-1]:.3f} s')
