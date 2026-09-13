@@ -1,32 +1,29 @@
-# KiCad backup / history directories
-hardware/.history/
-# Python
+# ==========================================
+# AdEx Resonant Core — Optimized .gitignore
+# ==========================================
+
+# ------------------------------------------
+# Python & Environment
+# ------------------------------------------
 __pycache__/
 *.py[cod]
 *$py.class
 .venv/
 env/
-__init__.py
+venv/
+ENV/
 
-# KiCad / EDA
+# ------------------------------------------
+# KiCad 10 / EDA Temporary & Backup Files
+# ------------------------------------------
+hardware/.history/
 *.kicad_prl
 *.kicad_pcb-bak
 *.sch-bak
 *.kicad_pro.bak
-*-backups/
-_autosave-*/
+*_autosave/
 *.lck
 *.tmp
-
-# SPICE / Simulation outputs
-*.raw
-*.log
-*.op.raw
-simulations/results/*.png
-simulations/results/*.csv
-
-# Generated / Exported files
-hardware/exports/
 
 # KiCad system symbol library copies (not project-specific)
 hardware/symbols/Comparator.kicad_sym
@@ -34,13 +31,34 @@ hardware/symbols/Device.kicad_sym
 hardware/symbols/Transistor_BJT.kicad_sym
 hardware/symbols/Transistor_FET.kicad_sym
 
-# IDEs & Editors
+# ------------------------------------------
+# SPICE Raw Artifacts & Transient Logs
+# ------------------------------------------
+*.raw
+*.op.raw
+*.log
+
+# ------------------------------------------
+# Hardware Exports — Production Packages
+# Ignore zip archives, gerber subdirectory, and DRC reports
+# (regenerated on each export run).
+# BOM and CPL production metrics (bom_*.csv / cpl_*.csv)
+# are PRESERVED as canonical source-tracked artifacts.
+# ------------------------------------------
+hardware/exports/*.zip
+hardware/exports/gerber/
+hardware/exports/drc_report.*
+
+# ------------------------------------------
+# Simulation Output (regenerated on each run)
+# ------------------------------------------
+simulations/results/*.csv
+simulations/results/*.png
+
+# ------------------------------------------
+# IDEs & System Files
+# ------------------------------------------
 .vscode/
 .idea/
 *.swp
-
-# Python Virtual Environments
-.venv/
-env/
-venv/
-ENV/
+.DS_Store
