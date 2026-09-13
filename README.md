@@ -181,7 +181,7 @@ Signed bridge currents are summed at each neuron and injected into its membrane-
 | **Kuramoto Order Parameter, mean R(t)** | **0.983851** |
 | **Pairwise Phase Dispersion** | **0.222575 rad** |
 | **Phase-Lag Distribution Std. Dev.** | **0.241026 rad** |
-| **Cluster Cross-Correlation** | **0.855814** |
+| **Cluster Cross-Correlation (off-diagonal)** | **0.846201** |
 | **Varactor Bridge Current RMS** | **0.070779 mA** |
 | **Simulation Duration** | 500 ms |
 | **Time Step** | 10 µs |
@@ -212,7 +212,7 @@ The following verification plot is generated automatically on every simulation r
 
 - **Bridge RMS Current:** The instantaneous current through each varactor-tuned LC bridge is computed from the Kirchhoff state variables. The RMS value is taken over the final 400 ms of the simulation to exclude initial settling transients. **Verified: 0.070779 mA.**
 
-- **Cluster Cross-Correlation:** The mean Pearson correlation coefficient between all neuron pairs (excluding self-pairs), computed on the binned spike trains. A value of **0.999780** confirms near-identical firing patterns across the grid.
+- **Cluster Cross-Correlation:** The mean Pearson correlation coefficient between all **off-diagonal inter-neuron pairs only** (self-correlation diagonal elements excluded via a boolean identity mask `~np.eye()`). This removes the self-pair bias of 1.0, reporting only genuine cross-neuron coupling. A value of **0.846201** confirms coordinated but not identical firing dynamics across the 16-neuron grid.
 
 ---
 

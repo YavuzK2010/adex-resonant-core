@@ -376,7 +376,9 @@ def compute_metrics(
     rms_mA = float(np.sqrt(np.mean(np.square(currents))) * 1000.0)
     theta_peak = peak_in_band(1.0, 15.0)
     gamma_peak = peak_in_band(25.0, 120.0)
-    cluster_correlation = float(np.mean(np.corrcoef(potentials.T))) if potentials.shape[1] > 1 else 1.0
+    corr_matrix = np.corrcoef(potentials.T)
+    mask = ~np.eye(corr_matrix.shape[0], dtype=bool)
+    cluster_correlation = float(corr_matrix[mask].mean()) if potentials.shape[1] > 1 else 1.0
     return pd.DataFrame([
         {'metric': 'phase_locking_value', 'value': plv},
         {'metric': 'cluster_cross_correlation', 'value': cluster_correlation},
@@ -624,7 +626,7 @@ def main() -> None:
     print(f"  FFT Peak Gamma Frequency (Hz)         : {metrics.loc[3, 'value']:.4f}")
     print(f"  Mean Phase-Locking Value (PLV)        : {metrics.loc[0, 'value']:.6f}")
     print(f"  Varactor Bridge Current RMS (mA)      : {bridge_rms * 1e3:.6f}")
-    print(f"  Cluster Cross-Correlation              : {metrics.loc[1, 'value']:.6f}")
+    print(f"  Off-Diagonal Inter-Neuron Cross-Corr   : {metrics.loc[1, 'value']:.6f}")
     print(f"  Plot saved to                         : {test_plot_path}")
     print("===========================================")
 
