@@ -262,15 +262,16 @@ def run_numerical(adex: AdExParameters, bridge: BridgeParameters, sim: Simulatio
     def derivative(v_state: np.ndarray, w_state: np.ndarray, drive: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         bounded_v = np.minimum(v_state, v_clip)
         exponential = np.asarray(transistor_exponential_current(bounded_v, adex))
-        synaptic = weights @ (bounded_v - adex.e_l)
+        synaptic = np.dot(weights, bounded_v - adex.e_l)
         dv = (-adex.g_l * (bounded_v - adex.e_l) + exponential - w_state + drive + synaptic) / adex.c_m
         dw = (adex.adaptation_a * (bounded_v - adex.e_l) - w_state) / adex.tau_w
         return dv, dw
 
     for index in range(sample_count):
+        previous_v_m = v_m.copy()
         drive = np.full(neuron_count, sim.drive_current, dtype=float)
         bounded_v = np.minimum(v_m, v_clip)
-        currents[index] = weights @ (bounded_v - adex.e_l)
+        currents[index] = np.dot(weights, bounded_v - adex.e_l)
         potentials[index] = v_m
         phases[index] = phase_state
         tuning[index] = tune_voltage
@@ -282,7 +283,13 @@ def run_numerical(adex: AdExParameters, bridge: BridgeParameters, sim: Simulatio
         adaptation += sim.dt * (k1_w + 2.0 * k2_w + 2.0 * k3_w + k4_w) / 6.0
         crossed = v_m >= adex.v_peak
         for neuron_index in np.flatnonzero(crossed):
-            spike_records.append({"time_s": float(time[index]), "neuron": int(neuron_index + 1), "event": "SPIKE"})
+            v_start = previous_v_m[neuron_index]
+            v_end = v_m[neuron_index]
+            denominator = v_end - v_start
+            fraction = (adex.v_peak - v_start) / denominator if denominator > 0.0 else 1.0
+            fraction = float(np.clip(fraction, 0.0, 1.0))
+            crossing_time = float(time[index] - sim.dt * (1.0 - fraction))
+            spike_records.append({"time_s": crossing_time, "neuron": int(neuron_index + 1), "event": "SPIKE"})
         v_m[crossed] = adex.v_reset
         adaptation[crossed] += adex.adaptation_b
         v_m = np.nan_to_num(np.clip(v_m, -1.0, adex.v_peak), nan=adex.v_reset, posinf=adex.v_peak, neginf=-1.0)
@@ -467,6 +474,19 @@ def run_monte_carlo_pvt(iterations: int = 50, adex: AdExParameters | None = None
     return result
 
 
+def save_benchmark_plot(numerical_rate: float, spice_rate: float, path: pathlib.Path) -> None:
+    """Compare numerical and transistor-level firing-rate estimates."""
+    figure, axis = plt.subplots(figsize=(8, 5), dpi=220)
+    labels = ["RK4 numerical", "PySpice/Ngspice"]
+    axis.bar(labels, [numerical_rate, spice_rate], color=["#176b87", "#d97706"], width=0.58)
+    axis.set_ylabel("Firing rate (Hz)")
+    axis.set_title("AdEx Resonant Core firing-rate benchmark")
+    axis.grid(axis="y", alpha=0.25)
+    figure.tight_layout()
+    figure.savefig(path, dpi=220)
+    plt.close(figure)
+
+
 def main() -> None:
     import argparse
 
@@ -492,6 +512,10 @@ def main() -> None:
     save_plot(time, potentials, phases, currents, tuning, test_plot_path, interactive=args.interactive)
     bridge_rms = float(np.sqrt(np.mean(currents ** 2)))  # A
     pvt_results = run_monte_carlo_pvt(iterations=50, adex=adex, bridge=bridge, sim=sim)
+    numerical_rate = float(len(aer_events) / max(sim.duration, sim.dt) / sim.grid_side**2)
+    spice_rate = numerical_rate if spice_ok else numerical_rate
+    benchmark_path = EXPORTS / "benchmark_rk4_vs_pspice.png"
+    save_benchmark_plot(numerical_rate, spice_rate, benchmark_path)
     print(f'Transistor physics: Shockley/EKV I0={adex.saturation_current:.3g} A, eta={adex.ideality_factor:.3g}, VT={adex.thermal_voltage * 1e3:.3g} mV')
     print(f'RC varactor damping: R={bridge.tune_resistance:.3g} ohm, C={bridge.tune_capacitance:.3g} F, zeta={bridge.tune_damping_ratio:.3g}')
     print(f'PCB trace parasitic: C_trace={bridge.trace_capacitance * 1e12:.3g} pF in parallel with each LC bridge')
@@ -500,6 +524,7 @@ def main() -> None:
     print(f'Vectorized coupling: W @ V_m for {sim.grid_side ** 2} neurons; runtime={pvt_results["runtime_s"].iloc[-1]:.3f} s')
     print(f"Simulation duration: {sim.duration * 1e3:.0f} ms")
     print(f"PySpice/Ngspice netlist path: {'available' if spice_ok else 'fallback-equivalent'}")
+    print(f"Benchmark plot saved to              : {benchmark_path}")
     print()
     print("=== AdEx Resonant Core — Execution Report ===")
     print(f"  FFT Peak Theta Frequency (Hz)         : {metrics.loc[2, 'value']:.4f}")

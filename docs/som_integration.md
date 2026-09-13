@@ -250,6 +250,28 @@ The resonant bridge uses a 100 uH parallel inductor, 10 uF external storage capa
 
 ## 9. Mixed-Signal Isolation, Guard Rings, and Calibration
 
+## 10. 16x16 Synapse Crossbar Routing
+
+Route the 16x16 synapse matrix as an orthogonal two-layer crossbar. Each
+vertical synapse-column trace shall remain on `F.Cu`; each horizontal
+synapse-row trace shall remain on `B.Cu`. At every matrix intersection, join
+the two layers with a controlled via pair or the released single-via cell
+geometry. Keep via annuli and clearances inside the cell pitch, and do not
+route unrelated signals through the crossbar corridor.
+
+Keep row and column naming aligned with the KiCad schematic net labels. Match
+the crossbar origin, pitch, and via coordinates to the released PCB grid so
+that footprint moves cannot silently change the matrix topology. Maintain the
+specified impedance and spacing rules at the crossbar perimeter, and reserve
+test access only at the designated row and column breakout locations.
+
+Place the PTAT thermal-bias current mirror immediately adjacent to the BJT/MOSFET
+neuron-core cluster it compensates. Use matched orientation, common-centroid or
+interdigitated placement where practical, short symmetric bias routes, and a
+quiet `AGND` return. Keep the mirror away from hot switching edges and provide
+the local thermal coupling needed for temperature tracking without crossing
+the LC bridge guard-ring keepout.
+
 ### 9.1 AGND and DGND
 
 - Keep the analog ground plane (`AGND`) and digital ground plane (`DGND`) physically isolated in the carrier placement and routing regions. Do not use a split-plane copper bridge under the LC bridges, `V_tune`, or `V_m` routes.
