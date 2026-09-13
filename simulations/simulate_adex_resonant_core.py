@@ -90,11 +90,11 @@ class BridgeParameters:
 
     @property
     def resonance_min_hz(self) -> float:
-        return tank_resonance_hz(self.varactor_max_capacitance, self)
+        return float(tank_resonance_hz(self.varactor_max_capacitance, self))
 
     @property
     def resonance_max_hz(self) -> float:
-        return tank_resonance_hz(self.varactor_min_capacitance, self)
+        return float(tank_resonance_hz(self.varactor_min_capacitance, self))
 
 
 @dataclasses.dataclass(frozen=True)
@@ -111,7 +111,7 @@ def dynamic_varactor_capacitance(
 ) -> np.ndarray | float:
     """Return the effective 10-100 nF capacitance over a 0-5 V tune range."""
     normalized = np.clip(np.asarray(voltage_difference) / 5.0, 0.0, 1.0)
-    capacitance = bridge.varactor_max_capacitance - normalized * (bridge.varactor_max_capacitance - bridge.varactor_min_capacitance)
+    capacitance = np.asarray(bridge.varactor_max_capacitance) - normalized * (bridge.varactor_max_capacitance - bridge.varactor_min_capacitance)
     return float(capacitance) if np.ndim(voltage_difference) == 0 else capacitance
 
 
@@ -315,7 +315,8 @@ def compute_cross_validated_metrics(
     """Cross-check phase coherence using event, analytic, and network metrics."""
     del phases, adex
     voltage = np.asarray(potentials, dtype=float)
-    analytic_phase = np.unwrap(np.angle(hilbert(voltage, axis=0)), axis=0)
+    analytic_signal = np.asarray(hilbert(voltage, axis=0))
+    analytic_phase = np.unwrap(np.angle(analytic_signal), axis=0)
     wrapped_phase = np.angle(np.exp(1j * analytic_phase))
     kuramoto = np.abs(np.mean(np.exp(1j * analytic_phase), axis=1))
     threshold = np.mean(voltage, axis=0) + np.std(voltage, axis=0)
