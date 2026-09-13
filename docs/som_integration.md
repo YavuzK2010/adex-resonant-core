@@ -247,3 +247,25 @@ The analog CMOS fast-reset switch shall force the AdEx membrane capacitor to `V_
 The BJT/MOSFET bias network shall use a thermal bias mirror compensation topology. Sense the local junction temperature, mirror a proportional correction current into the threshold and adaptation-bias branches, and trim the room-temperature intercept independently from the temperature coefficient. Place the sensing device close to the matched bias pair, use common-centroid or interdigitated matching where practical, and verify mirror compliance voltage at both `-20 C` and `85 C`.
 
 The resonant bridge uses a 100 uH parallel inductor, 10 uF external storage capacitance, and a 10-100 pF reverse-biased varactor. This produces an approximately 5.03 kHz carrier, with theta/gamma represented by envelope modulation. Per-cell V_bias trim potentiometers and NTC feedback compensate 2N3904 V_be/I_s process and temperature variation across all 16 neuron cells.
+
+## 9. Mixed-Signal Isolation, Guard Rings, and Calibration
+
+### 9.1 AGND and DGND
+
+- Keep the analog ground plane (`AGND`) and digital ground plane (`DGND`) physically isolated in the carrier placement and routing regions. Do not use a split-plane copper bridge under the LC bridges, `V_tune`, or `V_m` routes.
+- Join `AGND` and `DGND` at exactly one controlled star point through a ferrite bead. Place the bead at the carrier power-entry boundary, beside the bulk decoupling, and keep the connection short and wide.
+- Return varactor bias, bridge components, `V_m` buffers, and analog supply bypass capacitors to `AGND`. Return AER receivers, clocks, converters, and switching-regulator control signals to `DGND`.
+- Do not route digital return current through the analog star point. Keep the ferrite bead current rating and impedance curve appropriate for the carrier's measured transient current; do not replace it with multiple parallel ground links.
+
+### 9.2 Varactor LC bridge guard rings
+
+- Surround each varactor-controlled LC bridge on Layer 1 (`F.Cu`) with a grounded copper guard ring tied to `AGND` at one point only. Keep the ring continuous around the bridge signal path, with a minimum 0.25 mm clearance from signal copper and the component pads.
+- Keep the guard ring and bridge loop free of vias, digital routes, test-point stubs, and thermal-relief spokes. Use a solid analog reference region directly beneath the bridge on the adjacent ground layer.
+- Keep `V_tune` inside the guard-ring boundary, route it as a short high-impedance analog trace, and place the carrier RC damping network at the module entry. The simulation uses 1 kohm and 100 nF as the nominal damping network and includes 2.5 pF PCB trace capacitance in parallel with each bridge.
+
+### 9.3 AER spike interface and self-calibration
+
+- `SPIKE_OUT` is an asynchronous Address-Event Representation interface: transmit the neuron address and event strobe only when a transistor-level spike occurs. Do not continuously digitize all `V_m` channels for normal operation.
+- The carrier receiver shall provide a timestamped event latch or asynchronous FIFO and keep measured event-to-capture jitter below 10 ns. Keep the point-to-point route short, avoid parallelism with `V_m` and `V_tune`, and terminate only as required by the receiver input standard.
+- At bring-up, sweep each `V_tune` DAC code slowly, record the AER event rate and bridge phase, and store the code that centers the desired resonance. Apply the code after power sequencing and repeat the sweep over temperature if the NTC compensation reports a drift outside the calibrated window.
+- Verify the damped tuning response after every carrier revision by observing `V_tune`, bridge phase, and the AER event timestamps together. A valid calibration must preserve phase-locking with the assembled trace parasitics present.

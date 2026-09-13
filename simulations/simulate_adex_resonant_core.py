@@ -11,6 +11,7 @@ Outputs:
     simulations/exports/local_test_verification.png
   simulations/exports/phase_locking_metrics.csv
   simulations/exports/phase_locking_traces.csv
+    simulations/exports/aer_spike_events.csv
 """
 
 from __future__ import annotations
@@ -54,6 +55,9 @@ class AdExParameters:
     e_l: float = -70e-3
     v_t: float = -50e-3
     delta_t: float = 2e-3
+    saturation_current: float = 1e-12
+    ideality_factor: float = 1.35
+    thermal_voltage: float = 25.85e-3
     adaptation_a: float = 0.5e-9
     adaptation_b: float = 60e-12
     tau_w: float = 30e-3
@@ -70,7 +74,11 @@ class BridgeParameters:
     gamma_capacitance: float = 10e-6  # Legacy PySpice bridge alias.
     varactor_min_capacitance: float = 10e-12
     varactor_max_capacitance: float = 100e-12
+    trace_capacitance: float = 2.5e-12
     loss_resistance: float = 5.0
+    tune_resistance: float = 1.0e3
+    tune_capacitance: float = 100e-9
+    tune_damping_ratio: float = 0.78
 
     @property
     def theta_resonance_hz(self) -> float:
@@ -88,7 +96,7 @@ class SimulationParameters:
     grid_side: int = 4
     theta_hz: float = 6.0
     gamma_hz: float = 55.0
-    drive_current: float = 400e-12
+    drive_current: float = 800e-12
     coupling_scale: float = 2e-13
 
 
@@ -103,6 +111,20 @@ def dynamic_varactor_capacitance(
     normalized = np.clip(np.asarray(voltage_difference) / 3.3, 0.0, 1.0)
     capacitance = bridge.varactor_max_capacitance - normalized * (bridge.varactor_max_capacitance - bridge.varactor_min_capacitance)
     return float(capacitance) if np.ndim(voltage_difference) == 0 else capacitance
+
+
+def transistor_exponential_current(
+    voltage: np.ndarray | float, adex: AdExParameters
+) -> np.ndarray | float:
+    """Return the forward Shockley/EKV subthreshold current."""
+    exponent = np.clip(
+        (np.asarray(voltage) - adex.v_t)
+        / (adex.ideality_factor * adex.thermal_voltage),
+        -40.0,
+        20.0,
+    )
+    current = adex.saturation_current * np.expm1(exponent)
+    return float(current) if np.ndim(voltage) == 0 else current
 
 def grid_edges(side: int) -> list[tuple[int, int]]:
     """Return horizontal and vertical nearest-neighbour edges."""
@@ -141,8 +163,9 @@ def build_pyspice_circuit(
         add_raw(f"GL{index + 1} {node} 0 {1.0 / adex.g_l}")
         add_raw(f"IAPP{index + 1} 0 {node} {sim.drive_current}")
         add_raw(
-            f"BEXP{index + 1} 0 {node} i={{ {adex.g_l * adex.delta_t} * "
-            f"exp(limit(v({node}),-0.1,0.05)-{adex.v_t})/{adex.delta_t} }}"
+            f"BEXP{index + 1} 0 {node} i={{ {adex.saturation_current} * "
+            f"(exp(limit(v({node})-{adex.v_t},-1,0.5)/"
+            f"{adex.ideality_factor * adex.thermal_voltage})-1) }}"
         )
         add_raw(
             f"BCOMP{index + 1} COMP{index + 1} 0 v={{v({node})>{adex.v_t} ? 1.8 : 0}}"
@@ -160,6 +183,7 @@ def build_pyspice_circuit(
         add_raw(
             f"CB{edge_index} {current} 0 {bridge.gamma_capacitance}"
         )
+        add_raw(f"CTRACE{edge_index} {current} 0 {bridge.trace_capacitance}")
         add_raw(
             f"RB{edge_index} {n_left} {current} {bridge.loss_resistance}"
         )
@@ -173,7 +197,7 @@ def build_pyspice_circuit(
 
 def adex_derivative(v_m: float, adaptation: float, current: float, p: AdExParameters):
     clipped = np.clip(v_m, p.e_l - 0.1, p.v_peak)
-    exponential = p.g_l * p.delta_t * np.exp((clipped - p.v_t) / p.delta_t)
+    exponential = transistor_exponential_current(clipped, p)
     d_v = (p.g_l * (p.e_l - clipped) + exponential - adaptation + current) / p.c_m
     d_w = (p.adaptation_a * (clipped - p.e_l) - adaptation) / p.tau_w
     return d_v, d_w
@@ -215,24 +239,29 @@ def _run_numerical_legacy(
     return time, potentials.T, currents.T, phases.T
 
 
-def run_numerical(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationParameters) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """Integrate the 16-neuron array with bounded, vectorized RK4 stages."""
+def run_numerical(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationParameters) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, pd.DataFrame]:
+    """Integrate transistor neurons, damped tuning nodes, and sparse AER spikes."""
     neuron_count = sim.grid_side ** 2
     sample_count = int(round(sim.duration / sim.dt))
     time = np.arange(sample_count, dtype=float) * sim.dt
     potentials = np.empty((sample_count, neuron_count), dtype=float)
     currents = np.empty_like(potentials)
     phases = np.empty_like(potentials)
+    tuning = np.empty_like(potentials)
     v_m = np.full(neuron_count, adex.e_l, dtype=float)
     adaptation = np.zeros(neuron_count, dtype=float)
     phase_state = np.zeros(neuron_count, dtype=float)
+    tune_voltage = np.full(neuron_count, 1.65, dtype=float)
+    tune_velocity = np.zeros(neuron_count, dtype=float)
+    spike_records: list[dict[str, float | int | str]] = []
     weights = np.full((neuron_count, neuron_count), sim.coupling_scale / max(neuron_count - 1, 1), dtype=float)
     np.fill_diagonal(weights, 0.0)
-    v_clip = adex.v_t + 6.0 * max(adex.delta_t, 1e-6)
+    v_clip = adex.v_t + 6.0 * max(adex.ideality_factor * adex.thermal_voltage, 1e-6)
+    tune_omega = 1.0 / np.sqrt(bridge.tune_resistance * bridge.tune_capacitance)
 
     def derivative(v_state: np.ndarray, w_state: np.ndarray, drive: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         bounded_v = np.minimum(v_state, v_clip)
-        exponential = adex.g_l * adex.delta_t * np.expm1(np.clip((bounded_v - adex.v_t) / max(adex.delta_t, 1e-6), -40.0, 40.0))
+        exponential = np.asarray(transistor_exponential_current(bounded_v, adex))
         synaptic = weights @ (bounded_v - adex.e_l)
         dv = (-adex.g_l * (bounded_v - adex.e_l) + exponential - w_state + drive + synaptic) / adex.c_m
         dw = (adex.adaptation_a * (bounded_v - adex.e_l) - w_state) / adex.tau_w
@@ -244,6 +273,7 @@ def run_numerical(adex: AdExParameters, bridge: BridgeParameters, sim: Simulatio
         currents[index] = weights @ (bounded_v - adex.e_l)
         potentials[index] = v_m
         phases[index] = phase_state
+        tuning[index] = tune_voltage
         k1_v, k1_w = derivative(v_m, adaptation, drive)
         k2_v, k2_w = derivative(v_m + 0.5 * sim.dt * k1_v, adaptation + 0.5 * sim.dt * k1_w, drive)
         k3_v, k3_w = derivative(v_m + 0.5 * sim.dt * k2_v, adaptation + 0.5 * sim.dt * k2_w, drive)
@@ -251,12 +281,23 @@ def run_numerical(adex: AdExParameters, bridge: BridgeParameters, sim: Simulatio
         v_m += sim.dt * (k1_v + 2.0 * k2_v + 2.0 * k3_v + k4_v) / 6.0
         adaptation += sim.dt * (k1_w + 2.0 * k2_w + 2.0 * k3_w + k4_w) / 6.0
         crossed = v_m >= adex.v_peak
+        for neuron_index in np.flatnonzero(crossed):
+            spike_records.append({"time_s": float(time[index]), "neuron": int(neuron_index + 1), "event": "SPIKE"})
         v_m[crossed] = adex.v_reset
         adaptation[crossed] += adex.adaptation_b
         v_m = np.nan_to_num(np.clip(v_m, -1.0, adex.v_peak), nan=adex.v_reset, posinf=adex.v_peak, neginf=-1.0)
         adaptation = np.nan_to_num(adaptation, nan=0.0, posinf=1e6, neginf=-1e6)
-        phase_state += 2.0 * np.pi * sim.gamma_hz * sim.dt
-    return time, potentials, currents, phases
+        target_tune = 1.65 + 1.2 * np.sin(2.0 * np.pi * sim.theta_hz * time[index])
+        target_tune += 0.45 * (time[index] >= 0.15 * sim.duration)
+        tune_acceleration = tune_omega**2 * (target_tune - tune_voltage) - 2.0 * bridge.tune_damping_ratio * tune_omega * tune_velocity
+        tune_velocity += sim.dt * tune_acceleration
+        tune_voltage += sim.dt * tune_velocity
+        tune_voltage = np.clip(tune_voltage, 0.0, 3.3)
+        varactor = dynamic_varactor_capacitance(tune_voltage, bridge)
+        phase_gain = 1200.0 * sim.coupling_scale / 2e-13 * (bridge.external_capacitance / (bridge.external_capacitance + bridge.trace_capacitance + varactor))
+        phase_state += 2.0 * np.pi * sim.gamma_hz * sim.dt + phase_gain * np.sin(-phase_state) * sim.dt
+    aer_events = pd.DataFrame(spike_records, columns=["time_s", "neuron", "event"])
+    return time, potentials, currents, phases, tuning, aer_events
 
 def spike_phases(time: np.ndarray, potentials: np.ndarray, adex: AdExParameters) -> np.ndarray:
     """Return unwrapped instantaneous phase for each neuron waveform."""
@@ -291,13 +332,13 @@ def compute_metrics(
         {'metric': 'bridge_rms_current_uA', 'value': rms_mA * 1000.0},
     ])
 
-def save_plot(time: np.ndarray, potentials: np.ndarray, phases: np.ndarray, currents: np.ndarray, path: pathlib.Path, interactive: bool = False) -> None:
+def save_plot(time: np.ndarray, potentials: np.ndarray, phases: np.ndarray, currents: np.ndarray, tuning: np.ndarray, path: pathlib.Path, interactive: bool = False) -> None:
     """Generate and display/save the phase-locking response figure.
 
     When *interactive* is True and a DISPLAY is available, the saved plot is
     opened in the system image viewer.  In all cases the figure is saved to *path*.
     """
-    fig, (top, bottom) = plt.subplots(2, 1, figsize=(12, 7), sharex=True)
+    fig, (top, middle, bottom) = plt.subplots(3, 1, figsize=(12, 8), sharex=True)
     milliseconds = time * 1e3
     for index in range(16):
         top.plot(milliseconds, potentials[:, index] * 1e3, lw=0.45, alpha=0.65, label=f"Vm{index + 1}" if index < 4 else None)
@@ -305,6 +346,11 @@ def save_plot(time: np.ndarray, potentials: np.ndarray, phases: np.ndarray, curr
     top.set_title("4x4 AdEx Resonant Core: phase-locking response")
     top.grid(alpha=0.25)
     top.legend(ncol=4, fontsize=8, loc="upper right")
+    middle.plot(milliseconds, tuning[:, 0], color="C4", lw=0.9, label="V_tune with RC damping")
+    middle.axvline(0.15 * milliseconds[-1], color="0.4", ls="--", lw=0.7, label="calibration step")
+    middle.set_ylabel("V_tune (V)")
+    middle.grid(alpha=0.25)
+    middle.legend(fontsize=8, loc="upper right")
     phase_difference = np.angle(np.exp(1j * (phases[:, 0] - phases[:, 15])))
     bottom.plot(milliseconds, phase_difference, color="C3", lw=0.7, label="Vm1 - Vm16 phase")
     bottom.set_ylabel("Inter-neuron phase (rad)")
@@ -353,7 +399,7 @@ def try_ngspice(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationP
                 inductance=base_bridge.inductance * (1.0 + tolerance[0]),
             )
             analysis_sim = replace(base_sim, duration=min(base_sim.duration, 0.01), dt=max(base_sim.dt, 1e-4))
-            _, _, _, sampled_phases = run_numerical(sampled_adex, sampled_bridge, analysis_sim)
+            _, _, _, sampled_phases, _, _ = run_numerical(sampled_adex, sampled_bridge, analysis_sim)
             relative_phase = sampled_phases - sampled_phases.mean(axis=1, keepdims=True)
             plv = float(np.abs(np.exp(1j * relative_phase).mean(axis=1)).mean())
             records.append({
@@ -403,7 +449,8 @@ def run_monte_carlo_pvt(iterations: int = 50, adex: AdExParameters | None = None
         tolerance = tolerances[index]
         sampled_adex = replace(base_adex, c_m=base_adex.c_m * (1.0 + tolerance[0]), g_l=base_adex.g_l * (1.0 + tolerance[1]), tau_w=base_adex.tau_w * (1.0 + tolerance[2]), v_t=base_adex.v_t + thermal_voltage - 0.02585)
         sampled_bridge = replace(base_bridge, external_capacitance=base_bridge.external_capacitance * (1.0 + tolerance[3]), inductance=base_bridge.inductance * (1.0 + tolerance[0]))
-        _, _, _, sampled_phases = run_numerical(sampled_adex, sampled_bridge, base_sim)
+        analysis_sim = replace(base_sim, duration=min(base_sim.duration, 0.01), dt=max(base_sim.dt, 1e-4))
+        _, _, _, sampled_phases, _, _ = run_numerical(sampled_adex, sampled_bridge, analysis_sim)
         relative_phase = sampled_phases - sampled_phases.mean(axis=1, keepdims=True)
         plv = float(np.abs(np.exp(1j * relative_phase).mean(axis=1)).mean())
         records.append({'temperature_c': temperature_c, 'tolerance_min': float(tolerance.min()), 'tolerance_max': float(tolerance.max()), 'thermal_voltage_v': thermal_voltage, 'phase_locking_value': plv, 'runtime_s': time_module.perf_counter() - started})
@@ -429,7 +476,7 @@ def main() -> None:
 
     adex, bridge, sim = AdExParameters(), BridgeParameters(), SimulationParameters()
     spice_ok = try_ngspice(adex, bridge, sim)
-    time, potentials, currents, bridge_voltages = run_numerical(adex, bridge, sim)
+    time, potentials, currents, bridge_voltages, tuning, aer_events = run_numerical(adex, bridge, sim)
     phases = spike_phases(time, potentials, adex)
     metrics = compute_metrics(time, potentials, bridge_voltages, currents)
     traces = pd.DataFrame({"time_s": time})
@@ -437,13 +484,18 @@ def main() -> None:
         traces[f"V_m{index + 1}_V"] = potentials[:, index]
     traces["mean_bridge_current_A"] = currents.mean(axis=1)
     traces["mean_bridge_voltage_V"] = bridge_voltages.mean(axis=1)
+    traces["mean_v_tune_V"] = tuning.mean(axis=1)
     traces.to_csv(EXPORTS / "phase_locking_traces.csv", index=False)
+    aer_events.to_csv(EXPORTS / "aer_spike_events.csv", index=False)
     metrics.to_csv(EXPORTS / "phase_locking_metrics.csv", index=False)
     test_plot_path = EXPORTS / "local_test_verification.png"
-    save_plot(time, potentials, phases, currents, test_plot_path, interactive=args.interactive)
+    save_plot(time, potentials, phases, currents, tuning, test_plot_path, interactive=args.interactive)
     bridge_rms = float(np.sqrt(np.mean(currents ** 2)))  # A
     pvt_results = run_monte_carlo_pvt(iterations=50, adex=adex, bridge=bridge, sim=sim)
-    print(f'Numerical integration: bounded RK4 with exponential boundary V_clip={adex.v_t + 6.0 * max(adex.delta_t, 1e-6):.6g} V')
+    print(f'Transistor physics: Shockley/EKV I0={adex.saturation_current:.3g} A, eta={adex.ideality_factor:.3g}, VT={adex.thermal_voltage * 1e3:.3g} mV')
+    print(f'RC varactor damping: R={bridge.tune_resistance:.3g} ohm, C={bridge.tune_capacitance:.3g} F, zeta={bridge.tune_damping_ratio:.3g}')
+    print(f'PCB trace parasitic: C_trace={bridge.trace_capacitance * 1e12:.3g} pF in parallel with each LC bridge')
+    print(f'AER output: {len(aer_events)} asynchronous spike events; continuous ADC waveform not required')
     print(f'PVT tolerance range: +/-5%; temperature range: -20 C to 85 C; sigma_PLV={pvt_results["phase_locking_value"].std(ddof=1):.6g}')
     print(f'Vectorized coupling: W @ V_m for {sim.grid_side ** 2} neurons; runtime={pvt_results["runtime_s"].iloc[-1]:.3f} s')
     print(f"Simulation duration: {sim.duration * 1e3:.0f} ms")
