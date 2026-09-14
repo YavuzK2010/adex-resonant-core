@@ -2,7 +2,7 @@
 
 **Document status:** Carrier-board integration contract (pre-fabrication; 0 DRC, behavioral / circuit-equivalent SPICE simulation verified)
 **Module:** AdEx Resonant Core 16-neuron Tunable Analog Resonant SoM
-**Parametric sensitivity:** Passive-component tolerance (±5 %) and temperature drift (−20 °C to 85 °C) Monte Carlo analysis performed on macro-parameters (C_m, g_l, τ_w, V_t, L, C_ext). BJT/MOSFET process variation (V_BE, β, I_s, Early-effect mismatch) is **not** included and will be addressed in a full behavioral / circuit-equivalent SPICE PDK Monte Carlo prior to silicon fabrication.
+**Macro-Parametric Sensitivity Sweep Performed (5% 3-Sigma Component Variations):** Monte Carlo analysis on 8 passive macro parameters (C_m, g_L, τ_w, V_t, L, C_fixed, C_var0, R_s) using a 3-sigma Gaussian tolerance distribution. Note: Current sensitivity analysis models discrete passive component tolerances and thermal macro-shifts. Full silicon-level transistor mismatch (V_BE, β, I_s, Early effect) will be evaluated via foundry SPICE PDK Monte Carlo during physical IC/SoM bring-up.
 **Board outline:** 70 mm x 70 mm, four copper layers  
 **Interface:** 96 castellated edge pads, 0.5 mm nominal pitch unless the released fabrication drawing states otherwise
 
@@ -20,6 +20,12 @@ The four edge namespaces are positional, not electrical layer names:
 | `CR001`-`CR024` | Right edge | Bottom to top when viewed from the top side |
 
 The carrier must use the same top-side viewing convention. Do not mirror the left or right edge numbering in the carrier footprint.
+
+### Mathematical Abstraction vs. Analog Circuit Implementation
+
+The software AdEx state variables describe the behavior of each analog cell; they do not imply additional module pins. In the membrane equation `C_m dV/dt`, `C_m` is the physical membrane integration capacitor and the exponential current is provided by the BJT differential pair in its exponential/subthreshold operating region. In the adaptation equation `tau_w dw/dt = a(V - E_L) - w`, `a` is represented by subthreshold MOSFET transconductance (`g_m`), `b` is represented by spike-triggered MOSFET charge injection into `C_w`, and `tau_w` is the internal `R_w * C_w` discharge time constant.
+
+The adaptation variable `w` is consequently an internal closed-loop analog node formed by the `C_w / R_w` passive integration network and its spike-triggered FET switch. The physical cell boundary remains the primary interfaces `V_m`, `V_tune`, and `SPIKE_OUT` plus power and ground; `w` is not routed as a carrier-board or inter-cell interface.
 
 ## 2. Module Specifications
 

@@ -7,7 +7,7 @@
   <img alt="Fedora" src="https://img.shields.io/badge/OS-Fedora-294172?logo=fedora&logoColor=white">
   <img alt="DRC 0 Errors" src="https://img.shields.io/badge/DRC-0%20Errors-success">
   <img alt="Status" src="https://img.shields.io/badge/Status-Pre--Fabrication%20(0%20DRC%2C%20Transistor--Level%20Sim)-yellow">
-  <img alt="Parametric Sensitivity" src="https://img.shields.io/badge/Parametric%20Sensitivity-Passive%20%26%20Macro%20Tolerances-8A2BE2">
+  <img alt="Macro-Parametric Sensitivity" src="https://img.shields.io/badge/Macro--Parametric%20Sensitivity-8--Param%20Gaussian%205%25%203--Sigma-8A2BE2">
   <img alt="License" src="https://img.shields.io/badge/License-CERN--OHL--P%20v2-important">
 </p>
 
@@ -35,7 +35,7 @@ The project maintains **two independent simulation engines** — an RK4 numerica
 
 > **Current status:** The behavioural SPICE netlist loads and parses correctly in Ngspice v47, but the hard-threshold BCOMP/BRST sources create convergence difficulties for pure spiking-neuron behavioural models. When Ngspice convergence fails, the benchmark plot explicitly displays a **"SPICE Engine Offline"** indicator — it never duplicates RK4 data. A future revision with smoothed threshold functions or transistor-level subcircuits will resolve this. The architectural infrastructure for independent cross-validation is fully implemented.
 
-> **Parametric sensitivity analysis** has been performed for passive-component tolerance (±5 %) and temperature drift (−20 °C to 85 °C) on macro-parameters C_m, g_l, τ_w, V_t, L, and C_ext. Detailed BJT/MOSFET process variation (V_BE, β, I_s, Early-effect mismatch) is **not** covered by this analysis — those effects require a full behavioral / circuit-equivalent SPICE PDK Monte Carlo simulation scheduled prior to silicon fabrication.
+> **Macro-Parametric Sensitivity Sweep Performed (5% 3-Sigma Component Variations)** on 8 passive macro parameters (C_m, g_L, τ_w, V_t, L, C_fixed, C_var0, R_s). Note: Current sensitivity analysis models discrete passive component tolerances and thermal macro-shifts. Full silicon-level transistor mismatch (V_BE, beta, I_S, Early effect) will be evaluated via foundry SPICE PDK Monte Carlo during physical IC/SoM bring-up.
 
 The varactor capacitance is modelled via the semiconductor reverse-bias junction equation:
 
@@ -119,6 +119,12 @@ if V >= V_peak: V <- V_reset, w <- w + b
 | BSS138 (N-MOSFET) | Reset switch sinking V_m to V_reset on spike |
 | RC network (R1, C1) | Passive integrator approximating membrane time constant |
 | 100 mH inductor + BB833 varactor + RC tank | Tunable LC resonant coupling to neighbour cell (semiconductor reverse-bias junction model) |
+
+### Mathematical Abstraction vs. Analog Circuit Implementation
+
+The AdEx equations are a mathematical abstraction of the transistor-level cell, not a second set of external pins. The membrane equation `C_m dV/dt` is implemented by the physical membrane capacitor `C_m`, while the exponential term is realized by the 2N3904 BJT differential pair operating in its exponential/subthreshold region. The adaptation equation `tau_w dw/dt = a(V - E_L) - w` maps to an internal closed-loop analog network: subthreshold MOSFET transconductance (`g_m`) provides the effective `a` coupling, the spike-triggered MOSFET switch injects charge into `C_w` for the `b` increment, and `R_w` with `C_w` sets `tau_w = R_w C_w`.
+
+The physical cell layout exposes only the primary interfaces `V_m`, `V_tune`, and `SPIKE_OUT` along with power and ground. The adaptation state `w` is strictly an internal RC/FET feedback node. It is observable in the model and simulation as a state variable, but it is not a separate carrier-board signal or an additional cell-to-cell interface.
 
 ---
 

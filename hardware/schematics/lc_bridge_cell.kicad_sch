@@ -629,4 +629,19 @@
       )
     )
   )
+  (text "In-Cell Adaptation Network: C_w / R_w passive integration driven by spike-triggered MOSFET switch representing state variable (w) and parameters (a, b, tau_w)."
+    (exclude_from_sim no)
+    (at 70 260 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "7d2b9e11-7c4a-4d6d-9b0f-000000000001"))
+  (text "Primary cell interfaces: V_m, V_tune, and SPIKE_OUT. Adaptation dynamic (w) operates strictly as an internal closed-loop analog node."
+    (exclude_from_sim no)
+    (at 105 260 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "7d2b9e11-7c4a-4d6d-9b0f-000000000002"))
+  (text "Physical mapping: a -> MOSFET g_m; b -> C_w charge injection; tau_w -> R_w * C_w time constant."
+    (exclude_from_sim no)
+    (at 140 260 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "7d2b9e11-7c4a-4d6d-9b0f-000000000003"))
 )
