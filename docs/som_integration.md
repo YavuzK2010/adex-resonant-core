@@ -360,3 +360,16 @@ the LC bridge guard-ring keepout.
 - The carrier receiver shall provide a timestamped event latch or asynchronous FIFO and keep measured event-to-capture jitter below 10 ns. Keep the point-to-point route short, avoid parallelism with `V_m` and `V_tune`, and terminate only as required by the receiver input standard.
 - At bring-up, sweep each `V_tune` DAC code slowly, record the AER event rate and bridge phase, and store the code that centers the desired resonance. Apply the code after power sequencing and repeat the sweep over temperature if the NTC compensation reports a drift outside the calibrated window.
 - Verify the damped tuning response after every carrier revision by observing `V_tune`, bridge phase, and the AER event timestamps together. A valid calibration must preserve phase-locking with the assembled trace parasitics present.
+
+## Hardware Bring-Up & Physical Verification Matrix
+
+The `0 DRC / 0 Warnings` result is a geometric CAD-layout compliance result, not a guarantee that the fabricated circuit will function. Physical verification must be completed after assembly and before system-level claims are made.
+
+| Verification domain | Pre-fabrication risk factor | Physical check and acceptance evidence |
+| --- | --- | --- |
+| **LC Resonant Dynamics** | Inductor self-resonant frequency (SRF) and Q-factor at 1-3 kHz may differ from nominal models; BB833 C-V variance changes the tuned resonance. | Confirm the selected inductor operates well below SRF with measured Q at 1-3 kHz. Sweep BB833 reverse bias and record the measured C-V curve, resonance, and tuning range. |
+| **Mixed-Signal & Power Integrity** | Ground-return crosstalk, insufficient AGND/DGND ferrite-bead isolation, and V_tune bias noise can modulate the resonant node and contaminate timing. | Probe return-current paths and rail transients under switching load. Verify AGND/DGND isolation, V_tune ripple/noise, decoupling, and regulator response at the intended operating points. |
+| **Neuron Cell Physics** | MOSFET reset charge injection, BJT V_BE mismatch, and comparator propagation delay can shift the membrane waveform and spike timing. | Capture reset transients and quantify charge injection, characterize cell-to-cell V_BE spread, and verify comparator propagation delay is below 10 ns across voltage and temperature corners. |
+| **Laboratory Measurement Plan** | Instrument loading, probe-ground inductance, trigger uncertainty, and clock/AER transport jitter can obscure phase behavior. | Use an oscilloscope to record V_m(t) waveforms and reset events, a spectrum analyzer to measure PSD peaks and noise skirts, and AER timestamp analysis to track jitter and phase-lock stability. |
+
+This matrix separates layout sign-off from hardware bring-up. A passing CAD DRC report supports manufacturability of the documented geometry; it does not substitute for measured LC behavior, power integrity, neuron-cell timing, or AER performance.

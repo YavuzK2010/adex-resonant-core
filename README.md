@@ -1,3 +1,8 @@
+## PCB Status
+
+**PCB Layout Status: CAD Clean (0 DRC / 0 Unconnected) - Pre-Fabrication Certified**
+
+CAD DRC compliance confirms geometric rule checks only; it does not guarantee physical circuit functionality. Physical validation requires post-fabrication oscilloscope and logic analyzer bring-up.
 # AdEx Resonant Core: A 16-Neuron AdEx Neuromorphic Core with Tunable Resonant Coupling
 
 <p align="center">
