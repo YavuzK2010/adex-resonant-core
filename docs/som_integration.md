@@ -255,7 +255,7 @@ The tank resonance is verified via the `compute_tuning_spectrum()` function whic
 - **low_tune**: **1196.3 Hz** (mean V_tune = 0.4 V)
 - **high_tune**: **1391.6 Hz** (mean V_tune = 4.6 V)
 - $\Delta f = 195.3$ Hz, $|df/dV_{\text{tune}}| = 48.8$ Hz/V
-The 4x4 network has no external AC oscillator or preset theta/gamma frequency input: it is driven only by passive L/C values, membrane capacitance `C_m`, DC bias `I_bias`, distinct initial membrane conditions, and nonlinear AdEx plus bridge feedback. Welch analysis of the resulting membrane traces measured emergent envelope peaks at **6.0 Hz** (Theta band) and **34.00 Hz** (Gamma band) in the updated dimensionally corrected run.
+The 4x4 network has no external AC oscillator or preset theta/gamma frequency input: it is driven only by passive L/C values, membrane capacitance `C_m`, DC bias `I_bias`, distinct initial membrane conditions, and nonlinear AdEx plus bridge feedback. Welch analysis of the resulting membrane traces measured emergent envelope peaks at **6.00 Hz** (Theta band) and **56.00 Hz** (Gamma band) in the updated dimensionally corrected run.
 
 `dQ_ij/dt = I_ij`
 

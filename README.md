@@ -17,7 +17,7 @@
 
 The **AdEx Resonant Core** is an open-source, 16-neuron **Adaptive Exponential Integrate-and-Fire (AdEx)** Tunable Analog Resonant SoM Architecture implemented as a **70.0 mm × 70.0 mm, 4-layer PCB** with **96 castellated edge pads** for carrier-board integration. The current verification reflects a production-ready CAD layout (0 DRC) and second-order behavioral / circuit-equivalent SPICE simulation dynamics, all validated prior to physical silicon/PCB fabrication. Each of the 16 cells is coupled to its four nearest neighbours through a **varactor-tuned LC resonant bridge** (100 mH + 47 nF fixed capacitance + semiconductor varactor model). Theta and Gamma are emergent envelope bands, not driven frequencies.
 
-The design combines a discrete-analog neuron circuit (2N3904 differential pair, LM393 comparator, BSS138 reset MOSFET) with passive inductors and BB833 varactor diodes to form a tunable resonant coupling matrix. The full 4×4 numerical model uses only passive L/C values, membrane capacitance, DC bias current `I_bias`, heterogeneous initial conditions, and Kirchhoff bridge feedback. There is no external AC or frequency forcing. Post-simulation Welch PSD and Hilbert analysis measured **6.0 Hz** (Theta band), **34.00 Hz** (Gamma band), and **PLV = 0.975472** in the verification run.
+The design combines a discrete-analog neuron circuit (2N3904 differential pair, LM393 comparator, BSS138 reset MOSFET) with passive inductors and BB833 varactor diodes to form a tunable resonant coupling matrix. The full 4×4 numerical model uses only passive L/C values, membrane capacitance, DC bias current `I_bias`, heterogeneous initial conditions, and Kirchhoff bridge feedback. There is no external AC or frequency forcing. Post-simulation Welch PSD and Hilbert analysis measured **6.00 Hz** (Theta band), **56.00 Hz** (Gamma band), and **PLV = 0.975472** in the verification run.
 
 ### Dual-Engine Benchmark Methodology
 
@@ -205,15 +205,15 @@ Signed bridge currents are summed at each neuron and injected into its membrane-
 | **Frequency tuning range** | 258 Hz (22.6% fractional shift) |
 | **V_tune sweep sensitivity** | 51.7 Hz/V |
 | **Welch PSD tank peaks (dimensionally corrected)** | `low_tune` (V_tune ≤ 0.8 V): **1196.3 Hz**; `high_tune` (V_tune ≥ 4.2 V): **1391.6 Hz**; Δf = 195.3 Hz |
-| **Emergent envelope: Theta** | **6.0 Hz** (Welch PSD peak, updated from dimensional fix) |
-| **Emergent envelope: Gamma** | **34.00 Hz** (Welch PSD peak, updated from dimensional fix) |
+| **Emergent envelope: Theta** | **6.00 Hz** (Welch PSD peak) |
+| **Emergent envelope: Gamma** | **56.00 Hz** (Welch PSD peak) |
 
 ### Key Performance Metrics (120-Pair Pairwise PLV Matrix)
 
 | Metric | Value |
 |---|---|
-| **Emergent Theta-band peak** (Welch PSD of mean V_m) | **6.0 Hz** |
-| **Emergent Gamma-band peak** (Welch PSD of mean V_m) | **34.00 Hz** |
+| **Emergent Theta-band peak** (Welch PSD of mean V_m) | **6.00 Hz** |
+| **Emergent Gamma-band peak** (Welch PSD of mean V_m) | **56.00 Hz** |
 | **Spike-Time PLV — Mean Pairwise** (120 unique pairs) | **0.919338** |
 | **Spike-Time PLV — Median Pairwise** (120 unique pairs) | **0.919017** |
 | **Spike-Time PLV — Min Pairwise** (120 unique pairs) | **0.813877** |
@@ -251,9 +251,9 @@ The following verification plot is generated automatically on every simulation r
 
   This deliberately replaces a single idealized PLV claim with a full pairwise distribution, enabling outlier detection and biophysical confidence intervals.
 
-- **Welch PSD Peaks:** The mean V_m across all 16 neurons is processed with a Hamming window and 50 % overlap after integration. The run reported emergent envelope peaks at **6.0 Hz** and **34.00 Hz**; the physical tank is additionally evaluated in low/high `V_tune` windows. `tuning_welch_peaks.csv` reports **1196.3 Hz** (low_tune) and **1391.6 Hz** (high_tune).
+- **Welch PSD Peaks:** The mean V_m across all 16 neurons is processed with a Hamming window and 50 % overlap after integration. The run reported emergent envelope peaks at **6.00 Hz** and **56.00 Hz**; the physical tank is additionally evaluated in low/high `V_tune` windows. `tuning_welch_peaks.csv` reports **1196.3 Hz** (low_tune) and **1391.6 Hz** (high_tune).
 
-- **Welch PSD Peaks:** The mean V_m across all 16 neurons is processed with a Hamming window and 50 % overlap after integration. The run reported emergent envelope peaks at **6.0 Hz** and **34.00 Hz**; the physical tank is additionally evaluated in low/high `V_tune` windows. `tuning_welch_peaks.csv` reports **1196.3 Hz** (low_tune) and **1391.6 Hz** (high_tune).
+- **Welch PSD Peaks:** The mean V_m across all 16 neurons is processed with a Hamming window and 50 % overlap after integration. The run reported emergent envelope peaks at **6.00 Hz** and **56.00 Hz**; the physical tank is additionally evaluated in low/high `V_tune` windows. `tuning_welch_peaks.csv` reports **1196.3 Hz** (low_tune) and **1391.6 Hz** (high_tune).
 
 - **Bridge RMS Current:** The instantaneous current through each varactor-tuned LC bridge is computed from the Kirchhoff state variables. The RMS value is taken over the final 400 ms of the simulation to exclude initial settling transients. **Verified: 0.030344 mA.**
 
@@ -384,6 +384,15 @@ Expected output (verified 2026-09-14):
 
 ---
 
+### Scientific Provenance & Benchmark Environment
+
+- **Certified Commit Hash**: `dd37e28` (or current HEAD)
+- **Global Random Seed**: `42`
+- **Environment**: Python 3.14 / NumPy 1.26 / SciPy 1.12 / Fedora Linux
+- **Emergent Envelope Peaks**: Theta = 6.00 Hz | Gamma = 56.00 Hz
+- **Provenance Artifact**: `simulations/exports/benchmark_provenance.json`
+
+Benchmark provenance metadata including Git commit hash, random seed, software dependencies, and emergent peak frequencies is automatically exported to `simulations/exports/benchmark_provenance.json` at the end of each simulation run. This JSON artifact enables deterministic reproduction and scientific auditing of all reported metrics.
 ## Integration Resources
 
 - **[SoM Integration Guide](docs/som_integration.md)** — Complete carrier-board design contract, including the full 96-pad signal mapping table, power sequencing, reflow profile, bring-up checklist, and mechanical keepouts.

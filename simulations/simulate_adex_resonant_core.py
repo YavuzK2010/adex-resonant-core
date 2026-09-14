@@ -31,6 +31,7 @@ import tempfile
 from typing import Iterable
 
 import os
+import json
 import matplotlib
 
 # File-based (non-interactive) backend – guaranteed to work everywhere.
@@ -828,7 +829,7 @@ def extract_spike_rate_from_voltage(
         base_adex = adex or AdExParameters()
         base_bridge = bridge or BridgeParameters()
         base_sim = sim or SimulationParameters()
-        rng = np.random.default_rng(20260913)
+        rng = np.random.default_rng(42)
         temperatures = rng.uniform(-20.0, 85.0, iterations)
         tolerances = rng.uniform(-0.05, 0.05, (iterations, 4))
         records: list[dict[str, float]] = []
@@ -899,7 +900,7 @@ def run_monte_carlo_parametric_sensitivity(iterations: int = 50, adex: AdExParam
     base_adex = adex or AdExParameters()
     base_bridge = bridge or BridgeParameters()
     base_sim = sim or SimulationParameters()
-    rng = np.random.default_rng(20260913)
+    rng = np.random.default_rng(42)
     temperatures = rng.uniform(-20.0, 85.0, iterations)
     tolerances = rng.uniform(-0.05, 0.05, (iterations, 4))
     records: list[dict[str, float]] = []
@@ -977,6 +978,49 @@ def save_benchmark_plot(numerical_rate: float, spice_rate: float | None, path: p
     figure.savefig(path, dpi=220)
     plt.close(figure)
 
+
+
+def export_provenance_metadata(metrics: pd.DataFrame) -> None:
+    """Export benchmark provenance metadata JSON with Git commit, seed, and environment snapshot."""
+    from datetime import datetime, timezone
+    import json
+
+    # Extract peak frequencies from metrics
+    def _mval(name: str) -> float:
+        return float(metrics.loc[metrics["metric"] == name, "value"].iloc[0])
+
+    theta_peak = _mval("theta_peak_frequency_hz")
+    gamma_peak = _mval("gamma_peak_frequency_hz")
+
+    # Capture Git commit hash
+    try:
+        import subprocess
+        commit_hash = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            capture_output=True, text=True, check=True, cwd=ROOT
+        ).stdout.strip()
+    except Exception:
+        commit_hash = "unknown"
+
+    provenance = {
+        "provenance_schema": "AdEx Resonant Core Benchmark Provenance v1",
+        "certified_commit_hash": commit_hash,
+        "global_random_seed": 42,
+        "execution_timestamp_iso": datetime.now(timezone.utc).isoformat(),
+        "emergent_theta_peak_hz": round(theta_peak, 6),
+        "emergent_gamma_peak_hz": round(gamma_peak, 6),
+        "environment": {
+            "python": "".join(__import__("sys").version.split()[:1]),
+            "numpy": __import__("numpy").__version__,
+            "scipy": __import__("scipy").__version__,
+            "pyspice": __import__("PySpice").__version__ if __import__("sys").modules.get("PySpice") else "N/A"
+        }
+    }
+
+    path = EXPORTS / "benchmark_provenance.json"
+    with open(path, "w") as f:
+        json.dump(provenance, f, indent=2)
+    print(f"Provenance metadata exported to {path}")
 
 def main() -> None:
     import argparse
@@ -1075,6 +1119,7 @@ def main() -> None:
     print(f"  Off-Diagonal Inter-Neuron Cross-Corr     : {_mval('cluster_cross_correlation'):.6f}")
     print(f"  Plot saved to                           : {test_plot_path}")
     print("===========================================")
+    export_provenance_metadata(metrics)
 
 
 if __name__ == "__main__":

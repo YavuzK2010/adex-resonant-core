@@ -1,0 +1,14 @@
+{
+  "provenance_schema": "AdEx Resonant Core Benchmark Provenance v1",
+  "certified_commit_hash": "db7b6c32c3dd1466f90f3bed2229a67188bfab3b",
+  "global_random_seed": 42,
+  "execution_timestamp_iso": "2026-09-14T15:48:36.587303+00:00",
+  "emergent_theta_peak_hz": 6.0,
+  "emergent_gamma_peak_hz": 34.0,
+  "environment": {
+    "python": "3.14.7",
+    "numpy": "2.5.2",
+    "scipy": "1.18.1",
+    "pyspice": "1.5"
+  }
+}
