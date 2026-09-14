@@ -261,18 +261,20 @@ The 4x4 network has no external AC oscillator or preset theta/gamma frequency in
 
 `dI_ij/dt = ((V_m,i - V_m,j) - R_s I_ij - Q_ij/C_var(V_tune)) / L`
 
-The signed bridge currents are summed into each cell's membrane-current input by Kirchhoff Current Law. Phase coherence is cross-validated only after integration using five independent views of the physical waveforms:
+The signed bridge currents are summed into each cell's membrane-current input by Kirchhoff Current Law. Phase coherence is cross-validated only after integration using the full **16×16 Pairwise PLV Matrix** where each element PLV_ij = |mean(exp(1j × (phase_i − phase_j)))|. The boolean mask `~np.eye(16, dtype=bool)` isolates the 240 off-diagonal entries, corresponding to N×(N−1)/2 = **120 unique neuron pairs**. Per-matrix summary statistics (Mean, Median, Min, Max) replace the former single-number PLV:
 
-| Method | Verified value |
-|---|---:|
-| Spike-Time PLV, analytic phase at discrete voltage crossings | **0.919189** |
-| Hilbert Instantaneous PLV, continuous `V_m(t)` phase | **0.975472** |
+| Pairwise PLV Metric | Hilbert (continuous phase) | Spike-Time (discrete events) |
+|---|---:|---:|
+| **Mean** (120 pairs) | **0.948820** | **0.919338** |
+| **Median** (120 pairs) | **0.949749** | **0.919017** |
+| **Min** (120 pairs) | **0.869659** | **0.813877** |
+| **Max** (120 pairs) | **0.987550** | **0.978704** |
 | Kuramoto Order Parameter, mean `R(t)` | **0.975472** |
 | Pairwise Phase Dispersion, 16x16 circular phase matrix | **0.240158 rad** |
 | Phase-Lag Distribution standard deviation | **0.261841 rad** |
 | Off-Diagonal Inter-Neuron Cross-Correlation (Pearson `~np.eye()` masked) | **0.746242** |
 
-This replaces a single idealized PLV claim with event-, waveform-, and network-level checks. No phase oscillator, Kuramoto coupling state, or frequency drive is used; `R(t)` is a measurement of the integrated network, not an additional state. Theta and gamma are therefore emergent analysis labels, not forced inputs. Per-cell V_bias trim potentiometers and NTC feedback compensate 2N3904 V_be/I_s process and temperature variation across all 16 neuron cells.
+This replaces a single idealized PLV claim with a full pairwise distribution, enabling outlier detection and biophysical confidence intervals. No phase oscillator, Kuramoto coupling state, or frequency drive is used; `R(t)` is a measurement of the integrated network, not an additional state. Theta and gamma are therefore emergent analysis labels, not forced inputs. Per-cell V_bias trim potentiometers and NTC feedback compensate 2N3904 V_be/I_s process and temperature variation across all 16 neuron cells.
 
 ## 9. Mixed-Signal Isolation, Guard Rings, and Calibration
 

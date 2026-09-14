@@ -208,14 +208,20 @@ Signed bridge currents are summed at each neuron and injected into its membrane-
 | **Emergent envelope: Theta** | **6.0 Hz** (Welch PSD peak, updated from dimensional fix) |
 | **Emergent envelope: Gamma** | **34.00 Hz** (Welch PSD peak, updated from dimensional fix) |
 
-### Key Performance Metrics
+### Key Performance Metrics (120-Pair Pairwise PLV Matrix)
 
 | Metric | Value |
 |---|---|
 | **Emergent Theta-band peak** (Welch PSD of mean V_m) | **6.0 Hz** |
 | **Emergent Gamma-band peak** (Welch PSD of mean V_m) | **34.00 Hz** |
-| **Spike-Time PLV** | **0.919189** |
-| **Hilbert Instantaneous PLV** | **0.975472** |
+| **Spike-Time PLV — Mean Pairwise** (120 unique pairs) | **0.919338** |
+| **Spike-Time PLV — Median Pairwise** (120 unique pairs) | **0.919017** |
+| **Spike-Time PLV — Min Pairwise** (120 unique pairs) | **0.813877** |
+| **Spike-Time PLV — Max Pairwise** (120 unique pairs) | **0.978704** |
+| **Hilbert PLV — Mean Pairwise** (120 unique pairs) | **0.948820** |
+| **Hilbert PLV — Median Pairwise** (120 unique pairs) | **0.949749** |
+| **Hilbert PLV — Min Pairwise** (120 unique pairs) | **0.869659** |
+| **Hilbert PLV — Max Pairwise** (120 unique pairs) | **0.987550** |
 | **Kuramoto Order Parameter, mean R(t)** | **0.975472** |
 | **Pairwise Phase Dispersion** | **0.240158 rad** |
 | **Phase-Lag Distribution Std. Dev.** | **0.261841 rad** |
@@ -226,25 +232,26 @@ Signed bridge currents are summed at each neuron and injected into its membrane-
 
 ### Phase-Locking Verification
 
-The following verification plot is generated automatically on every simulation run. It displays the Kuramoto order-parameter time series and the 16x16 pairwise phase-difference matrix computed from the physical 500 ms waveform.
+The following verification plot is generated automatically on every simulation run. It displays the Kuramoto order-parameter time series and the 16x16 Pairwise PLV Heatmap (PLV_ij = |mean(exp(1j × (phase_i − phase_j)))|) computed from the physical 500 ms waveform.
 
 ![Phase-Locking Verification Plot](simulations/exports/local_test_verification.png)
 
-*Figure 1: Top — global Kuramoto R(t); Bottom — pairwise phase-difference matrix in radians.*
+*Figure 1: Top — global Kuramoto R(t); Bottom — 16x16 Pairwise PLV Heatmap (120 unique neuron pairs).*
 
 ### How the Metrics Are Computed
 
-- **Five-method phase cross-validation:** After physical integration, spike-time PLV samples the analytic phase at each discrete voltage crossing; Hilbert PLV uses the continuous analytic phase; Kuramoto `R(t)` is the instantaneous network magnitude; the pairwise matrix reports circular phase deltas for all 16x16 neuron pairs; and the phase-lag distribution reports physical dispersion. The verified breakdown is:
+- **120-pair pairwise PLV methodology:** After physical integration, phase coherence is quantified by constructing a full **16×16 Pairwise PLV Matrix** where each element PLV_ij = |mean(exp(1j × (phase_i − phase_j)))|. A boolean mask `~np.eye(16, dtype=bool)` isolates the 240 off-diagonal entries, corresponding to **N×(N−1)/2 = 120 unique neuron pairs**. The per-matrix summary replaces the former single-number PLV with explicit **Mean, Median, Min, and Max Pairwise PLV**:
 
-  | Method | Verified value |
-  |---|---:|
-  | Spike-Time PLV | 0.919189 |
-  | Hilbert Instantaneous PLV | 0.975472 |
-  | Kuramoto mean `R(t)` | 0.975472 |
-  | Pairwise Phase Dispersion | 0.240158 rad |
-  | Phase-Lag Distribution Std. Dev. | 0.261841 rad |
+  | Pairwise PLV Metric | Hilbert (continuous phase) | Spike-Time (discrete events) | Phase-Locking Value (spike phases) |
+  |---|---|---:|---:|
+  | **Mean** (120 pairs) | 0.948820 | 0.919338 | 0.987242 |
+  | **Median** (120 pairs) | 0.949749 | 0.919017 | 0.987720 |
+  | **Min** (120 pairs) | 0.869659 | 0.813877 | 0.971620 |
+  | **Max** (120 pairs) | 0.987550 | 0.978704 | 0.994971 |
 
-  This deliberately replaces a single idealized PLV claim with independent event-, waveform-, and network-level checks.
+  This deliberately replaces a single idealized PLV claim with a full pairwise distribution, enabling outlier detection and biophysical confidence intervals.
+
+- **Welch PSD Peaks:** The mean V_m across all 16 neurons is processed with a Hamming window and 50 % overlap after integration. The run reported emergent envelope peaks at **6.0 Hz** and **34.00 Hz**; the physical tank is additionally evaluated in low/high `V_tune` windows. `tuning_welch_peaks.csv` reports **1196.3 Hz** (low_tune) and **1391.6 Hz** (high_tune).
 
 - **Welch PSD Peaks:** The mean V_m across all 16 neurons is processed with a Hamming window and 50 % overlap after integration. The run reported emergent envelope peaks at **6.0 Hz** and **34.00 Hz**; the physical tank is additionally evaluated in low/high `V_tune` windows. `tuning_welch_peaks.csv` reports **1196.3 Hz** (low_tune) and **1391.6 Hz** (high_tune).
 
@@ -356,14 +363,20 @@ The simulation will:
 - Save the verification plot to `simulations/exports/local_test_verification.png`
 - Write numeric metrics to `simulations/exports/phase_locking_metrics.csv`
 
-Expected output (verified 2026-09-12):
+Expected output (verified 2026-09-14):
 
 | Metric | Expected Value |
 |---|---|
 | Theta peak | 6.00 Hz |
 | Gamma peak | 56.00 Hz |
-| Spike-Time PLV | 0.919189 |
-| Hilbert Instantaneous PLV | 0.975472 |
+| Hilbert PLV — Mean Pairwise (120 pairs) | 0.948820 |
+| Hilbert PLV — Median Pairwise (120 pairs) | 0.949749 |
+| Hilbert PLV — Min Pairwise (120 pairs) | 0.869659 |
+| Hilbert PLV — Max Pairwise (120 pairs) | 0.987550 |
+| Spike-Time PLV — Mean Pairwise (120 pairs) | 0.919338 |
+| Spike-Time PLV — Median Pairwise (120 pairs) | 0.919017 |
+| Spike-Time PLV — Min Pairwise (120 pairs) | 0.813877 |
+| Spike-Time PLV — Max Pairwise (120 pairs) | 0.978704 |
 | Kuramoto mean R(t) | 0.975472 |
 | Pairwise Phase Dispersion | 0.240158 rad |
 | Phase-Lag Distribution Std. Dev. | 0.261841 rad |

@@ -398,40 +398,82 @@ def compute_cross_validated_metrics(
     potentials: np.ndarray,
     phases: np.ndarray,
     adex: AdExParameters,
-) -> tuple[pd.DataFrame, np.ndarray, np.ndarray]:
-    """Cross-check phase coherence using event, analytic, and network metrics."""
-    del phases, adex
+) -> tuple[pd.DataFrame, np.ndarray, np.ndarray, np.ndarray]:
+    """Cross-validate phase coherence via 16x16 pairwise PLV matrix (120 unique pairs).
+
+    Constructs a full 16x16 Pairwise PLV Matrix where PLV_ij = |mean(exp(1j * (phase_i - phase_j)))|.
+    Applies boolean mask ~np.eye(16, dtype=bool) to isolate the 240 off-diagonal entries
+    (120 unique neuron pairs) and reports Mean, Median, Min, Max Pairwise PLV for both
+    Hilbert continuous-phase and spike-triggered phase-locking values.
+
+    Returns (metrics DataFrame, Kuramoto R(t), mean phase-difference matrix, 16x16 PLV matrix).
+    """
+    del adex
     voltage = np.asarray(potentials, dtype=float)
     analytic_signal = np.asarray(hilbert(voltage, axis=0))
     analytic_phase = np.unwrap(np.angle(analytic_signal), axis=0)
     wrapped_phase = np.angle(np.exp(1j * analytic_phase))
     kuramoto = np.abs(np.mean(np.exp(1j * analytic_phase), axis=1))
+
+    # ── 16x16 Pairwise PLV Matrix (Hilbert continuous analytic phase) ──────
+    # PLV_ij = |mean(exp(1j * (phase_i - phase_j)))| over all time samples
+    phase_diff = wrapped_phase[:, :, None] - wrapped_phase[:, None, :]  # (T, 16, 16)
+    plv_matrix = np.abs(np.mean(np.exp(1j * phase_diff), axis=0))       # (16, 16)
+    n_neurons = voltage.shape[1]
+    mask = ~np.eye(n_neurons, dtype=bool)                               # 240 off-diag → 120 unique pairs
+    off_diag_plv = plv_matrix[mask]
+    mean_plv = float(off_diag_plv.mean())
+    median_plv = float(np.median(off_diag_plv))
+    min_plv = float(off_diag_plv.min())
+    max_plv = float(off_diag_plv.max())
+
+    # ── Spike-Triggered 16x16 Pairwise PLV Matrix ──────────────────────────
+    # For each pair (i,j), compute PLV using analytic phase at the union of
+    # their respective spike event times.
     threshold = np.mean(voltage, axis=0) + np.std(voltage, axis=0)
     crossings = (voltage[:-1] < threshold) & (voltage[1:] >= threshold)
-    event_phases = [
-        wrapped_phase[np.flatnonzero(crossings[:, index]), index]
-        for index in range(voltage.shape[1])
-    ]
-    spike_phase_samples = np.concatenate(event_phases)
-    spike_time_plv = float(np.abs(np.mean(np.exp(1j * spike_phase_samples))))
-    hilbert_plv = float(np.mean(kuramoto))
+    spike_plv_matrix = np.zeros((n_neurons, n_neurons))
+    for i in range(n_neurons):
+        for j in range(n_neurons):
+            if i == j:
+                spike_plv_matrix[i, j] = 1.0
+                continue
+            union_spikes = crossings[:, i] | crossings[:, j]
+            if union_spikes.sum() > 0:
+                diff_ij = wrapped_phase[:-1][union_spikes, i] - wrapped_phase[:-1][union_spikes, j]
+                spike_plv_matrix[i, j] = float(np.abs(np.mean(np.exp(1j * diff_ij))))
+
+    spike_off_diag = spike_plv_matrix[mask]
+    mean_spike_plv = float(spike_off_diag.mean())
+    median_spike_plv = float(np.median(spike_off_diag))
+    min_spike_plv = float(spike_off_diag.min())
+    max_spike_plv = float(spike_off_diag.max())
+
+    # ── Legacy phase-dispersion metrics (backward-compat) ──────────────────
     recent = wrapped_phase[-min(voltage.shape[0], 20000):]
     deltas = np.angle(np.exp(1j * (recent[:, :, None] - recent[:, None, :])))
     pairwise = np.angle(np.mean(np.exp(1j * deltas), axis=0))
     pairwise_dispersion = float(np.mean(np.std(deltas, axis=0)))
     phase_lag_std = float(np.std(deltas))
+
     metrics = pd.DataFrame([
-        {"metric": "spike_time_plv", "value": spike_time_plv},
-        {"metric": "hilbert_instantaneous_plv", "value": hilbert_plv},
+        {"metric": "spike_time_plv_mean_pairwise", "value": mean_spike_plv},
+        {"metric": "spike_time_plv_median_pairwise", "value": median_spike_plv},
+        {"metric": "spike_time_plv_min_pairwise", "value": min_spike_plv},
+        {"metric": "spike_time_plv_max_pairwise", "value": max_spike_plv},
+        {"metric": "hilbert_plv_mean_pairwise", "value": mean_plv},
+        {"metric": "hilbert_plv_median_pairwise", "value": median_plv},
+        {"metric": "hilbert_plv_min_pairwise", "value": min_plv},
+        {"metric": "hilbert_plv_max_pairwise", "value": max_plv},
         {"metric": "kuramoto_order_parameter_mean", "value": float(np.mean(kuramoto))},
         {"metric": "pairwise_phase_dispersion_rad", "value": pairwise_dispersion},
         {"metric": "phase_lag_distribution_std_rad", "value": phase_lag_std},
     ])
-    return metrics, kuramoto, pairwise
+    return metrics, kuramoto, pairwise, plv_matrix
 
 
 def save_cross_validation_plot(
-    time: np.ndarray, kuramoto: np.ndarray, pairwise: np.ndarray, path: pathlib.Path
+    time: np.ndarray, kuramoto: np.ndarray, plv_matrix: np.ndarray, path: pathlib.Path
 ) -> None:
     figure, axes = plt.subplots(2, 1, figsize=(11, 8), gridspec_kw={"height_ratios": [1.2, 1]})
     axes[0].plot(time, kuramoto, color="#0b7285", linewidth=1.0)
@@ -439,11 +481,11 @@ def save_cross_validation_plot(
     axes[0].set_title("Kuramoto Order Parameter")
     axes[0].set_ylim(0, 1.02)
     axes[0].grid(alpha=0.25)
-    image = axes[1].imshow(pairwise, cmap="twilight", vmin=-np.pi, vmax=np.pi)
-    axes[1].set_title("16x16 Pairwise Phase Difference Matrix")
+    image = axes[1].imshow(plv_matrix, cmap="viridis", vmin=0.0, vmax=1.0)
+    axes[1].set_title("16x16 Pairwise PLV Heatmap")
     axes[1].set_xlabel("Neuron j")
     axes[1].set_ylabel("Neuron i")
-    figure.colorbar(image, ax=axes[1], label="delta phi (rad)")
+    figure.colorbar(image, ax=axes[1], label="PLV")
     figure.tight_layout()
     figure.savefig(path, dpi=150)
     plt.close(figure)
@@ -460,15 +502,27 @@ def compute_metrics(
         mask = (frequencies >= low) & (frequencies <= high)
         return float(frequencies[mask][np.argmax(power[mask])])
     relative_phase = phases - phases.mean(axis=1, keepdims=True)
-    plv = float(np.abs(np.exp(1j * relative_phase).mean(axis=0)).mean())
+    # ── 16x16 Pairwise PLV Matrix (120 unique off-diagonal pairs) ──────
+    n_neurons = phases.shape[1]
+    phase_diff = phases[:, :, None] - phases[:, None, :]  # (T, 16, 16)
+    plv_matrix = np.abs(np.mean(np.exp(1j * phase_diff), axis=0))  # (16, 16)
+    off_diag_mask = ~np.eye(n_neurons, dtype=bool)
+    off_diag_plv = plv_matrix[off_diag_mask]  # 120 unique pairs (240 entries symmetric)
+    plv_mean = float(off_diag_plv.mean())
+    plv_median = float(np.median(off_diag_plv))
+    plv_min = float(off_diag_plv.min())
+    plv_max = float(off_diag_plv.max())
     rms_mA = float(np.sqrt(np.mean(np.square(currents))) * 1000.0)
     theta_peak = peak_in_band(4.0, 8.0)
     gamma_peak = peak_in_band(30.0, 80.0)
     corr_matrix = np.corrcoef(potentials.T)
-    mask = ~np.eye(corr_matrix.shape[0], dtype=bool)
-    cluster_correlation = float(corr_matrix[mask].mean()) if potentials.shape[1] > 1 else 1.0
+    corr_mask = ~np.eye(corr_matrix.shape[0], dtype=bool)
+    cluster_correlation = float(corr_matrix[corr_mask].mean()) if potentials.shape[1] > 1 else 1.0
     return pd.DataFrame([
-        {'metric': 'phase_locking_value', 'value': plv},
+        {'metric': 'phase_locking_value_mean_pairwise', 'value': plv_mean},
+        {'metric': 'phase_locking_value_median_pairwise', 'value': plv_median},
+        {'metric': 'phase_locking_value_min_pairwise', 'value': plv_min},
+        {'metric': 'phase_locking_value_max_pairwise', 'value': plv_max},
         {'metric': 'cluster_cross_correlation', 'value': cluster_correlation},
         {'metric': 'theta_peak_frequency_hz', 'value': theta_peak},
         {'metric': 'gamma_peak_frequency_hz', 'value': gamma_peak},
@@ -797,8 +851,11 @@ def extract_spike_rate_from_voltage(
             )
             analysis_sim = replace(base_sim, duration=min(base_sim.duration, 0.01), dt=max(base_sim.dt, 1e-4))
             _, _, _, sampled_phases, _, _, _, _ = run_numerical(sampled_adex, sampled_bridge, analysis_sim)
-            relative_phase = sampled_phases - sampled_phases.mean(axis=1, keepdims=True)
-            plv = float(np.abs(np.exp(1j * relative_phase).mean(axis=1)).mean())
+            n_neurons = sampled_phases.shape[1]
+            phase_diff = sampled_phases[:, :, None] - sampled_phases[:, None, :]
+            plv_matrix = np.abs(np.mean(np.exp(1j * phase_diff), axis=0))
+            mask = ~np.eye(n_neurons, dtype=bool)
+            plv = float(plv_matrix[mask].mean())
             records.append({
                 'temperature_c': temperature_c,
                 'tolerance_min': float(tolerance.min()),
@@ -855,8 +912,11 @@ def run_monte_carlo_parametric_sensitivity(iterations: int = 50, adex: AdExParam
         sampled_bridge = replace(base_bridge, external_capacitance=base_bridge.external_capacitance * (1.0 + tolerance[3]), inductance=base_bridge.inductance * (1.0 + tolerance[0]))
         analysis_sim = replace(base_sim, duration=min(base_sim.duration, 0.01), dt=max(base_sim.dt, 1e-4))
         _, _, _, sampled_phases, _, _, _, _ = run_numerical(sampled_adex, sampled_bridge, analysis_sim)
-        relative_phase = sampled_phases - sampled_phases.mean(axis=1, keepdims=True)
-        plv = float(np.abs(np.exp(1j * relative_phase).mean(axis=1)).mean())
+        n_neurons = sampled_phases.shape[1]
+        phase_diff = sampled_phases[:, :, None] - sampled_phases[:, None, :]
+        plv_matrix = np.abs(np.mean(np.exp(1j * phase_diff), axis=0))
+        mask = ~np.eye(n_neurons, dtype=bool)
+        plv = float(plv_matrix[mask].mean())
         records.append({'temperature_c': temperature_c, 'tolerance_min': float(tolerance.min()), 'tolerance_max': float(tolerance.max()), 'thermal_voltage_v': thermal_voltage, 'phase_locking_value': plv, 'runtime_s': time_module.perf_counter() - started})
     result = pd.DataFrame(records)
     EXPORTS.mkdir(parents=True, exist_ok=True)
@@ -930,7 +990,7 @@ def main() -> None:
     time, potentials, currents, bridge_voltages, tuning, capacitance_trace, tank_frequency, diagnostics_df = run_numerical(adex, bridge, sim)
     phases = spike_phases(time, potentials, adex)
     metrics = compute_metrics(time, potentials, bridge_voltages, currents)
-    cross_metrics, kuramoto, pairwise = compute_cross_validated_metrics(
+    cross_metrics, kuramoto, pairwise, plv_matrix = compute_cross_validated_metrics(
         time, potentials, bridge_voltages, adex
     )
     metrics = pd.concat([cross_metrics, metrics], ignore_index=True)
@@ -948,7 +1008,7 @@ def main() -> None:
     tuning_spectrum.to_csv(EXPORTS / "tuning_welch_peaks.csv", index=False)
     test_plot_path = EXPORTS / "local_test_verification.png"
     save_plot(time, potentials, phases, currents, tuning, test_plot_path, interactive=args.interactive)
-    save_cross_validation_plot(time, kuramoto, pairwise, test_plot_path)
+    save_cross_validation_plot(time, kuramoto, plv_matrix, test_plot_path)
     bridge_rms = float(np.sqrt(np.mean(currents ** 2)))  # A
     # === V_tune varactor frequency sweep (semiconductor reverse-bias junction model) ===
     vtune_sweep = run_vtune_frequency_sweep(bridge)
@@ -995,12 +1055,25 @@ def main() -> None:
     print("=== AdEx Resonant Core — Execution Report ===")
     print(f"Physical topology: 4x4 2D nearest-neighbour grid; {len(grid_edges(GRID_SIZE))} RLC bridges")
     print("Kirchhoff solver: second-order state-space equations dQ/dt=I and dI/dt=((V_m,i-V_m,j)-R_s I-Q/C)/L")
-    print(f"  FFT Peak Theta Frequency (Hz)         : {metrics.loc[2, 'value']:.4f}")
-    print(f"  FFT Peak Gamma Frequency (Hz)         : {metrics.loc[3, 'value']:.4f}")
-    print(f"  Mean Phase-Locking Value (PLV)        : {metrics.loc[0, 'value']:.6f}")
-    print(f"  Varactor Bridge Current RMS (mA)      : {bridge_rms * 1e3:.6f}")
-    print(f"  Off-Diagonal Inter-Neuron Cross-Corr   : {metrics.loc[1, 'value']:.6f}")
-    print(f"  Plot saved to                         : {test_plot_path}")
+    def _mval(name: str) -> float:
+        return float(metrics.loc[metrics['metric'] == name, 'value'].iloc[0])
+    print(f"  Hilbert PLV \u2014 Mean Pairwise (120 pairs) : {_mval('hilbert_plv_mean_pairwise'):.6f}")
+    print(f"  Hilbert PLV \u2014 Median Pairwise (120 pairs): {_mval('hilbert_plv_median_pairwise'):.6f}")
+    print(f"  Hilbert PLV \u2014 Min Pairwise (120 pairs)  : {_mval('hilbert_plv_min_pairwise'):.6f}")
+    print(f"  Hilbert PLV \u2014 Max Pairwise (120 pairs)  : {_mval('hilbert_plv_max_pairwise'):.6f}")
+    print(f"  Spike-Time PLV \u2014 Mean Pairwise (120 prs): {_mval('spike_time_plv_mean_pairwise'):.6f}")
+    print(f"  Spike-Time PLV \u2014 Median Pairwise (120prs): {_mval('spike_time_plv_median_pairwise'):.6f}")
+    print(f"  Spike-Time PLV \u2014 Min Pairwise (120 prs) : {_mval('spike_time_plv_min_pairwise'):.6f}")
+    print(f"  Spike-Time PLV \u2014 Max Pairwise (120 prs) : {_mval('spike_time_plv_max_pairwise'):.6f}")
+    print(f"  Phase-Locking Value \u2014 Mean (120 pairs)  : {_mval('phase_locking_value_mean_pairwise'):.6f}")
+    print(f"  Phase-Locking Value \u2014 Median (120 pairs): {_mval('phase_locking_value_median_pairwise'):.6f}")
+    print(f"  Phase-Locking Value \u2014 Min (120 pairs)   : {_mval('phase_locking_value_min_pairwise'):.6f}")
+    print(f"  Phase-Locking Value \u2014 Max (120 pairs)   : {_mval('phase_locking_value_max_pairwise'):.6f}")
+    print(f"  FFT Peak Theta Frequency (Hz)           : {_mval('theta_peak_frequency_hz'):.4f}")
+    print(f"  FFT Peak Gamma Frequency (Hz)           : {_mval('gamma_peak_frequency_hz'):.4f}")
+    print(f"  Varactor Bridge Current RMS (mA)        : {bridge_rms * 1e3:.6f}")
+    print(f"  Off-Diagonal Inter-Neuron Cross-Corr     : {_mval('cluster_cross_correlation'):.6f}")
+    print(f"  Plot saved to                           : {test_plot_path}")
     print("===========================================")
 
 
