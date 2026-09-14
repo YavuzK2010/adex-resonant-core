@@ -100,7 +100,7 @@ if V >= V_peak: V <- V_reset, w <- w + b
 | LM393 (open-collector) | Threshold comparator (V_T) generating SPIKE_OUT |
 | BSS138 (N-MOSFET) | Reset switch sinking V_m to V_reset on spike |
 | RC network (R1, C1) | Passive integrator approximating membrane time constant |
-| 100 µH inductor + BB833 varactor + 10 µF | Tunable LC resonant coupling to neighbour cell |
+| 100 mH inductor + BB833 varactor + 10 µF | Tunable LC resonant coupling to neighbour cell |
 
 ---
 

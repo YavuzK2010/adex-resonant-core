@@ -478,7 +478,7 @@
       (at 300 200 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Value" "100uH"
+    (property "Value" "100mH"
       (at 300 200 0)
       (effects (font (size 1.27 1.27)))
     )
@@ -490,7 +490,7 @@
       (at 300 200 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
-    (property "ki_description" "High-Q inductor 100 uH"
+    (property "ki_description" "High-Q inductor 100 mH"
       (at 300 200 0)
       (effects (font (size 1.27 1.27)))
     )
