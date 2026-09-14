@@ -373,3 +373,11 @@ The `0 DRC / 0 Warnings` result is a geometric CAD-layout compliance result, not
 | **Laboratory Measurement Plan** | Instrument loading, probe-ground inductance, trigger uncertainty, and clock/AER transport jitter can obscure phase behavior. | Use an oscilloscope to record V_m(t) waveforms and reset events, a spectrum analyzer to measure PSD peaks and noise skirts, and AER timestamp analysis to track jitter and phase-lock stability. |
 
 This matrix separates layout sign-off from hardware bring-up. A passing CAD DRC report supports manufacturability of the documented geometry; it does not substitute for measured LC behavior, power integrity, neuron-cell timing, or AER performance.
+
+## BB833 Varactor Calibration Pipeline
+
+The resonant core models the reverse-biased BB833 junction with the nonlinear semiconductor relation
+
+$$C_{var}(V_r) = \frac{C_0}{(1 + V_r/V_J)^M} + C_{parasitic}$$
+
+using $C_0 = 100$ nF, $V_J = 0.7$ V, $M = 0.5$, and $C_{parasitic} = 47$ nF. `load_measured_varactor_cv_data()` provides the experimental calibration boundary: place a lab-exported CSV at `simulations/data/bb833_measured_cv.csv` with `V_tune` and capacitance columns, and the engine uses a one-dimensional cubic `scipy.interpolate.interp1d` model. Oscilloscope bias sweeps and LCR-meter capacitance measurements can be merged into this CSV for post-fabrication calibration. Missing or invalid data falls back to the analytical equation and records `Using Analytical BB833 Semiconductor Junction Model` in the log.

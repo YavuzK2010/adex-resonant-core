@@ -32,6 +32,7 @@ from typing import Iterable
 
 import os
 import json
+import logging
 import matplotlib
 
 # File-based (non-interactive) backend – guaranteed to work everywhere.
@@ -39,6 +40,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+
+logger = logging.getLogger(__name__)
+from scipy.interpolate import interp1d
 from scipy.signal import hilbert, welch
 
 try:
@@ -130,31 +134,60 @@ class SimulationParameters:
 GRID_SIZE = 4
 
 
+def _analytical_bb833_capacitance(V_tune: np.ndarray | float) -> np.ndarray | float:
+    """Return the BB833 reverse-bias junction capacitance in farads."""
+    C0 = 100e-9
+    V_J = 0.7
+    M = 0.5
+    C_parasitic = 47e-9
+    V_reverse = np.maximum(np.asarray(V_tune, dtype=float), 0.0)
+    capacitance = C0 / ((1.0 + V_reverse / V_J) ** M) + C_parasitic
+    return float(capacitance) if capacitance.ndim == 0 else capacitance
+
+
+def load_measured_varactor_cv_data(csv_path: str | pathlib.Path) -> callable:
+    """Load measured V_tune/C_var data or fall back to the BB833 equation."""
+    path = pathlib.Path(csv_path)
+    if not path.exists():
+        logger.info("Using Analytical BB833 Semiconductor Junction Model")
+        return _analytical_bb833_capacitance
+
+    try:
+        measured = pd.read_csv(path)
+        columns = {column.strip().lower(): column for column in measured.columns}
+        voltage_column = next((columns[name] for name in ("v_tune", "vtune", "voltage", "v_reverse") if name in columns), None)
+        capacitance_column = next((columns[name] for name in ("capacitance_f", "capacitance", "c_var", "cvar") if name in columns), None)
+        if voltage_column is None or capacitance_column is None:
+            raise ValueError("CSV must contain V_tune and capacitance columns")
+        voltage = measured[voltage_column].to_numpy(dtype=float)
+        capacitance = measured[capacitance_column].to_numpy(dtype=float)
+        order = np.argsort(voltage)
+        voltage = voltage[order]
+        capacitance = capacitance[order]
+        if voltage.size < 4 or np.unique(voltage).size < 4:
+            raise ValueError("at least four unique C-V samples are required")
+        return interp1d(voltage, capacitance, kind="cubic", bounds_error=False, fill_value="extrapolate")
+    except (OSError, ValueError, TypeError) as error:
+        logger.warning("Measured BB833 C-V data unavailable (%s); using analytical model", error)
+        logger.info("Using Analytical BB833 Semiconductor Junction Model")
+        return _analytical_bb833_capacitance
+
+
+_VARACTOR_CV_DATA_PATH = pathlib.Path(__file__).parent / "data" / "bb833_measured_cv.csv"
+_varactor_capacitance_model = load_measured_varactor_cv_data(_VARACTOR_CV_DATA_PATH)
+
+
 def dynamic_varactor_capacitance(
     V_tune: np.ndarray | float,
     V_m_i: np.ndarray | float,
     V_m_j: np.ndarray | float,
     bridge: BridgeParameters,
 ) -> np.ndarray | float:
-    """Compute varactor capacitance via semiconductor reverse-bias junction physics.
-
-    The net reverse bias across the varactor diode is:
-        V_rev = V_tune + (V_m_i - V_m_j)
-    clipped to the [0.0, 15.0] V safe operating range.
-
-    Junction capacitance follows the standard semiconductor model:
-        C_var = C_var0 / (1 + V_rev / V_J)^M + C_fixed
-
-    Returns:
-        Effective varactor capacitance in Farads (float or ndarray).
-    """
-    V_rev = np.clip(
-        np.asarray(V_tune, dtype=float) + (np.asarray(V_m_i, dtype=float) - np.asarray(V_m_j, dtype=float)),
-        0.0,
-        15.0,
-    )
-    C_var = bridge.varactor_c0 / ((1.0 + V_rev / bridge.varactor_vj) ** bridge.varactor_m) + bridge.varactor_c_fixed
-    return float(C_var) if np.ndim(V_rev) == 0 else C_var
+    """Return dynamic BB833 C-V capacitance for the instantaneous tune voltage."""
+    effective_tune = np.maximum(np.asarray(V_tune, dtype=float), 0.0)
+    capacitance = _varactor_capacitance_model(effective_tune)
+    result = np.asarray(capacitance)
+    return float(result) if result.ndim == 0 else result
 
 
 def tank_resonance_hz(varactor_capacitance: np.ndarray | float, bridge: BridgeParameters) -> np.ndarray | float:
@@ -1007,6 +1040,12 @@ def main() -> None:
     traces["tank_resonance_frequency_hz"] = tank_frequency
     traces.to_csv(EXPORTS / "phase_locking_traces.csv", index=False)
     diagnostics_df.to_csv(EXPORTS / "aer_spike_events.csv", index=False)
+    dynamic_capacitance_metrics = pd.DataFrame([
+        {"metric": "dynamic_varactor_capacitance_mean_F", "value": float(np.mean(capacitance_trace))},
+        {"metric": "dynamic_varactor_capacitance_min_F", "value": float(np.min(capacitance_trace))},
+        {"metric": "dynamic_varactor_capacitance_max_F", "value": float(np.max(capacitance_trace))},
+    ])
+    metrics = pd.concat([metrics, dynamic_capacitance_metrics], ignore_index=True)
     metrics.to_csv(EXPORTS / "phase_locking_metrics.csv", index=False)
     tuning_spectrum = compute_tuning_spectrum(time, tuning, tank_frequency)
     tuning_spectrum.to_csv(EXPORTS / "tuning_welch_peaks.csv", index=False)

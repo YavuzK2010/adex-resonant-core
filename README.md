@@ -462,3 +462,11 @@ Full licence text: [https://ohwr.org/cern_ohl_p_v2.txt](https://ohwr.org/cern_oh
 <p align="center">
   <em>AdEx Resonant Brain Project — Lead Hardware &amp; Software Architect</em>
 </p>
+
+## BB833 Varactor C-V Physics
+
+The resonant tuning model uses the reverse-biased BB833 semiconductor junction equation rather than linear C-V interpolation:
+
+$$C_{var}(V_r) = \frac{C_0}{(1 + V_r/V_J)^M} + C_{parasitic}$$
+
+The simulation parameters are $C_0 = 100$ nF, $V_J = 0.7$ V, $M = 0.5$, and $C_{parasitic} = 47$ nF. For physical PCB validation, `load_measured_varactor_cv_data()` accepts a CSV containing `V_tune` and capacitance columns and builds a cubic SciPy interpolator. The default path is `simulations/data/bb833_measured_cv.csv`; when it is absent, the analytical BB833 model is used and logged. Lab oscilloscope/LCR C-V sweeps can therefore be added without changing the circuit solver.
