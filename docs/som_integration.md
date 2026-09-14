@@ -247,7 +247,14 @@ The analog CMOS fast-reset switch shall force the AdEx membrane capacitor to `V_
 
 The BJT/MOSFET bias network shall use a thermal bias mirror compensation topology. Sense the local junction temperature, mirror a proportional correction current into the threshold and adaptation-bias branches, and trim the room-temperature intercept independently from the temperature coefficient. Place the sensing device close to the matched bias pair, use common-centroid or interdigitated matching where practical, and verify mirror compliance voltage at both `-20 C` and `85 C`.
 
-The resonant bridge uses a 100 mH inductor, 47 nF fixed capacitance, and a 10-100 nF effective varactor capacitance controlled over 0-5 V `V_tune`. The physical resonance is approximately 1.313-2.108 kHz. The 4x4 network has no external AC oscillator or preset theta/gamma frequency input: it is driven only by passive L/C values, membrane capacitance `C_m`, DC bias `I_bias`, distinct initial membrane conditions, and nonlinear AdEx plus bridge feedback. Welch analysis of the resulting membrane traces measured emergent envelope peaks at **8.0 Hz** (Theta band) and **40.00 Hz** (Gamma band) in the verified run, while the sampled low-tune tank peak was **1.318 kHz**.
+The resonant LC bridge uses the semiconductor reverse-bias junction model for the varactor:
+$C_{\text{var}}(V_{\text{rev}}) = C_0/(1 + V_{\text{rev}}/V_J)^M + C_{\text{fixed}}$ where $C_0 = 100$ nF,
+$V_J = 0.7$ V, $M = 0.5$, $C_{\text{fixed}} = 47$ nF, and the net reverse bias is
+$V_{\text{rev}} = V_{\text{tune}} + (V_{m,i} - V_{m,j})$, clipped to $[0, 15]$ V.
+The tank resonance is verified via the `run_vtune_frequency_sweep()` function which
+sweeps $V_{\text{tune}}$ from 0 to 5 V and records the physical frequency shift:
+**1.143 kHz at 0 V to 1.401 kHz at 5 V** ($\Delta f = 258$ Hz, 51.7 Hz/V sensitivity).
+The 4x4 network has no external AC oscillator or preset theta/gamma frequency input: it is driven only by passive L/C values, membrane capacitance `C_m`, DC bias `I_bias`, distinct initial membrane conditions, and nonlinear AdEx plus bridge feedback. Welch analysis of the resulting membrane traces measured emergent envelope peaks at **8.0 Hz** (Theta band) and **40.00 Hz** (Gamma band) in the verified run.
 
 `dQ_ij/dt = I_ij`
 

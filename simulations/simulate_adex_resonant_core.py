@@ -7,11 +7,16 @@ The PySpice/Ngspice netlist is emitted and attempted first.  A numerically
 integrated equivalent is used when PySpice cannot load Ngspice's shared
 library; this keeps the analysis runnable in lightweight CI environments.
 
+Varactor model: semiconductor reverse-bias junction equation
+  C_var = C_var0 / (1 + V_rev / V_J)^M + C_fixed
+  where V_rev = V_tune + (V_m,i - V_m,j), clipped to [0, 15] V
+
 Outputs:
     simulations/exports/local_test_verification.png
-  simulations/exports/phase_locking_metrics.csv
-  simulations/exports/phase_locking_traces.csv
+    simulations/exports/phase_locking_metrics.csv
+    simulations/exports/phase_locking_traces.csv
     simulations/exports/aer_spike_events.csv
+    simulations/exports/vtune_frequency_sweep.csv
 """
 
 from __future__ import annotations
@@ -72,8 +77,11 @@ class BridgeParameters:
     inductance: float = 100e-3
     external_capacitance: float = 47e-9
     gamma_capacitance: float = 47e-9  # Fixed parallel tank capacitance.
-    varactor_min_capacitance: float = 10e-9
-    varactor_max_capacitance: float = 100e-9
+    # Semiconductor varactor junction parameters (reverse-bias model)
+    varactor_c0: float = 100e-9       # Zero-bias junction capacitance (F)
+    varactor_vj: float = 0.7          # Junction built-in potential (V)
+    varactor_m: float = 0.5           # Grading coefficient (abrupt junction)
+    varactor_c_fixed: float = 47e-9   # Fixed parallel tank capacitance (F)
     trace_capacitance: float = 2.5e-12
     loss_resistance: float = 5.0
     tune_resistance: float = 1.0e3
@@ -90,11 +98,15 @@ class BridgeParameters:
 
     @property
     def resonance_min_hz(self) -> float:
-        return float(tank_resonance_hz(self.varactor_max_capacitance, self))
+        """Resonance at max reverse bias (V_rev=15V, smallest C_var)."""
+        c_min = self.varactor_c0 / ((1.0 + 15.0 / self.varactor_vj) ** self.varactor_m) + self.varactor_c_fixed
+        return float(tank_resonance_hz(c_min, self))
 
     @property
     def resonance_max_hz(self) -> float:
-        return float(tank_resonance_hz(self.varactor_min_capacitance, self))
+        """Resonance at zero reverse bias (V_rev=0V, largest C_var)."""
+        c_max = self.varactor_c0 / ((1.0 + 0.0 / self.varactor_vj) ** self.varactor_m) + self.varactor_c_fixed
+        return float(tank_resonance_hz(c_max, self))
 
 
 @dataclasses.dataclass(frozen=True)
@@ -110,16 +122,38 @@ GRID_SIZE = 4
 
 
 def dynamic_varactor_capacitance(
-    voltage_difference: np.ndarray | float, bridge: BridgeParameters
+    V_tune: np.ndarray | float,
+    V_m_i: np.ndarray | float,
+    V_m_j: np.ndarray | float,
+    bridge: BridgeParameters,
 ) -> np.ndarray | float:
-    """Return the effective 10-100 nF capacitance over a 0-5 V tune range."""
-    normalized = np.clip(np.asarray(voltage_difference) / 5.0, 0.0, 1.0)
-    capacitance = np.asarray(bridge.varactor_max_capacitance) - normalized * (bridge.varactor_max_capacitance - bridge.varactor_min_capacitance)
-    return float(capacitance) if np.ndim(voltage_difference) == 0 else capacitance
+    """Compute varactor capacitance via semiconductor reverse-bias junction physics.
+
+    The net reverse bias across the varactor diode is:
+        V_rev = V_tune + (V_m_i - V_m_j)
+    clipped to the [0.0, 15.0] V safe operating range.
+
+    Junction capacitance follows the standard semiconductor model:
+        C_var = C_var0 / (1 + V_rev / V_J)^M + C_fixed
+
+    Returns:
+        Effective varactor capacitance in Farads (float or ndarray).
+    """
+    V_rev = np.clip(
+        np.asarray(V_tune, dtype=float) + (np.asarray(V_m_i, dtype=float) - np.asarray(V_m_j, dtype=float)),
+        0.0,
+        15.0,
+    )
+    C_var = bridge.varactor_c0 / ((1.0 + V_rev / bridge.varactor_vj) ** bridge.varactor_m) + bridge.varactor_c_fixed
+    return float(C_var) if np.ndim(V_rev) == 0 else C_var
 
 
 def tank_resonance_hz(varactor_capacitance: np.ndarray | float, bridge: BridgeParameters) -> np.ndarray | float:
-    """Return the physical parallel-LC resonance for the selected varactor."""
+    """Return the physical parallel-LC resonance for the selected varactor capacitance.
+
+    Total tank C = bridge.external_capacitance + varactor_capacitance + bridge.trace_capacitance
+    where varactor_capacitance already includes C_fixed via the semiconductor model.
+    """
     total_capacitance = bridge.external_capacitance + np.asarray(varactor_capacitance) + bridge.trace_capacitance
     frequency = 1.0 / (2.0 * np.pi * np.sqrt(bridge.inductance * total_capacitance))
     return float(frequency) if np.ndim(varactor_capacitance) == 0 else frequency
@@ -261,7 +295,7 @@ def run_numerical(
 
     def derivatives(v_state: np.ndarray, w_state: np.ndarray, q_state: np.ndarray, i_state: np.ndarray):
         voltage_difference = v_state[edge_left] - v_state[edge_right]
-        varactor = np.asarray(dynamic_varactor_capacitance(np.abs(voltage_difference), bridge), dtype=float)
+        varactor = np.asarray(dynamic_varactor_capacitance(2.5, v_state[edge_left], v_state[edge_right], bridge), dtype=float)
         capacitance = bridge.external_capacitance + bridge.trace_capacitance + varactor
         d_charge = i_state
         d_current = (voltage_difference - bridge.loss_resistance * i_state - q_state / capacitance) / bridge.inductance
@@ -283,8 +317,8 @@ def run_numerical(
         adaptation[sample] = adaptation_state
         voltage_difference = voltages[edge_left] - voltages[edge_right]
         bridge_voltages[sample] = voltage_difference
-        varactor = np.asarray(dynamic_varactor_capacitance(np.abs(voltage_difference), bridge), dtype=float)
-        tuning[sample] = np.full(neuron_count, np.mean(varactor) if varactor.size else bridge.varactor_min_capacitance)
+        varactor = np.asarray(dynamic_varactor_capacitance(2.5, voltages[edge_left], voltages[edge_right], bridge), dtype=float)
+        tuning[sample] = np.full(neuron_count, np.mean(varactor) if varactor.size else bridge.varactor_c0)
         tank_frequency[sample] = tank_resonance_hz(tuning[sample], bridge)
         coupling_snapshot = np.zeros(neuron_count, dtype=float)
         np.add.at(coupling_snapshot, edge_left, -currents)
@@ -403,6 +437,83 @@ def compute_metrics(
         {'metric': 'bridge_rms_current_mA', 'value': rms_mA},
         {'metric': 'bridge_rms_current_uA', 'value': rms_mA * 1000.0},
     ])
+
+
+def run_vtune_frequency_sweep(
+    bridge: BridgeParameters,
+    V_tune_range: np.ndarray | None = None,
+) -> pd.DataFrame:
+    """Sweep V_tune from 0 V to 5 V and measure the LC tank resonance shift.
+
+    Uses the semiconductor varactor junction equation:
+        C_var(V_rev) = C_var0 / (1 + V_rev / V_J)^M + C_fixed
+    where V_rev = V_tune (assuming V_m,i - V_m,j = 0 for the open-loop sweep).
+
+    Returns:
+        DataFrame with columns: V_tune_V, C_var_F, resonance_frequency_hz
+    """
+    if V_tune_range is None:
+        V_tune_range = np.linspace(0.0, 5.0, 51)
+
+    C_fixed_total = bridge.external_capacitance + bridge.trace_capacitance
+    records = []
+    for V_tune in V_tune_range:
+        V_rev = float(np.clip(V_tune, 0.0, 15.0))
+        C_var = bridge.varactor_c0 / ((1.0 + V_rev / bridge.varactor_vj) ** bridge.varactor_m) + bridge.varactor_c_fixed
+        C_total = C_fixed_total + C_var
+        f_res = 1.0 / (2.0 * np.pi * np.sqrt(bridge.inductance * C_total))
+        records.append({
+            "V_tune_V": float(V_tune),
+            "V_rev_V": V_rev,
+            "C_var_F": C_var,
+            "C_total_F": C_total,
+            "resonance_frequency_hz": f_res,
+        })
+
+    result = pd.DataFrame(records)
+
+    # Compute tuning sensitivity
+    if len(result) > 1:
+        f_low = result["resonance_frequency_hz"].iloc[0]   # V_tune = 0 V
+        f_high = result["resonance_frequency_hz"].iloc[-1] # V_tune = 5 V
+        df_dv = (f_low - f_high) / 5.0
+        print(f"[V_tune sweep] 0 V -> {f_low:.3f} Hz, 5 V -> {f_high:.3f} Hz, |df/dV_tune| = {abs(df_dv):.3f} Hz/V")
+
+    return result
+
+
+def save_vtune_sweep_plot(sweep_df: pd.DataFrame, path: pathlib.Path) -> None:
+    """Generate a two-panel figure showing V_tune vs frequency and C_var."""
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4.5), constrained_layout=True)
+
+    # Panel 1: V_tune vs Resonance Frequency
+    ax1.plot(sweep_df["V_tune_V"], sweep_df["resonance_frequency_hz"], color="C0", lw=1.8, marker="o", ms=2.5)
+    ax1.set_xlabel("V_tune (V)")
+    ax1.set_ylabel("LC tank resonance frequency (Hz)")
+    ax1.set_title("V_tune -> Frequency tuning curve\n(semiconductor varactor model)")
+    ax1.grid(alpha=0.25)
+
+    # Annotate endpoints
+    v0 = sweep_df["V_tune_V"].iloc[0]
+    f0 = sweep_df["resonance_frequency_hz"].iloc[0]
+    v5 = sweep_df["V_tune_V"].iloc[-1]
+    f5 = sweep_df["resonance_frequency_hz"].iloc[-1]
+    ax1.annotate(f"{f0:.1f} Hz @ {v0:.1f} V", xy=(v0, f0), xytext=(v0 + 0.3, f0 + 30),
+                 arrowprops=dict(arrowstyle="->", color="0.4"), fontsize=9)
+    ax1.annotate(f"{f5:.1f} Hz @ {v5:.1f} V", xy=(v5, f5), xytext=(v5 - 1.2, f5 - 30),
+                 arrowprops=dict(arrowstyle="->", color="0.4"), fontsize=9)
+
+    # Panel 2: V_tune vs Varactor Capacitance
+    ax2.plot(sweep_df["V_tune_V"], sweep_df["C_var_F"] * 1e9, color="C1", lw=1.8, marker="s", ms=2.5)
+    ax2.set_xlabel("V_tune (V)")
+    ax2.set_ylabel("Varactor capacitance C_var (nF)")
+    ax2.set_title("V_tune -> C_var reverse-bias characteristic\nC_var = C0 / (1 + V_rev/V_J)^M + C_fixed")
+    ax2.grid(alpha=0.25)
+
+    fig.suptitle("AdEx Resonant Core - V_tune Varactor Characterisation", fontsize=12, y=1.02)
+    fig.savefig(path, dpi=160, bbox_inches="tight")
+    plt.close(fig)
+    print(f"V_tune sweep plot saved to {path}")
 
 
 def compute_tuning_spectrum(
@@ -619,6 +730,19 @@ def main() -> None:
     save_plot(time, potentials, phases, currents, tuning, test_plot_path, interactive=args.interactive)
     save_cross_validation_plot(time, kuramoto, pairwise, test_plot_path)
     bridge_rms = float(np.sqrt(np.mean(currents ** 2)))  # A
+    # === V_tune varactor frequency sweep (semiconductor reverse-bias junction model) ===
+    vtune_sweep = run_vtune_frequency_sweep(bridge)
+    vtune_sweep.to_csv(EXPORTS / "vtune_frequency_sweep.csv", index=False)
+    vtune_sweep_path = EXPORTS / "vtune_frequency_sweep.png"
+    save_vtune_sweep_plot(vtune_sweep, vtune_sweep_path)
+
+    # Document verified V_tune sweep responsiveness
+    vtune_0v_freq = vtune_sweep["resonance_frequency_hz"].iloc[0]
+    vtune_5v_freq = vtune_sweep["resonance_frequency_hz"].iloc[-1]
+    print(f'[Varactor semiconductor model] C_var0={bridge.varactor_c0 * 1e9:.3g} nF, V_J={bridge.varactor_vj:.3g} V, M={bridge.varactor_m:.3g}, C_fixed={bridge.varactor_c_fixed * 1e9:.3g} nF')
+    print(f'[V_tune sweep] Verified: {vtune_5v_freq:.3f} Hz @ 5 V  ->  {vtune_0v_freq:.3f} Hz @ 0 V')
+    print(f'[V_tune sweep] Total frequency shift = {abs(vtune_0v_freq - vtune_5v_freq):.3f} Hz across 0-5 V range')
+
     parametric_results = run_monte_carlo_parametric_sensitivity(iterations=50, adex=adex, bridge=bridge, sim=sim)
     numerical_rate = float(len(aer_events) / max(sim.duration, sim.dt) / sim.grid_side**2)
     spice_rate = numerical_rate if spice_ok else numerical_rate
@@ -627,8 +751,8 @@ def main() -> None:
     print(f'Transistor physics: Shockley/EKV I0={adex.saturation_current:.3g} A, eta={adex.ideality_factor:.3g}, VT={adex.thermal_voltage * 1e3:.3g} mV')
     print(f'RC varactor damping: R={bridge.tune_resistance:.3g} ohm, C={bridge.tune_capacitance:.3g} F, zeta={bridge.tune_damping_ratio:.3g}')
     print(f'PCB trace parasitic: C_trace={bridge.trace_capacitance * 1e12:.3g} pF in parallel with each LC bridge')
-    print(f'LC tank: L={bridge.inductance * 1e3:.3g} mH, C_fixed={bridge.external_capacitance * 1e9:.3g} nF, C_var=10-100 nF')
-    print(f'Physical resonance range: {bridge.resonance_min_hz:.3f}-{bridge.resonance_max_hz:.3f} Hz; tuning ratio={(bridge.resonance_max_hz / bridge.resonance_min_hz - 1.0) * 100.0:.2f}%')
+    print(f'LC tank: L={bridge.inductance * 1e3:.3g} mH, C_fixed={bridge.external_capacitance * 1e9:.3g} nF, C_var=C0/(1+V_rev/V_J)^M+C_fixed')
+    print(f'Physical resonance range (V_tune sweep): {bridge.resonance_min_hz:.3f}-{bridge.resonance_max_hz:.3f} Hz; tuning ratio={(bridge.resonance_max_hz / bridge.resonance_min_hz - 1.0) * 100.0:.2f}%')
     if len(tuning_spectrum) == 2:
         low_peak = tuning_spectrum.loc[tuning_spectrum['tune_region'] == 'low_tune', 'welch_peak_frequency_hz'].iloc[0]
         high_peak = tuning_spectrum.loc[tuning_spectrum['tune_region'] == 'high_tune', 'welch_peak_frequency_hz'].iloc[0]

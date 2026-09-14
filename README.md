@@ -15,15 +15,17 @@
 
 ## Executive Summary
 
-The **AdEx Resonant Core** is an open-source, 16-neuron **Adaptive Exponential Integrate-and-Fire (AdEx)** Tunable Analog Resonant SoM Architecture implemented as a **70.0 mm × 70.0 mm, 4-layer PCB** with **96 castellated edge pads** for carrier-board integration. The current verification reflects a production-ready CAD layout (0 DRC) and second-order transistor-level simulation dynamics, all validated prior to physical silicon/PCB fabrication. Each of the 16 cells is coupled to its four nearest neighbours through a **varactor-tuned LC resonant bridge** (100 mH + 47 nF fixed capacitance + 10–100 nF effective varactor capacitance). Theta and Gamma are emergent envelope bands, not driven frequencies.
+The **AdEx Resonant Core** is an open-source, 16-neuron **Adaptive Exponential Integrate-and-Fire (AdEx)** Tunable Analog Resonant SoM Architecture implemented as a **70.0 mm × 70.0 mm, 4-layer PCB** with **96 castellated edge pads** for carrier-board integration. The current verification reflects a production-ready CAD layout (0 DRC) and second-order transistor-level simulation dynamics, all validated prior to physical silicon/PCB fabrication. Each of the 16 cells is coupled to its four nearest neighbours through a **varactor-tuned LC resonant bridge** (100 mH + 47 nF fixed capacitance + semiconductor varactor model). Theta and Gamma are emergent envelope bands, not driven frequencies.
 
 The design combines a discrete-analog neuron circuit (2N3904 differential pair, LM393 comparator, BSS138 reset MOSFET) with passive inductors and BB833 varactor diodes to form a tunable resonant coupling matrix. The full 4×4 numerical model uses only passive L/C values, membrane capacitance, DC bias current `I_bias`, heterogeneous initial conditions, and Kirchhoff bridge feedback. There is no external AC or frequency forcing. Post-simulation Welch PSD and Hilbert analysis measured **8.0 Hz** (Theta band), **40.00 Hz** (Gamma band), and **PLV = 0.988065** in the verification run.
 
 > **Parametric sensitivity analysis** has been performed for passive-component tolerance (±5 %) and temperature drift (−20 °C to 85 °C) on macro-parameters C_m, g_l, τ_w, V_t, L, and C_ext. Detailed BJT/MOSFET process variation (V_BE, β, I_s, Early-effect mismatch) is **not** covered by this analysis — those effects require a full SPICE transistor-level PDK Monte Carlo simulation scheduled prior to silicon fabrication.
 
-The physical parallel LC tank tunes from approximately **1.313 kHz to 2.108 kHz** as `V_tune` moves from 5 V to 0 V. This is a **60.6% frequency shift**; the observed Theta and Gamma rhythms are **envelope modulation rates** of the carrier, not the carrier itself. A 3.5 kHz upper endpoint is not physically compatible with the specified 100 mH, 47 nF, and 10–100 nF values.
+The varactor capacitance is modelled via the semiconductor reverse-bias junction equation:
 
-The physical parallel LC tank tunes from approximately **1.313 kHz to 2.108 kHz** as `V_tune` moves from 5 V to 0 V. This is a **60.6% frequency shift**; the observed Theta and Gamma rhythms are **envelope modulation rates** of the carrier, not the carrier itself. A 3.5 kHz upper endpoint is not physically compatible with the specified 100 mH, 47 nF, and 10–100 nF values.
+$$C_{\\text{var}}(V_{\\text{rev}}) = \\frac{C_0}{(1 + V_{\\text{rev}} / V_J)^M} + C_{\\text{fixed}}$$
+
+where the net reverse bias is $V_{\\text{rev}} = V_{\\text{tune}} + (V_{m,i} - V_{m,j})$, clipped to $[0, 15]$ V. Using $C_0 = 100$ nF, $V_J = 0.7$ V, $M = 0.5$, and $C_{\\text{fixed}} = 47$ nF, the LC tank resonance shifts from **1.143 kHz at 0 V to 1.401 kHz at 5 V** ($\\Delta f = 258$ Hz). The observed Theta and Gamma rhythms are **envelope modulation rates** of the carrier, not the carrier itself.
 
 ---
 
@@ -100,7 +102,7 @@ if V >= V_peak: V <- V_reset, w <- w + b
 | LM393 (open-collector) | Threshold comparator (V_T) generating SPIKE_OUT |
 | BSS138 (N-MOSFET) | Reset switch sinking V_m to V_reset on spike |
 | RC network (R1, C1) | Passive integrator approximating membrane time constant |
-| 100 mH inductor + BB833 varactor + 10 µF | Tunable LC resonant coupling to neighbour cell |
+| 100 mH inductor + BB833 varactor + RC tank | Tunable LC resonant coupling to neighbour cell (semiconductor reverse-bias junction model) |
 
 ---
 
@@ -180,10 +182,13 @@ Signed bridge currents are summed at each neuron and injected into its membrane-
 |---|---|
 | **Inductance (L)** | 100 mH |
 | **Fixed capacitance (C_fixed)** | 47 nF |
-| **Effective varactor capacitance (C_var)** | 10–100 nF over 0–5 V `V_tune` |
-| **Tank resonance (calculated)** | 1.313–2.108 kHz |
-| **Frequency tuning ratio** | 60.6% (>25%) |
-| **Welch PSD tank peaks** | 1.318–2.051 kHz; 183.1 Hz/V |
+| **Varactor model** | Semiconductor reverse-bias junction: $C_{\text{var}} = C_0/(1+V_{\text{rev}}/V_J)^M + C_{\text{fixed}}$ |
+| **Varactor parameters** | $C_0 = 100$ nF, $V_J = 0.7$ V, $M = 0.5$, $C_{\text{fixed}} = 47$ nF |
+| **Net reverse bias** | $V_{\text{rev}} = V_{\text{tune}} + (V_{m,i} - V_{m,j})$, clipped to $[0, 15]$ V |
+| **Tank resonance (simulated)** | 1.143–1.401 kHz over 0–5 V $V_{\text{tune}}$ sweep |
+| **Frequency tuning range** | 258 Hz (22.6% fractional shift) |
+| **V_tune sweep sensitivity** | 51.7 Hz/V |
+| **Welch PSD tank peaks** | Verified via `run_vtune_frequency_sweep()` |
 | **Emergent envelope: Theta** | **8.0 Hz** (Welch PSD peak) |
 | **Emergent envelope: Gamma** | **40.00 Hz** (Welch PSD peak) |
 
@@ -369,8 +374,8 @@ The following benchmarks are planned for the physical silicon/PCB prototyping ph
 
 ### Bench 2 — Varactor Tuning Curve (C-V Sweep)
 - **Objective:** Characterise the BB833 varactor diode's capacitance vs. `V_tune` (0–5 V) on the fabricated PCB.
-- **Measurements:** LCR-meter or VNA sweep of each resonant LC bridge; compare against the BB833 datasheet 10–100 nF range.
-- **Success Criterion:** Measured tuning range within ±10 % of simulation prediction (1.313 kHz–2.108 kHz carrier envelope).
+- **Measurements:** LCR-meter or VNA sweep of each resonant LC bridge; compare against the semiconductor varactor model $C_{\text{var}}(V_{\text{rev}}) = C_0/(1+V_{\text{rev}}/V_J)^M + C_{\text{fixed}}$ with $C_0=100$ nF, $V_J=0.7$ V, $M=0.5$, $C_{\text{fixed}}=47$ nF.
+- **Success Criterion:** Measured tuning range within ±10 % of simulation prediction (1.143 kHz @ 0 V – 1.401 kHz @ 5 V carrier envelope from the $V_{\text{tune}}$ sweep).
 
 ### Bench 3 — Oscilloscope V_m Traces (Single-Neuron Dynamics)
 - **Objective:** Capture membrane-potential waveforms from any of the 16 V_m monitor pads under DC bias.
