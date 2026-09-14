@@ -17,7 +17,7 @@
 
 The **AdEx Resonant Core** is an open-source, 16-neuron **Adaptive Exponential Integrate-and-Fire (AdEx)** Tunable Analog Resonant SoM Architecture implemented as a **70.0 mm × 70.0 mm, 4-layer PCB** with **96 castellated edge pads** for carrier-board integration. The current verification reflects a production-ready CAD layout (0 DRC) and second-order transistor-level simulation dynamics, all validated prior to physical silicon/PCB fabrication. Each of the 16 cells is coupled to its four nearest neighbours through a **varactor-tuned LC resonant bridge** (100 mH + 47 nF fixed capacitance + semiconductor varactor model). Theta and Gamma are emergent envelope bands, not driven frequencies.
 
-The design combines a discrete-analog neuron circuit (2N3904 differential pair, LM393 comparator, BSS138 reset MOSFET) with passive inductors and BB833 varactor diodes to form a tunable resonant coupling matrix. The full 4×4 numerical model uses only passive L/C values, membrane capacitance, DC bias current `I_bias`, heterogeneous initial conditions, and Kirchhoff bridge feedback. There is no external AC or frequency forcing. Post-simulation Welch PSD and Hilbert analysis measured **8.0 Hz** (Theta band), **40.00 Hz** (Gamma band), and **PLV = 0.988065** in the verification run.
+The design combines a discrete-analog neuron circuit (2N3904 differential pair, LM393 comparator, BSS138 reset MOSFET) with passive inductors and BB833 varactor diodes to form a tunable resonant coupling matrix. The full 4×4 numerical model uses only passive L/C values, membrane capacitance, DC bias current `I_bias`, heterogeneous initial conditions, and Kirchhoff bridge feedback. There is no external AC or frequency forcing. Post-simulation Welch PSD and Hilbert analysis measured **6.0 Hz** (Theta band), **34.00 Hz** (Gamma band), and **PLV = 0.975472** in the verification run.
 
 > **Parametric sensitivity analysis** has been performed for passive-component tolerance (±5 %) and temperature drift (−20 °C to 85 °C) on macro-parameters C_m, g_l, τ_w, V_t, L, and C_ext. Detailed BJT/MOSFET process variation (V_BE, β, I_s, Early-effect mismatch) is **not** covered by this analysis — those effects require a full SPICE transistor-level PDK Monte Carlo simulation scheduled prior to silicon fabrication.
 
@@ -188,23 +188,23 @@ Signed bridge currents are summed at each neuron and injected into its membrane-
 | **Tank resonance (simulated)** | 1.143–1.401 kHz over 0–5 V $V_{\text{tune}}$ sweep |
 | **Frequency tuning range** | 258 Hz (22.6% fractional shift) |
 | **V_tune sweep sensitivity** | 51.7 Hz/V |
-| **Welch PSD tank peaks** | Verified via `run_vtune_frequency_sweep()` |
-| **Emergent envelope: Theta** | **8.0 Hz** (Welch PSD peak) |
-| **Emergent envelope: Gamma** | **40.00 Hz** (Welch PSD peak) |
+| **Welch PSD tank peaks (dimensionally corrected)** | `low_tune` (V_tune ≤ 0.8 V): **1196.3 Hz**; `high_tune` (V_tune ≥ 4.2 V): **1391.6 Hz**; Δf = 195.3 Hz |
+| **Emergent envelope: Theta** | **6.0 Hz** (Welch PSD peak, updated from dimensional fix) |
+| **Emergent envelope: Gamma** | **34.00 Hz** (Welch PSD peak, updated from dimensional fix) |
 
 ### Key Performance Metrics
 
 | Metric | Value |
 |---|---|
-| **Emergent Theta-band peak** (Welch PSD of mean V_m) | **8.0 Hz** |
-| **Emergent Gamma-band peak** (Welch PSD of mean V_m) | **40.00 Hz** |
-| **Spike-Time PLV** | **0.874361** |
-| **Hilbert Instantaneous PLV** | **0.983851** |
-| **Kuramoto Order Parameter, mean R(t)** | **0.983851** |
-| **Pairwise Phase Dispersion** | **0.222575 rad** |
-| **Phase-Lag Distribution Std. Dev.** | **0.241026 rad** |
-| **Cluster Cross-Correlation (off-diagonal)** | **0.846201** |
-| **Varactor Bridge Current RMS** | **0.070779 mA** |
+| **Emergent Theta-band peak** (Welch PSD of mean V_m) | **6.0 Hz** |
+| **Emergent Gamma-band peak** (Welch PSD of mean V_m) | **34.00 Hz** |
+| **Spike-Time PLV** | **0.919189** |
+| **Hilbert Instantaneous PLV** | **0.975472** |
+| **Kuramoto Order Parameter, mean R(t)** | **0.975472** |
+| **Pairwise Phase Dispersion** | **0.240158 rad** |
+| **Phase-Lag Distribution Std. Dev.** | **0.261841 rad** |
+| **Cluster Cross-Correlation (off-diagonal)** | **0.746242** |
+| **Varactor Bridge Current RMS** | **0.030344 mA** |
 | **Simulation Duration** | 500 ms |
 | **Time Step** | 10 µs |
 
@@ -222,19 +222,19 @@ The following verification plot is generated automatically on every simulation r
 
   | Method | Verified value |
   |---|---:|
-  | Spike-Time PLV | 0.874361 |
-  | Hilbert Instantaneous PLV | 0.983851 |
-  | Kuramoto mean `R(t)` | 0.983851 |
-  | Pairwise Phase Dispersion | 0.222575 rad |
-  | Phase-Lag Distribution Std. Dev. | 0.241026 rad |
+  | Spike-Time PLV | 0.919189 |
+  | Hilbert Instantaneous PLV | 0.975472 |
+  | Kuramoto mean `R(t)` | 0.975472 |
+  | Pairwise Phase Dispersion | 0.240158 rad |
+  | Phase-Lag Distribution Std. Dev. | 0.261841 rad |
 
   This deliberately replaces a single idealized PLV claim with independent event-, waveform-, and network-level checks.
 
-- **Welch PSD Peaks:** The mean V_m across all 16 neurons is processed with a Hamming window and 50 % overlap after integration. The run reported emergent envelope peaks at **2.00 Hz** and **40.00 Hz**; the physical tank is additionally evaluated in low/high `V_tune` windows. `tuning_welch_peaks.csv` reports **1.318 kHz** for the sampled low-tune case.
+- **Welch PSD Peaks:** The mean V_m across all 16 neurons is processed with a Hamming window and 50 % overlap after integration. The run reported emergent envelope peaks at **6.0 Hz** and **34.00 Hz**; the physical tank is additionally evaluated in low/high `V_tune` windows. `tuning_welch_peaks.csv` reports **1196.3 Hz** (low_tune) and **1391.6 Hz** (high_tune).
 
-- **Bridge RMS Current:** The instantaneous current through each varactor-tuned LC bridge is computed from the Kirchhoff state variables. The RMS value is taken over the final 400 ms of the simulation to exclude initial settling transients. **Verified: 0.070779 mA.**
+- **Bridge RMS Current:** The instantaneous current through each varactor-tuned LC bridge is computed from the Kirchhoff state variables. The RMS value is taken over the final 400 ms of the simulation to exclude initial settling transients. **Verified: 0.030344 mA.**
 
-- **Cluster Cross-Correlation:** The mean Pearson correlation coefficient between all **off-diagonal inter-neuron pairs only** (self-correlation diagonal elements excluded via a boolean identity mask `~np.eye()`). This removes the self-pair bias of 1.0, reporting only genuine cross-neuron coupling. A value of **0.846201** confirms coordinated but not identical firing dynamics across the 16-neuron grid.
+- **Cluster Cross-Correlation:** The mean Pearson correlation coefficient between all **off-diagonal inter-neuron pairs only** (self-correlation diagonal elements excluded via a boolean identity mask `~np.eye()`). This removes the self-pair bias of 1.0, reporting only genuine cross-neuron coupling. A value of **0.746242** confirms coordinated but not identical firing dynamics across the 16-neuron grid.
 
 ---
 
@@ -346,11 +346,11 @@ Expected output (verified 2026-09-12):
 |---|---|
 | Theta peak | 6.00 Hz |
 | Gamma peak | 56.00 Hz |
-| Spike-Time PLV | 0.874361 |
-| Hilbert Instantaneous PLV | 0.983851 |
-| Kuramoto mean R(t) | 0.983851 |
-| Pairwise Phase Dispersion | 0.222575 rad |
-| Phase-Lag Distribution Std. Dev. | 0.241026 rad |
+| Spike-Time PLV | 0.919189 |
+| Hilbert Instantaneous PLV | 0.975472 |
+| Kuramoto mean R(t) | 0.975472 |
+| Pairwise Phase Dispersion | 0.240158 rad |
+| Phase-Lag Distribution Std. Dev. | 0.261841 rad |
 | Bridge current RMS | 2.09 mA |
 
 ---

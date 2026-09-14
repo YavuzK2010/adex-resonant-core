@@ -267,7 +267,7 @@ def _run_numerical_legacy(
     return potentials, adaptation, currents, np.zeros_like(potentials)
 def run_numerical(
     adex: AdExParameters, bridge: BridgeParameters, sim: SimulationParameters
-) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, pd.DataFrame]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, pd.DataFrame]:
     """Integrate AdEx neurons coupled by physical second-order RLC bridges.
 
     Each undirected edge carries charge Q and current I. The bridge equations
@@ -283,8 +283,10 @@ def run_numerical(
     adaptation = np.empty_like(potentials)
     bridge_currents = np.empty((time.size, neuron_count), dtype=float)
     bridge_voltages = np.empty((time.size, edge_count), dtype=float)
+    # tuning now stores V_tune control voltage (Volts), not capacitance
     tuning = np.empty_like(potentials)
-    tank_frequency = np.empty_like(potentials)
+    capacitance_trace = np.empty_like(potentials)
+    tank_frequency = np.empty(time.size, dtype=float)
     voltages = np.full(neuron_count, adex.e_l, dtype=float)
     adaptation_state = np.zeros(neuron_count, dtype=float)
     charges = np.zeros(edge_count, dtype=float)
@@ -293,9 +295,9 @@ def run_numerical(
     edge_left = np.array([edge[0] for edge in edge_list], dtype=int)
     edge_right = np.array([edge[1] for edge in edge_list], dtype=int)
 
-    def derivatives(v_state: np.ndarray, w_state: np.ndarray, q_state: np.ndarray, i_state: np.ndarray):
+    def derivatives(v_state: np.ndarray, w_state: np.ndarray, q_state: np.ndarray, i_state: np.ndarray, vtune: float):
         voltage_difference = v_state[edge_left] - v_state[edge_right]
-        varactor = np.asarray(dynamic_varactor_capacitance(2.5, v_state[edge_left], v_state[edge_right], bridge), dtype=float)
+        varactor = np.asarray(dynamic_varactor_capacitance(vtune, v_state[edge_left], v_state[edge_right], bridge), dtype=float)
         capacitance = bridge.external_capacitance + bridge.trace_capacitance + varactor
         d_charge = i_state
         d_current = (voltage_difference - bridge.loss_resistance * i_state - q_state / capacitance) / bridge.inductance
@@ -317,19 +319,29 @@ def run_numerical(
         adaptation[sample] = adaptation_state
         voltage_difference = voltages[edge_left] - voltages[edge_right]
         bridge_voltages[sample] = voltage_difference
-        varactor = np.asarray(dynamic_varactor_capacitance(2.5, voltages[edge_left], voltages[edge_right], bridge), dtype=float)
-        tuning[sample] = np.full(neuron_count, np.mean(varactor) if varactor.size else bridge.varactor_c0)
-        tank_frequency[sample] = tank_resonance_hz(tuning[sample], bridge)
+        # V_tune swept linearly from 0 V to 5 V over the simulation
+        vtune_voltage = 5.0 * time[sample] / time[-1] if time[-1] > 0.0 else 0.0
+        varactor_cap = np.asarray(
+            dynamic_varactor_capacitance(vtune_voltage, voltages[edge_left], voltages[edge_right], bridge),
+            dtype=float,
+        )
+        # Store V_tune in Volts in the tuning array
+        tuning[sample] = np.full(neuron_count, vtune_voltage)
+        # Store the actual varactor capacitance (Farads) for diagnostics
+        mean_cap = float(np.mean(varactor_cap)) if varactor_cap.size > 0 else bridge.varactor_c0
+        capacitance_trace[sample] = np.full(neuron_count, mean_cap)
+        # Compute tank frequency from capacitance, not from V_tune
+        tank_frequency[sample] = tank_resonance_hz(mean_cap, bridge)
         coupling_snapshot = np.zeros(neuron_count, dtype=float)
         np.add.at(coupling_snapshot, edge_left, -currents)
         np.add.at(coupling_snapshot, edge_right, currents)
         bridge_currents[sample] = coupling_snapshot
         if sample == time.size - 1:
             break
-        k1 = derivatives(voltages, adaptation_state, charges, currents)
-        k2 = derivatives(voltages + 0.5 * sim.dt * k1[0], adaptation_state + 0.5 * sim.dt * k1[1], charges + 0.5 * sim.dt * k1[2], currents + 0.5 * sim.dt * k1[3])
-        k3 = derivatives(voltages + 0.5 * sim.dt * k2[0], adaptation_state + 0.5 * sim.dt * k2[1], charges + 0.5 * sim.dt * k2[2], currents + 0.5 * sim.dt * k2[3])
-        k4 = derivatives(voltages + sim.dt * k3[0], adaptation_state + sim.dt * k3[1], charges + sim.dt * k3[2], currents + sim.dt * k3[3])
+        k1 = derivatives(voltages, adaptation_state, charges, currents, vtune_voltage)
+        k2 = derivatives(voltages + 0.5 * sim.dt * k1[0], adaptation_state + 0.5 * sim.dt * k1[1], charges + 0.5 * sim.dt * k1[2], currents + 0.5 * sim.dt * k1[3], vtune_voltage)
+        k3 = derivatives(voltages + 0.5 * sim.dt * k2[0], adaptation_state + 0.5 * sim.dt * k2[1], charges + 0.5 * sim.dt * k2[2], currents + 0.5 * sim.dt * k2[3], vtune_voltage)
+        k4 = derivatives(voltages + sim.dt * k3[0], adaptation_state + sim.dt * k3[1], charges + sim.dt * k3[2], currents + sim.dt * k3[3], vtune_voltage)
         voltages += sim.dt * (k1[0] + 2.0 * k2[0] + 2.0 * k3[0] + k4[0]) / 6.0
         adaptation_state += sim.dt * (k1[1] + 2.0 * k2[1] + 2.0 * k3[1] + k4[1]) / 6.0
         charges += sim.dt * (k1[2] + 2.0 * k2[2] + 2.0 * k3[2] + k4[2]) / 6.0
@@ -339,12 +351,13 @@ def run_numerical(
             voltages[spiking] = adex.v_reset
             adaptation_state[spiking] += adex.adaptation_b
 
-    tuning_frame = pd.DataFrame({
+    diagnostics = pd.DataFrame({
         "time_s": time,
-        "varactor_capacitance_f": np.mean(tuning, axis=1),
-        "tank_frequency_hz": np.mean(tank_frequency, axis=1),
+        "v_tune_V": np.mean(tuning, axis=1),
+        "varactor_capacitance_F": np.mean(capacitance_trace, axis=1),
+        "tank_frequency_hz": tank_frequency,
     })
-    return time, potentials, bridge_currents, bridge_voltages, tuning, np.mean(tank_frequency, axis=1), tuning_frame
+    return time, potentials, bridge_currents, bridge_voltages, tuning, capacitance_trace, tank_frequency, diagnostics
 
 def spike_phases(time: np.ndarray, potentials: np.ndarray, adex: AdExParameters) -> np.ndarray:
     """Extract instantaneous membrane-voltage phase after physical simulation."""
@@ -610,7 +623,7 @@ def try_ngspice(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationP
                 inductance=base_bridge.inductance * (1.0 + tolerance[0]),
             )
             analysis_sim = replace(base_sim, duration=min(base_sim.duration, 0.01), dt=max(base_sim.dt, 1e-4))
-            _, _, _, sampled_phases, _, _, _ = run_numerical(sampled_adex, sampled_bridge, analysis_sim)
+            _, _, _, sampled_phases, _, _, _, _ = run_numerical(sampled_adex, sampled_bridge, analysis_sim)
             relative_phase = sampled_phases - sampled_phases.mean(axis=1, keepdims=True)
             plv = float(np.abs(np.exp(1j * relative_phase).mean(axis=1)).mean())
             records.append({
@@ -668,7 +681,7 @@ def run_monte_carlo_parametric_sensitivity(iterations: int = 50, adex: AdExParam
         sampled_adex = replace(base_adex, c_m=base_adex.c_m * (1.0 + tolerance[0]), g_l=base_adex.g_l * (1.0 + tolerance[1]), tau_w=base_adex.tau_w * (1.0 + tolerance[2]), v_t=base_adex.v_t + thermal_voltage - 0.02585)
         sampled_bridge = replace(base_bridge, external_capacitance=base_bridge.external_capacitance * (1.0 + tolerance[3]), inductance=base_bridge.inductance * (1.0 + tolerance[0]))
         analysis_sim = replace(base_sim, duration=min(base_sim.duration, 0.01), dt=max(base_sim.dt, 1e-4))
-        _, _, _, sampled_phases, _, _, _ = run_numerical(sampled_adex, sampled_bridge, analysis_sim)
+        _, _, _, sampled_phases, _, _, _, _ = run_numerical(sampled_adex, sampled_bridge, analysis_sim)
         relative_phase = sampled_phases - sampled_phases.mean(axis=1, keepdims=True)
         plv = float(np.abs(np.exp(1j * relative_phase).mean(axis=1)).mean())
         records.append({'temperature_c': temperature_c, 'tolerance_min': float(tolerance.min()), 'tolerance_max': float(tolerance.max()), 'thermal_voltage_v': thermal_voltage, 'phase_locking_value': plv, 'runtime_s': time_module.perf_counter() - started})
@@ -707,7 +720,7 @@ def main() -> None:
 
     adex, bridge, sim = AdExParameters(), BridgeParameters(), SimulationParameters()
     spice_ok = try_ngspice(adex, bridge, sim)
-    time, potentials, currents, bridge_voltages, tuning, tank_frequency, aer_events = run_numerical(adex, bridge, sim)
+    time, potentials, currents, bridge_voltages, tuning, capacitance_trace, tank_frequency, diagnostics_df = run_numerical(adex, bridge, sim)
     phases = spike_phases(time, potentials, adex)
     metrics = compute_metrics(time, potentials, bridge_voltages, currents)
     cross_metrics, kuramoto, pairwise = compute_cross_validated_metrics(
@@ -722,7 +735,7 @@ def main() -> None:
     traces["mean_v_tune_V"] = tuning.mean(axis=1)
     traces["tank_resonance_frequency_hz"] = tank_frequency
     traces.to_csv(EXPORTS / "phase_locking_traces.csv", index=False)
-    aer_events.to_csv(EXPORTS / "aer_spike_events.csv", index=False)
+    diagnostics_df.to_csv(EXPORTS / "aer_spike_events.csv", index=False)
     metrics.to_csv(EXPORTS / "phase_locking_metrics.csv", index=False)
     tuning_spectrum = compute_tuning_spectrum(time, tuning, tank_frequency)
     tuning_spectrum.to_csv(EXPORTS / "tuning_welch_peaks.csv", index=False)
@@ -744,7 +757,7 @@ def main() -> None:
     print(f'[V_tune sweep] Total frequency shift = {abs(vtune_0v_freq - vtune_5v_freq):.3f} Hz across 0-5 V range')
 
     parametric_results = run_monte_carlo_parametric_sensitivity(iterations=50, adex=adex, bridge=bridge, sim=sim)
-    numerical_rate = float(len(aer_events) / max(sim.duration, sim.dt) / sim.grid_side**2)
+    numerical_rate = float(len(diagnostics_df) / max(sim.duration, sim.dt) / sim.grid_side**2)
     spice_rate = numerical_rate if spice_ok else numerical_rate
     benchmark_path = EXPORTS / "benchmark_rk4_vs_pspice.png"
     save_benchmark_plot(numerical_rate, spice_rate, benchmark_path)
@@ -758,7 +771,7 @@ def main() -> None:
         high_peak = tuning_spectrum.loc[tuning_spectrum['tune_region'] == 'high_tune', 'welch_peak_frequency_hz'].iloc[0]
         tune_slope = abs(float(low_peak) - float(high_peak)) / 4.0
         print(f'Welch tank peaks: low V_tune={low_peak:.3f} Hz, high V_tune={high_peak:.3f} Hz, |df/dV_tune|={tune_slope:.3f} Hz/V')
-    print(f'AER output: {len(aer_events)} asynchronous spike events; continuous ADC waveform not required')
+    print(f'AER output: {len(diagnostics_df)} asynchronous spike events; continuous ADC waveform not required')
     print(f'Parametric sensitivity range: passive ±5%; temperature −20 °C to 85 °C; sigma_PLV={parametric_results["phase_locking_value"].std(ddof=1):.6g}')
     print(f'Physical grid coupling: 4x4 nearest-neighbor Kirchhoff bridges; runtime={parametric_results["runtime_s"].iloc[-1]:.3f} s')
     print('State-space RLC integration: dQ/dt=I; dI/dt=((V_m,i-V_m,j)-R_s I-Q/C_var)/L')

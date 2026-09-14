@@ -1,2 +1,3 @@
-tune_region,mean_v_tune_V,welch_peak_frequency_hz,model_mean_frequency_hz
-low_tune,9.775082352448821e-08,1318.3593749999998,1322.8749691244582
+tune_region,mean_v_tune_V,welch_peak_frequency_hz,model_mean_frequency_hz,peak_shift_hz
+low_tune,0.39995799915998315,1196.2890624999998,1202.5900653897108,195.3125
+high_tune,4.600042000840017,1391.6015624999998,1394.8586950333104,195.3125

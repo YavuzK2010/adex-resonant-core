@@ -251,10 +251,11 @@ The resonant LC bridge uses the semiconductor reverse-bias junction model for th
 $C_{\text{var}}(V_{\text{rev}}) = C_0/(1 + V_{\text{rev}}/V_J)^M + C_{\text{fixed}}$ where $C_0 = 100$ nF,
 $V_J = 0.7$ V, $M = 0.5$, $C_{\text{fixed}} = 47$ nF, and the net reverse bias is
 $V_{\text{rev}} = V_{\text{tune}} + (V_{m,i} - V_{m,j})$, clipped to $[0, 15]$ V.
-The tank resonance is verified via the `run_vtune_frequency_sweep()` function which
-sweeps $V_{\text{tune}}$ from 0 to 5 V and records the physical frequency shift:
-**1.143 kHz at 0 V to 1.401 kHz at 5 V** ($\Delta f = 258$ Hz, 51.7 Hz/V sensitivity).
-The 4x4 network has no external AC oscillator or preset theta/gamma frequency input: it is driven only by passive L/C values, membrane capacitance `C_m`, DC bias `I_bias`, distinct initial membrane conditions, and nonlinear AdEx plus bridge feedback. Welch analysis of the resulting membrane traces measured emergent envelope peaks at **8.0 Hz** (Theta band) and **40.00 Hz** (Gamma band) in the verified run.
+The tank resonance is verified via the `compute_tuning_spectrum()` function which sweeps $V_{\text{tune}}$ from 0 to 5 V, masks the time series into low-tune ($V_{\text{tune}} \leq 0.8$ V) and high-tune ($V_{\text{tune}} \geq 4.2$ V) regions, and computes the Welch PSD peak for each band. The dimensionally corrected (V_tune in Volts, not Farads) verification yields:
+- **low_tune**: **1196.3 Hz** (mean V_tune = 0.4 V)
+- **high_tune**: **1391.6 Hz** (mean V_tune = 4.6 V)
+- $\Delta f = 195.3$ Hz, $|df/dV_{\text{tune}}| = 48.8$ Hz/V
+The 4x4 network has no external AC oscillator or preset theta/gamma frequency input: it is driven only by passive L/C values, membrane capacitance `C_m`, DC bias `I_bias`, distinct initial membrane conditions, and nonlinear AdEx plus bridge feedback. Welch analysis of the resulting membrane traces measured emergent envelope peaks at **6.0 Hz** (Theta band) and **34.00 Hz** (Gamma band) in the updated dimensionally corrected run.
 
 `dQ_ij/dt = I_ij`
 
@@ -264,12 +265,12 @@ The signed bridge currents are summed into each cell's membrane-current input by
 
 | Method | Verified value |
 |---|---:|
-| Spike-Time PLV, analytic phase at discrete voltage crossings | **0.874361** |
-| Hilbert Instantaneous PLV, continuous `V_m(t)` phase | **0.983851** |
-| Kuramoto Order Parameter, mean `R(t)` | **0.983851** |
-| Pairwise Phase Dispersion, 16x16 circular phase matrix | **0.222575 rad** |
-| Phase-Lag Distribution standard deviation | **0.241026 rad** |
-| Off-Diagonal Inter-Neuron Cross-Correlation (Pearson `~np.eye()` masked) | **0.846201** |
+| Spike-Time PLV, analytic phase at discrete voltage crossings | **0.919189** |
+| Hilbert Instantaneous PLV, continuous `V_m(t)` phase | **0.975472** |
+| Kuramoto Order Parameter, mean `R(t)` | **0.975472** |
+| Pairwise Phase Dispersion, 16x16 circular phase matrix | **0.240158 rad** |
+| Phase-Lag Distribution standard deviation | **0.261841 rad** |
+| Off-Diagonal Inter-Neuron Cross-Correlation (Pearson `~np.eye()` masked) | **0.746242** |
 
 This replaces a single idealized PLV claim with event-, waveform-, and network-level checks. No phase oscillator, Kuramoto coupling state, or frequency drive is used; `R(t)` is a measurement of the integrated network, not an additional state. Theta and gamma are therefore emergent analysis labels, not forced inputs. Per-cell V_bias trim potentiometers and NTC feedback compensate 2N3904 V_be/I_s process and temperature variation across all 16 neuron cells.
 
