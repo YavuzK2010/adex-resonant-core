@@ -17,6 +17,8 @@ Outputs:
     simulations/exports/phase_locking_traces.csv
     simulations/exports/aer_spike_events.csv
     simulations/exports/vtune_frequency_sweep.csv
+    simulations/exports/ablation_study_summary.csv    (--ablation flag)
+    simulations/exports/ablation_study_comparison.png  (--ablation flag)
 """
 
 from __future__ import annotations
@@ -1020,7 +1022,20 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="AdEx Resonant Core phase-locking simulation")
     parser.add_argument("--interactive", action="store_true", help="Show dynamic real-time plot")
+    parser.add_argument("--ablation", action="store_true", help="Run 6-configuration ablation study instead of full simulation")
     args = parser.parse_args()
+
+    if args.ablation:
+        # Delegate to ablation study engine
+        from run_ablation_study import run_ablation_study, save_ablation_comparison_plot
+        summary = run_ablation_study()
+        save_ablation_comparison_plot(summary)
+        print("\n" + "=" * 72)
+        print("Ablation Study - Final Comparison Table")
+        print("=" * 72)
+        print(summary.to_string(index=False))
+        print("=" * 72)
+        return
 
     adex, bridge, sim = AdExParameters(), BridgeParameters(), SimulationParameters()
     spice_ok, v_m_spice = try_ngspice(adex, bridge, sim)
