@@ -15,11 +15,11 @@
 
 ## Executive Summary
 
-The **AdEx Resonant Core** is an open-source, 16-neuron **Adaptive Exponential Integrate-and-Fire (AdEx)** Tunable Analog Resonant SoM Architecture implemented as a **70.0 mm × 70.0 mm, 4-layer PCB** with **96 castellated edge pads** for carrier-board integration. The current verification reflects a production-ready CAD layout (0 DRC) and second-order transistor-level simulation dynamics, all validated prior to physical silicon/PCB fabrication. Each of the 16 cells is coupled to its four nearest neighbours through a **varactor-tuned LC resonant bridge** (100 mH + 47 nF fixed capacitance + semiconductor varactor model). Theta and Gamma are emergent envelope bands, not driven frequencies.
+The **AdEx Resonant Core** is an open-source, 16-neuron **Adaptive Exponential Integrate-and-Fire (AdEx)** Tunable Analog Resonant SoM Architecture implemented as a **70.0 mm × 70.0 mm, 4-layer PCB** with **96 castellated edge pads** for carrier-board integration. The current verification reflects a production-ready CAD layout (0 DRC) and second-order behavioral / circuit-equivalent SPICE simulation dynamics, all validated prior to physical silicon/PCB fabrication. Each of the 16 cells is coupled to its four nearest neighbours through a **varactor-tuned LC resonant bridge** (100 mH + 47 nF fixed capacitance + semiconductor varactor model). Theta and Gamma are emergent envelope bands, not driven frequencies.
 
 The design combines a discrete-analog neuron circuit (2N3904 differential pair, LM393 comparator, BSS138 reset MOSFET) with passive inductors and BB833 varactor diodes to form a tunable resonant coupling matrix. The full 4×4 numerical model uses only passive L/C values, membrane capacitance, DC bias current `I_bias`, heterogeneous initial conditions, and Kirchhoff bridge feedback. There is no external AC or frequency forcing. Post-simulation Welch PSD and Hilbert analysis measured **6.0 Hz** (Theta band), **34.00 Hz** (Gamma band), and **PLV = 0.975472** in the verification run.
 
-> **Parametric sensitivity analysis** has been performed for passive-component tolerance (±5 %) and temperature drift (−20 °C to 85 °C) on macro-parameters C_m, g_l, τ_w, V_t, L, and C_ext. Detailed BJT/MOSFET process variation (V_BE, β, I_s, Early-effect mismatch) is **not** covered by this analysis — those effects require a full SPICE transistor-level PDK Monte Carlo simulation scheduled prior to silicon fabrication.
+> **Parametric sensitivity analysis** has been performed for passive-component tolerance (±5 %) and temperature drift (−20 °C to 85 °C) on macro-parameters C_m, g_l, τ_w, V_t, L, and C_ext. Detailed BJT/MOSFET process variation (V_BE, β, I_s, Early-effect mismatch) is **not** covered by this analysis — those effects require a full behavioral / circuit-equivalent SPICE PDK Monte Carlo simulation scheduled prior to silicon fabrication.
 
 The varactor capacitance is modelled via the semiconductor reverse-bias junction equation:
 
@@ -365,7 +365,7 @@ Expected output (verified 2026-09-12):
 
 ## Physical Hardware Bring-Up & Experimental Roadmap
 
-The following benchmarks are planned for the physical silicon/PCB prototyping phase. All metrics target oscilloscope-level verification against the transistor-level simulation baselines established in this repository.
+The following benchmarks are planned for the physical silicon/PCB prototyping phase. All metrics target oscilloscope-level verification against the behavioral / circuit-equivalent SPICE simulation baselines established in this repository.
 
 ### Bench 1 — CPLD/FPGA AER Event Capture
 - **Objective:** Validate Address-Event Representation (AER) handshake timing between the SoM and an external CPLD/FPGA carrier.
@@ -380,7 +380,7 @@ The following benchmarks are planned for the physical silicon/PCB prototyping ph
 ### Bench 3 — Oscilloscope V_m Traces (Single-Neuron Dynamics)
 - **Objective:** Capture membrane-potential waveforms from any of the 16 V_m monitor pads under DC bias.
 - **Measurements:** Resting potential, action-potential amplitude, spike width (FWHM), and after-hyperpolarisation (AHP) depth.
-- **Success Criterion:** Waveform shape consistent with 2nd-order transistor-level Ngspice simulation; spike amplitude ≥ 2 V pk-pk.
+- **Success Criterion:** Waveform shape consistent with 2nd-order behavioral / circuit-equivalent SPICE Ngspice simulation; spike amplitude ≥ 2 V pk-pk.
 
 ### Bench 4 — 16-Neuron Multi-Node Phase Coherence
 - **Objective:** Simultaneous 4-channel oscilloscope capture of V_m from four neighbouring cells to verify emergent Theta/Gamma coupling.

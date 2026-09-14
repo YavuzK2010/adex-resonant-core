@@ -1,8 +1,8 @@
 # AdEx Resonant Core SoM Integration Guide
 
-**Document status:** Carrier-board integration contract (pre-fabrication; 0 DRC, transistor-level simulation verified)
+**Document status:** Carrier-board integration contract (pre-fabrication; 0 DRC, behavioral / circuit-equivalent SPICE simulation verified)
 **Module:** AdEx Resonant Core 16-neuron Tunable Analog Resonant SoM
-**Parametric sensitivity:** Passive-component tolerance (±5 %) and temperature drift (−20 °C to 85 °C) Monte Carlo analysis performed on macro-parameters (C_m, g_l, τ_w, V_t, L, C_ext). BJT/MOSFET process variation (V_BE, β, I_s, Early-effect mismatch) is **not** included and will be addressed in a full SPICE transistor-level PDK Monte Carlo prior to silicon fabrication.
+**Parametric sensitivity:** Passive-component tolerance (±5 %) and temperature drift (−20 °C to 85 °C) Monte Carlo analysis performed on macro-parameters (C_m, g_l, τ_w, V_t, L, C_ext). BJT/MOSFET process variation (V_BE, β, I_s, Early-effect mismatch) is **not** included and will be addressed in a full behavioral / circuit-equivalent SPICE PDK Monte Carlo prior to silicon fabrication.
 **Board outline:** 70 mm x 70 mm, four copper layers  
 **Interface:** 96 castellated edge pads, 0.5 mm nominal pitch unless the released fabrication drawing states otherwise
 
@@ -324,7 +324,7 @@ the LC bridge guard-ring keepout.
 
 ### 9.3 AER spike interface and self-calibration
 
-- `SPIKE_OUT` is an asynchronous Address-Event Representation interface: transmit the neuron address and event strobe only when a transistor-level spike occurs. Do not continuously digitize all `V_m` channels for normal operation.
+- `SPIKE_OUT` is an asynchronous Address-Event Representation interface: transmit the neuron address and event strobe only when a behavioral / circuit-equivalent SPICE spike occurs. Do not continuously digitize all `V_m` channels for normal operation.
 - The carrier receiver shall provide a timestamped event latch or asynchronous FIFO and keep measured event-to-capture jitter below 10 ns. Keep the point-to-point route short, avoid parallelism with `V_m` and `V_tune`, and terminate only as required by the receiver input standard.
 - At bring-up, sweep each `V_tune` DAC code slowly, record the AER event rate and bridge phase, and store the code that centers the desired resonance. Apply the code after power sequencing and repeat the sweep over temperature if the NTC compensation reports a drift outside the calibrated window.
 - Verify the damped tuning response after every carrier revision by observing `V_tune`, bridge phase, and the AER event timestamps together. A valid calibration must preserve phase-locking with the assembled trace parasitics present.
