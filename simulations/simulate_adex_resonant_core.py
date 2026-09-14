@@ -215,7 +215,7 @@ def build_pyspice_circuit(
     for index in range(16):
         node = f"VM{index + 1}"
         add_raw(f"CM{index + 1} {node} 0 {adex.c_m}")
-        add_raw(f"GL{index + 1} {node} 0 {1.0 / adex.g_l}")
+        add_raw(f"RGL{index + 1} {node} 0 {1.0 / adex.g_l}")
         add_raw(f"IAPP{index + 1} 0 {node} {sim.I_bias}")
         add_raw(
             f"BEXP{index + 1} 0 {node} i={{ {adex.saturation_current} * "
@@ -616,10 +616,157 @@ def save_plot(time: np.ndarray, potentials: np.ndarray, phases: np.ndarray, curr
         subprocess.Popen(["xdg-open", str(path)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
-def try_ngspice(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationParameters) -> bool:
-    """Attempt the requested PySpice/Ngspice path without making it mandatory."""
-    if Circuit is None or shutil.which("ngspice") is None:
-        return False
+def try_ngspice(adex: AdExParameters, bridge: BridgeParameters, sim: SimulationParameters) -> tuple[bool, np.ndarray | None]:
+    """Attempt to run Ngspice transient simulation as an independent engine.
+
+    Builds the behavioural circuit-equivalent netlist, writes it to a
+    temporary file, executes ``ngspice -b`` as a subprocess, and parses
+    the printed transient node voltages for all 16 neurons.
+
+    Returns (ok, V_m_spice) where V_m_spice is an ndarray of shape
+    (n_time_steps, 16) with membrane potentials in Volts, or None if
+    ngspice is unavailable or the simulation fails.
+
+    This engine is completely independent of the RK4 numerical solver.
+    """
+    if shutil.which("ngspice") is None:
+        return False, None
+
+    try:
+        circuit = build_pyspice_circuit(adex, bridge, sim)
+    except Exception as exc:
+        print(f"[PySpice] Circuit build failed: {exc}")
+        return False, None
+
+    with tempfile.NamedTemporaryFile(
+        mode="w", suffix=".cir", delete=False, prefix="adex_spice_"
+    ) as f:
+        netlist_path = pathlib.Path(f.name)
+        raw = circuit.raw_spice
+        # UIC flag must be at the END of the .tran line, not after .tran
+        raw = raw.replace(".tran ", ".tran ")
+        if ".tran" in raw and "uic" not in raw.lower():
+            # Find the .tran line and append UIC
+            lines = raw.split("\n")
+            for i, line in enumerate(lines):
+                if line.strip().startswith(".tran"):
+                    lines[i] = line.strip() + " uic"
+                    break
+            raw = "\n".join(lines)
+        f.write(raw + "\n")
+        # Ngspice convergence options
+        f.write(".options ABSTOL=1e-12 RELTOL=0.01 VNTOL=1e-6 GMIN=1e-12\n")
+        f.write(".options ITL1=500 ITL2=500 METHOD=GEAR\n")
+        # Set initial node voltages for convergence
+        for index in range(16):
+            f.write(f".ic v(VM{index + 1})={adex.e_l}\n")
+        # Add .print tran for all 16 VM nodes
+        all_nodes = " ".join(f"v(VM{i+1})" for i in range(16))
+        f.write(f".print tran {all_nodes}\n")
+        f.write(".end\n")
+
+    try:
+        result = subprocess.run(
+            ["ngspice", "-b", str(netlist_path)],
+            capture_output=True,
+            text=True,
+            timeout=600.0,
+        )
+        if result.returncode != 0:
+            print(f"[Ngspice] Simulation failed (exit {result.returncode})")
+            if result.stderr:
+                for err_line in result.stderr.strip().splitlines()[-20:]:
+                    print(f"  [Ngspice stderr] {err_line}")
+            return False, None
+
+        output_lines = result.stdout.strip().splitlines()
+        # Find the printed transient data — ngspice .print outputs a table
+        # after a header line starting with "Index" or similar.
+        data_start = None
+        for i, line in enumerate(output_lines):
+            if line.strip().startswith("Index") and "v(" in line.lower():
+                data_start = i + 1
+                break
+
+        if data_start is None:
+            # Try a different format: ngspice sometimes prints without Index header
+            for i, line in enumerate(output_lines):
+                if line.strip() and line.strip().split()[0].replace(".","",1).replace("e","",1).replace("+","",1).replace("-","",1).isdigit():
+                    data_start = i
+                    break
+
+        if data_start is None or data_start >= len(output_lines):
+            print("[Ngspice] Could not locate transient data in output")
+            return False, None
+
+        # Parse the data table
+        rows = []
+        for line in output_lines[data_start:]:
+            line = line.strip()
+            if not line:
+                continue
+            parts = line.split()
+            if len(parts) < 17:  # Index + 16 node voltages
+                continue
+            try:
+                row = [float(parts[0])] + [float(p) for p in parts[1:17]]
+                rows.append(row)
+            except ValueError:
+                continue
+
+        if len(rows) < 2:
+            print(f"[Ngspice] Only {len(rows)} data rows parsed — aborting")
+            return False, None
+
+        data = np.array(rows, dtype=float)
+        v_m_spice = data[:, 1:]  # shape (n_steps, 16), each column is one VM node
+
+        print(f"[Ngspice] Transient completed: {v_m_spice.shape[0]} steps, {v_m_spice.shape[1]} neurons")
+        return True, v_m_spice
+
+    except subprocess.TimeoutExpired:
+        print("[Ngspice] Simulation timed out (>600 s)")
+        return False, None
+    except Exception as exc:
+        print(f"[Ngspice] Unexpected error: {exc}")
+        return False, None
+    finally:
+        if netlist_path.exists():
+            netlist_path.unlink()
+
+
+def extract_spike_rate_from_voltage(
+    voltages: np.ndarray,
+    v_peak: float,
+    dt: float,
+) -> float:
+    """Calculate firing rate from a membrane voltage trace.
+
+    Counts every crossing of *v_peak* (from below to at-or-above) and
+    returns the mean rate in Hz averaged across all neurons.
+
+    Parameters
+    ----------
+    voltages : ndarray, shape (n_time, n_neurons)
+        Membrane potential time series (V).
+    v_peak : float
+        Spike-detection threshold (V).
+    dt : float
+        Time step between samples (s).
+
+    Returns
+    -------
+    float
+        Mean firing rate (Hz) across the population.
+    """
+    n_neurons = voltages.shape[1]
+    total_spikes = 0
+    for neuron in range(n_neurons):
+        trace = voltages[:, neuron]
+        crossings = np.flatnonzero((trace[:-1] < v_peak) & (trace[1:] >= v_peak))
+        total_spikes += len(crossings)
+    duration_s = voltages.shape[0] * dt
+    return float(total_spikes) / (n_neurons * duration_s) if duration_s > 0.0 else 0.0
 
 
     def run_monte_carlo_parametric_sensitivity(iterations: int = 50, adex: AdExParameters | None = None, bridge: BridgeParameters | None = None, sim: SimulationParameters | None = None) -> pd.DataFrame:
@@ -724,13 +871,47 @@ def run_monte_carlo_parametric_sensitivity(iterations: int = 50, adex: AdExParam
     return result
 
 
-def save_benchmark_plot(numerical_rate: float, spice_rate: float, path: pathlib.Path) -> None:
-    """Compare numerical and behavioral / circuit-equivalent SPICE firing-rate estimates."""
+def save_benchmark_plot(numerical_rate: float, spice_rate: float | None, path: pathlib.Path) -> None:
+    """Compare numerical and behavioural circuit-equivalent SPICE firing-rate estimates.
+
+    When *spice_rate* is *None* (PySpice/Ngspice unavailable), the SPICE
+    bar is replaced by a "SPICE Engine Offline" annotation so the plot
+    never displays duplicated RK4 data.
+    """
     figure, axis = plt.subplots(figsize=(8, 5), dpi=220)
-    labels = ["RK4 numerical", "PySpice/Ngspice"]
-    axis.bar(labels, [numerical_rate, spice_rate], color=["#176b87", "#d97706"], width=0.58)
+
+    if spice_rate is not None:
+        labels = ["RK4 numerical", "PySpice/Ngspice"]
+        values = [numerical_rate, spice_rate]
+        colors = ["#176b87", "#d97706"]
+        axis.bar(labels, values, color=colors, width=0.58)
+        delta = abs(numerical_rate - spice_rate)
+        axis.annotate(
+            f"|ΔRate| = {delta:.3f} Hz\n(RK4 vs SPICE)",
+            xy=(0.5, 0.92),
+            xycoords="axes fraction",
+            fontsize=10,
+            ha="center",
+            va="top",
+            bbox=dict(boxstyle="round,pad=0.3", facecolor="wheat", alpha=0.85),
+        )
+    else:
+        labels = ["RK4 numerical", "SPICE Engine Offline"]
+        values = [numerical_rate, 0.0]
+        colors = ["#176b87", "#cccccc"]
+        axis.bar(labels, values, color=colors, width=0.58)
+        axis.annotate(
+            "PySpice/Ngspice not available\nRK4-only mode",
+            xy=(0.5, 0.50),
+            xycoords="axes fraction",
+            fontsize=11,
+            ha="center",
+            va="center",
+            bbox=dict(boxstyle="round,pad=0.4", facecolor="lightcoral", alpha=0.7),
+        )
+
     axis.set_ylabel("Firing rate (Hz)")
-    axis.set_title("AdEx Resonant Core firing-rate benchmark")
+    axis.set_title("AdEx Resonant Core — RK4 vs Behavioural SPICE Benchmark\n(Dual-engine independent execution)")
     axis.grid(axis="y", alpha=0.25)
     figure.tight_layout()
     figure.savefig(path, dpi=220)
@@ -745,7 +926,7 @@ def main() -> None:
     args = parser.parse_args()
 
     adex, bridge, sim = AdExParameters(), BridgeParameters(), SimulationParameters()
-    spice_ok = try_ngspice(adex, bridge, sim)
+    spice_ok, v_m_spice = try_ngspice(adex, bridge, sim)
     time, potentials, currents, bridge_voltages, tuning, capacitance_trace, tank_frequency, diagnostics_df = run_numerical(adex, bridge, sim)
     phases = spike_phases(time, potentials, adex)
     metrics = compute_metrics(time, potentials, bridge_voltages, currents)
@@ -784,7 +965,12 @@ def main() -> None:
 
     parametric_results = run_monte_carlo_parametric_sensitivity(iterations=50, adex=adex, bridge=bridge, sim=sim)
     numerical_rate = float(len(diagnostics_df) / max(sim.duration, sim.dt) / sim.grid_side**2)
-    spice_rate = numerical_rate if spice_ok else numerical_rate
+    if spice_ok and v_m_spice is not None:
+        spice_rate = extract_spike_rate_from_voltage(v_m_spice, adex.v_peak, sim.dt)
+        print(f"[Benchmark] RK4 rate={numerical_rate:.4f} Hz, SPICE rate={spice_rate:.4f} Hz, |Δ|={abs(numerical_rate - spice_rate):.4f} Hz")
+    else:
+        spice_rate = None
+        print("[Benchmark] SPICE engine offline — benchmark reflects RK4 only")
     benchmark_path = EXPORTS / "benchmark_rk4_vs_pspice.png"
     save_benchmark_plot(numerical_rate, spice_rate, benchmark_path)
     print(f'Behavioral B-source model (Shockley/EKV): I0={adex.saturation_current:.3g} A, eta={adex.ideality_factor:.3g}, VT={adex.thermal_voltage * 1e3:.3g} mV')

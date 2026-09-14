@@ -276,7 +276,31 @@ This replaces a single idealized PLV claim with event-, waveform-, and network-l
 
 ## 9. Mixed-Signal Isolation, Guard Rings, and Calibration
 
-## 10. Physical 4x4 Nearest-Neighbor RLC Routing
+## 10. Simulation Benchmark & Dual-Engine Cross-Validation
+
+The AdEx Resonant Core project implements **two independent simulation engines** to verify emergent dynamics before hardware fabrication:
+
+### 10.1 Engine Architecture
+
+| Engine | Solver | Firing-rate extraction |
+|--------|--------|------------------------|
+| **RK4 Numerical** | 4th-order Runge-Kutta with discrete spike-reset | Count V_m ≥ V_peak crossings in numerical V_m(t) |
+| **PySpice/Ngspice** | Behavioural circuit-equivalent netlist → `ngspice -b` subprocess | Print V_m nodes via `.print tran` → parse → count threshold crossings |
+
+Both engines operate **independently** — no state, parameters, or results are shared between them during execution. The benchmark plot (`benchmark_rk4_vs_pspice.png`) presents side-by-side bar charts with the absolute rate delta annotated.
+
+### 10.2 Current Benchmark Status
+
+| Metric | Value |
+|--------|-------|
+| RK4 Firing Rate | Extracted from numerical integration |
+| SPICE Firing Rate | Extracted from Ngspice transient; **None** when engine is offline |
+| Rate Delta (Δ) | `\|Rate_RK4 − Rate_SPICE\|` |
+| SPICE Engine Status | Reports **"SPICE Engine Offline"** on benchmark plot when unavailable/non-convergent |
+
+> **Note:** The behavioural circuit-equivalent netlist parses and loads correctly in Ngspice v47, but the hard-threshold BCOMP/BRST behavioural sources create convergence difficulties typical of pure spiking-neuron models in SPICE. The benchmark infrastructure is fully implemented and will report genuine dual-engine deltas once a simulation-friendly netlist revision (smoothed thresholds or transistor-level subcircuits) is adopted. The system **never** duplicates RK4 data onto the SPICE bar.
+
+## 11. Physical 4x4 Nearest-Neighbor RLC Routing
 
 The released PCB is modeled as a 4x4 2D nearest-neighbor grid, not a 16x16 synapse crossbar. Each neuron cell has at most four physical bridge connections: North, South, East, and West. The topology therefore contains 24 undirected LC bridges, matching the routed PCB traces and excluding diagonal and long-range connections.
 

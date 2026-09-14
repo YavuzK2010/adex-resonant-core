@@ -19,6 +19,22 @@ The **AdEx Resonant Core** is an open-source, 16-neuron **Adaptive Exponential I
 
 The design combines a discrete-analog neuron circuit (2N3904 differential pair, LM393 comparator, BSS138 reset MOSFET) with passive inductors and BB833 varactor diodes to form a tunable resonant coupling matrix. The full 4×4 numerical model uses only passive L/C values, membrane capacitance, DC bias current `I_bias`, heterogeneous initial conditions, and Kirchhoff bridge feedback. There is no external AC or frequency forcing. Post-simulation Welch PSD and Hilbert analysis measured **6.0 Hz** (Theta band), **34.00 Hz** (Gamma band), and **PLV = 0.975472** in the verification run.
 
+### Dual-Engine Benchmark Methodology
+
+The project maintains **two independent simulation engines** — an RK4 numerical state-space solver and a PySpice/Ngspice behavioural circuit-equivalent SPICE engine — to cross-validate emergent dynamics:
+
+- **RK4 Numerical Engine** (`run_numerical`): Integrates the 16-neuron × 24-bridge coupled system via a fourth-order Runge-Kutta method with discrete spike-reset events. Firing rates are extracted directly from the RK4 membrane voltage traces by counting V_m ≥ V_peak crossings.
+- **PySpice/Ngspice Engine** (`try_ngspice`): Generates a behavioural circuit-equivalent netlist (BJT/MOSFET/varactor models, B-source EKV equations), writes a temporary `.cir` file, and executes `ngspice -b` as an independent subprocess. Membrane voltage nodes `VM1`…`VM16` are printed via `.print tran` and parsed to compute the SPICE firing rate using the same threshold-crossing algorithm.
+
+| Metric | Value |
+|--------|-------|
+| RK4 Firing Rate | Computed from numerical V_m(t) |
+| SPICE Firing Rate | Computed from Ngspice V_m(t); **None** if engine unavailable |
+| Rate Delta (Δ) | `\|Rate_RK4 − Rate_SPICE\|` reported on benchmark plot |
+| SPICE Status | **"SPICE Engine Offline"** rendered on plot when Ngspice fails to converge |
+
+> **Current status:** The behavioural SPICE netlist loads and parses correctly in Ngspice v47, but the hard-threshold BCOMP/BRST sources create convergence difficulties for pure spiking-neuron behavioural models. When Ngspice convergence fails, the benchmark plot explicitly displays a **"SPICE Engine Offline"** indicator — it never duplicates RK4 data. A future revision with smoothed threshold functions or transistor-level subcircuits will resolve this. The architectural infrastructure for independent cross-validation is fully implemented.
+
 > **Parametric sensitivity analysis** has been performed for passive-component tolerance (±5 %) and temperature drift (−20 °C to 85 °C) on macro-parameters C_m, g_l, τ_w, V_t, L, and C_ext. Detailed BJT/MOSFET process variation (V_BE, β, I_s, Early-effect mismatch) is **not** covered by this analysis — those effects require a full behavioral / circuit-equivalent SPICE PDK Monte Carlo simulation scheduled prior to silicon fabrication.
 
 The varactor capacitance is modelled via the semiconductor reverse-bias junction equation:
